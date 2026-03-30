@@ -1,0 +1,188 @@
+@mixin displayFlex($justify: flex-start, $align: flex-start, $direction: row, $wrap: nowrap) {
+  display: flex;
+  flex-wrap: $wrap;
+  flex-direction: $direction;
+  justify-content: $justify;
+  align-items: $align;
+}
+
+
+@mixin designedScrollbar($topDistance: 20px,
+  $bottomDistance: 20px) {
+  &::-webkit-scrollbar-button:start:decrement {
+    height: $topDistance;
+    display: block;
+    background-color: transparent;
+  }
+
+  &::-webkit-scrollbar-button:end:increment {
+    height: $bottomDistance;
+    display: block;
+    background-color: transparent;
+  }
+}
+
+@mixin transparentBtn {
+  border: none;
+  background-color: transparent;
+  padding: 0;
+  display: flex;
+}
+
+
+@mixin appScrollbar {
+
+  /* width */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  /* Track */
+  ::-webkit-scrollbar-track {
+    background-color: transparent;
+    border-radius: 50px;
+    opacity: 0.5;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background-color: $purple7;
+    border-radius: 50px;
+  }
+}
+
+@mixin cardStyle {
+  position: relative;
+  margin-bottom: 20px;
+  padding: 16px 16px 14px;
+  border-radius: 14px;
+  background: $neutral1;
+  border: 1px solid $purple3;
+  max-width: 100%;
+
+  &:before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    border-left: 4px solid $purple7;
+    pointer-events: none;
+  }
+
+  @media (min-width: 1100px) {
+    padding: 18px 20px 16px;
+    margin-bottom: 24px;
+  }
+
+  h2 {
+    position: relative;
+    margin: 0 0 10px;
+    line-height: 1.3;
+    color: $purple8;
+
+    .react-talk-section-meta {
+      display: inline-block;
+      margin-top: 4px;
+      font-size: 0.85rem;
+      color: $neutral7;
+    }
+  }
+
+  .card-section {
+    position: relative;
+    padding: 10px 10px 8px;
+    border-radius: 10px;
+
+    &:not(:last-child) {
+      margin-bottom: 6px;
+    }
+
+    @media (min-width: 1100px) {
+      padding: 10px 12px 8px;
+    }
+
+    h3 {
+      margin: 0 0 4px;
+      color: $purple7;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 18px;
+      list-style: none;
+
+      li {
+        position: relative;
+        margin: 2px 0;
+        padding-left: 12px;
+        font-size: 1rem;
+        line-height: 1.3;
+        color: $neutral7;
+        overflow-wrap: break-word;
+
+        &:before {
+          content: "";
+          position: absolute;
+          left: 0;
+          top: 6px;
+          width: 6px;
+          height: 6px;
+          border-radius: 999px;
+          background: $purple6;
+        }
+      }
+    }
+  }
+
+  .code-snippet {
+    * {
+      font-family: "Fira Code" !important;
+    }
+    background-color: #f6f5f5;
+    padding: 12px 14px;
+    border-radius: 8px;
+    margin-top: 8px;
+    margin-bottom: 0px;
+    font-size: 0.9rem;
+    border: 1px solid $neutral3;
+    line-height: 1.4;
+    white-space: pre;
+    overflow-x: auto;
+    color: $neutral8;
+
+    code {
+      font-family: inherit;
+    }
+
+    .code-tag {
+      color: rgb(244, 81, 0); // tag names
+      .tag-sign {
+        color: $neutral8;
+      }
+    }
+
+    .code-text {
+      color: $neutral8; // plain text content
+    }
+
+    // if you later add attributes / strings you can reuse:
+    .code-attr {
+      color: $teal8;
+    }
+
+    .code-string {
+      color: $orange6;
+    }
+  }
+
+  &:hover {
+    background: $purple1;
+    border-color: $purple4;
+    box-shadow: 0 4px 14px rgba($neutral8, 0.08);
+
+    h2 {
+      color: $purple8;
+    }
+  }
+}
