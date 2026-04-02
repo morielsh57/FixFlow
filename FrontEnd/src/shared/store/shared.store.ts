@@ -5,7 +5,7 @@ export interface SharedStoreState {
 }
 
 const initialStateSharedStore: SharedStoreState = {
-  exampleForGlobalState: ''
+  exampleForGlobalState: 'hello world',
 };
 
 export const setexampleForGlobalState = createAction<string>(
