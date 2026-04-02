@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from datetime import datetime
+from django.utils import timezone
 
 class Departments(models.Model):
     id = models.AutoField(primary_key=True)
@@ -16,8 +16,8 @@ class Priority(models.Model):
 
 class Issues(models.Model):
     id = models.AutoField(primary_key=True)
-    date_created = models.DateTimeField(default=datetime.now())
-    date_updated = models.DateTimeField(default=datetime.now())
+    date_created = models.DateTimeField(default=timezone.now)
+    date_updated = models.DateTimeField(default=timezone.now)
     title = models.CharField(max_length=250)
     description = models.CharField(max_length=800)
     location = models.CharField(max_length=250)
