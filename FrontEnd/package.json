@@ -1,0 +1,66 @@
+{
+  "name": "web-seminar",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@ant-design/icons": "5.0.1",
+    "@reduxjs/toolkit": "1.8.6",
+    "@types/node": "17.0.45",
+    "@types/react": "18.0.24",
+    "@types/react-dom": "18.0.8",
+    "antd": "5.3.2",
+    "axios": "1.12.0",
+    "dayjs": "1.11.7",
+    "env-cmd": "10.1.0",
+    "js-confetti": "0.12.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-hook-form": "7.42.1",
+    "react-redux": "8.0.4",
+    "react-router-dom": "6.14.2",
+    "sass": "1.55.0",
+    "typescript": "4.8.4"
+  },
+  "scripts": {
+    "start": "env-cmd -f .env react-scripts start",
+    "start:ssl": "cross-env HTTPS=true react-scripts start",
+    "start:debug": "env-cmd -f .env react-scripts start --debug --watch",
+    "build": "react-scripts build",
+    "build:dev": "env-cmd -f .env.development react-scripts build",
+    "build:qa": "env-cmd -f .env.qa react-scripts build",
+    "build:stage": "env-cmd -f .env.stage react-scripts build",
+    "lint": "eslint --fix 'src/**/*.{ts,tsx}'",
+    "format": "prettier ./ --write",
+    "test": "cross-env REACT_APP_ENV_TEST=true CI=true react-scripts test --verbose",
+    "test:debug": "cross-env REACT_APP_ENV_TEST=true CI=true react-scripts --inspect-brk test --verbose --runInBand --no-cache",
+    "test:dev": "cross-env REACT_APP_ENV_TEST=true react-scripts test --watchAll"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "cross-env": "7.0.3",
+    "lint-staged": "15.2.11",
+    "prettier": "2.7.1",
+    "react-scripts": "5.0.1",
+    "react-test-renderer": "18.2.0"
+  },
+  "jest": {
+    "transformIgnorePatterns": [
+      "node_modules/(?!axios/.*|ical.js)"
+    ]
+  },
+  "lint-staged": {
+    "*.{ts,tsx}": "npm run lint",
+    "*.{ts,tsx,scss,json}": "npm run format"
+  }
+}

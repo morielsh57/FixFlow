@@ -1,0 +1,36 @@
+@import '../../shared/styles/style.index.scss';
+
+.app-main {
+  @include displayFlex(flex-start, flex-start, column);
+
+  >*:not(header) {
+    width: 100%;
+    overflow-y: auto;
+  }
+}
+
+@media only screen and (max-width: 1100px) {
+  .app-main {
+    padding: 0 20px 0 20px;
+
+    >*:not(header) {
+      padding-bottom: 20px;
+      padding-top: 20px;
+      overflow-y: auto;
+      @include designedScrollbar;
+    }
+  }
+}
+
+@media only screen and (min-width: 1101px) {
+  .app-main {
+    padding: 0 40px 0 40px;
+
+    >*:not(header) {
+      padding-right: 20px;
+      padding-bottom: 40px;
+      padding-top: 40px;
+      @include designedScrollbar;
+    }
+  }
+}
