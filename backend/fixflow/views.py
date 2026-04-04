@@ -22,6 +22,14 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
 
+
+@api_view(['GET'])
+def tickets(request):
+    open_tickets = Issues.objects.filter(status=Issues.Status.OPEN)
+    serializer = issuesSerializer(open_tickets, many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+
 """
 @api_view(['GET','POST','PATCH'])   # MUST - PICK ONE / MORE
 def FUNC_NAME(request):             # MUST - PICK FUNC NAME
