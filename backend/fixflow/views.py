@@ -151,10 +151,11 @@ def get_all_priorities(request):
 def get_single_priority(request,id):
     try:
         priority = Priority.objects.get(id=id)
-        serializer = prioritySerializer(priority,many=False)
-        return Response(serializer.data, status=status.HTTP_200_OK)
     except Exception as e:
-        return Response(serializer.errors, status=status.HTTP_404_NOT_FOUND)
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+    serializer = prioritySerializer(priority,many=False)
+    return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 def add_priority(request):
@@ -177,6 +178,6 @@ def update_priority(request,id):
     serializer = prioritySerializer(priority,data=input)
     if serializer.is_valid():
         serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
     else:
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
