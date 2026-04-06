@@ -7,6 +7,7 @@ from rest_framework.decorators import api_view
 from rest_framework import status
 from .serializers import departmentSerializer,issuesSerializer,prioritySerializer,userSerializer
 from .models import Departments,Issues,Priority,CustomUser
+from django.shortcuts import get_object_or_404
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
 
@@ -66,7 +67,7 @@ def change_password(request):
     
     user.set_password(input['password'])
     user.save()
-    return Response("password updated successfully",status=status.HTTP_201_CREATED)
+    return Response("password updated successfully",status=status.HTTP_200_OK)
 
 
 #####################
@@ -85,6 +86,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
+
 
 #####################
 #                   #
@@ -140,6 +142,7 @@ def create_ticket(request):
 #                   #
 #####################
 
+
 @api_view(['GET'])
 def get_all_priorities(request):
     priorities = Priority.objects.all()
@@ -180,3 +183,73 @@ def update_priority(request,id):
         return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
     else:
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+
+######################
+#                    #
+#    Departments     #
+#                    #
+######################
+
+
+"""
+GET - get data
+POST - create new data
+PATCH - partial update 
+"""
+
+@api_view(['GET'])
+def get_all_departments(request):
+    # THIS FUNCTION GETS ALL DEPARTMENTS FROM THE DATABASE
+    departments = Departments.objects.all()
+    serializer = departmentSerializer(departments, many=True)
+    # CONVERT DATA TO JSON (MANY=True BECAUSE THERE ARE MULTIPLE OBJECTS)
+
+    return Response(serializer.data, status=status.HTTP_200_OK)
+    # RETURN THE DATA WITH STATUS 200 (SUCCESS)
+
+@api_view(['GET'])
+def get_department(request, pk):
+    # THIS FUNCTION GETS ONE DEPARTMENT BY ID (PRIMARY KEY)
+    department = get_object_or_404(Departments, pk=pk)
+    # IF THE DEPARTMENT DOES NOT EXIST - RETURN 404 AUTOMATICALLY
+    serializer = departmentSerializer(department)
+    # CONVERT OBJECT TO JSON
+
+    return Response(serializer.data, status=status.HTTP_200_OK)
+    # RETURN THE DATA WITH STATUS 200
+
+@api_view(['POST'])
+def add_department(request):
+    # THIS FUNCTION CREATES A NEW DEPARTMENT
+
+    # GET DATA FROM REQUEST (FROM FRONTEND)
+    serializer = departmentSerializer(data=request.data)
+
+    # CHECK IF DATA IS VALID
+    if serializer.is_valid():
+        serializer.save()
+
+        # RETURN CREATED OBJECT WITH STATUS 201
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    # IF DATA IS NOT VALID - RETURN ERRORS
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['PATCH'])
+def update_department(request, pk):
+    # THIS FUNCTION UPDATES AN EXISTING DEPARTMENT
+    department = get_object_or_404(Departments, pk=pk)
+    # GET THE DEPARTMENT OR RETURN 404
+    serializer = departmentSerializer(department, data=request.data, partial=True)
+    # UPDATE ONLY FIELDS THAT WERE SENT (PARTIAL UPDATE)
+
+    # CHECK IF DATA IS VALID
+    if serializer.is_valid():
+        serializer.save()
+
+        # RETURN UPDATED OBJECT WITH STATUS 200
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    # RETURN ERRORS IF DATA IS NOT VALID
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

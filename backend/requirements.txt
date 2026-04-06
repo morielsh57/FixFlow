@@ -7,13 +7,13 @@ attrs==26.1.0
 babel==2.18.0
 certifi==2026.2.25
 charset-normalizer==3.4.6
-Django==6.0.3
+Django==5.2.12
 django-cors-headers==4.9.0
 django-libsql==0.1.3
 djangorestframework==3.17.1
 djangorestframework-jwt==1.11.0
 djangorestframework_simplejwt==5.5.1
-docutils==0.22.4
+docutils==0.21.2
 frozenlist==1.8.0
 idna==3.11
 imagesize==2.0.0
@@ -30,7 +30,7 @@ python-dotenv==1.2.2
 requests==2.33.1
 roman-numerals==4.1.0
 snowballstemmer==3.0.1
-Sphinx==9.1.0
+Sphinx==8.1.3
 sphinx-press-theme==0.8.0
 sphinxcontrib-applehelp==2.0.0
 sphinxcontrib-devhelp==2.0.0
