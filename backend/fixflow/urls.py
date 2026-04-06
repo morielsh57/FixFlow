@@ -5,6 +5,8 @@ from . import views
 urlpatterns = [
     path('', views.index),
     path('add-user/', views.create_user),
+    path('users/', views.get_all_users),
+    path('users/<int:id>/', views.get_user),
     path('change-password/', views.change_password),
     path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
     # Issues

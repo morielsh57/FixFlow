@@ -14,7 +14,7 @@ class prioritySerializer(serializers.ModelSerializer):
 class userSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
-        fields = ['username','first_name','last_name','email','phone_number','department']
+        fields = ['id','username','first_name','last_name','email','phone_number','department']
 
 class issuesSerializer(serializers.ModelSerializer):
     priority = prioritySerializer()

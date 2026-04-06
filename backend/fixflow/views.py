@@ -20,7 +20,7 @@ def FUNC_NAME(request):             # MUST - PICK FUNC NAME
 
 @api_view(['GET'])
 def index(request):
-    return Response("hello",status=status.HTTP_200_OK)
+    return Response({"msg":"hello"},status=status.HTTP_200_OK)
 
 
 #####################
@@ -36,7 +36,7 @@ def create_user(request):
     try:
         validate_password(input['password'])
     except ValidationError as e:
-        return Response(e,status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error":f"{e}"},status=status.HTTP_400_BAD_REQUEST)
     try:
         user = CustomUser.objects.create_user(
             username=input["username"],
@@ -48,9 +48,25 @@ def create_user(request):
             password=input['password'],
         )
         user.save()
-        return Response("User created successfully",status=status.HTTP_201_CREATED)
+        return Response({"msg":"User created successfully"},status=status.HTTP_201_CREATED)
     except Exception as e:
-        return Response(f"user creation failed: {e}",status=status.HTTP_400_BAD_REQUEST)
+        return Response({"msg":"user creation failed","error":f"{e}"},status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def get_all_users(request):
+    user = CustomUser.objects.all()
+    serializer = userSerializer(user,many=True)
+    return Response({"data":serializer.data,"msg":"users list fetched successfully"},status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def get_user(request,id):
+    try:
+        user = CustomUser.objects.get(id=id)
+    except Exception as e:
+        return Response({"msg":"user not found","error":f"{e}"}, status=status.HTTP_404_NOT_FOUND)
+    
+    serializer = userSerializer(user,many=False)
+    return Response({"data":serializer.data,"msg":"user fetched successfully"},status=status.HTTP_200_OK)
 
 @api_view(['PATCH'])
 def change_password(request):
@@ -58,16 +74,16 @@ def change_password(request):
     try:
         user = CustomUser.objects.get(username=input["username"])
     except Exception as e:
-        return Response("user not found", status=status.HTTP_404_NOT_FOUND)
+        return Response({"msg":"user not found","error":f"{e}"}, status=status.HTTP_404_NOT_FOUND)
     
     try:
         validate_password(input['password'])
     except ValidationError as e:
-        return Response(e,status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error":f"{e}"},status=status.HTTP_400_BAD_REQUEST)
     
     user.set_password(input['password'])
     user.save()
-    return Response("password updated successfully",status=status.HTTP_200_OK)
+    return Response({"msg":"password updated successfully"},status=status.HTTP_200_OK)
 
 
 #####################
@@ -99,31 +115,27 @@ class MyTokenObtainPairView(TokenObtainPairView):
 def tickets(request):
     open_tickets = Issues.objects.filter(status=Issues.Status.OPEN)
     serializer = issuesSerializer(open_tickets, many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response({"data":serializer.data,"msg":"Ticket list fetched successfully"}, status=status.HTTP_200_OK)
 
 @api_view(['GET', 'PATCH'])
 def ticket_detail(request, ticket_id):
     try:
         ticket = Issues.objects.get(id=ticket_id)
-    except Issues.DoesNotExist:
-        return Response({"error": "Ticket not found"}, status=status.HTTP_404_NOT_FOUND)
+    except Issues.DoesNotExist as e:
+        return Response({"msg": "Ticket not found", "error":f"{e}"}, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
         serializer = issuesSerializer(ticket)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({"data":serializer.data,"msg":"Ticket fetched successfully"}, status=status.HTTP_200_OK)
 
     elif request.method == 'PATCH':
         serializer = issuesSerializer(ticket, data=request.data, partial=True)
 
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
+            return Response({"data":serializer.data,"msg":"Ticket updated successfully"}, status=status.HTTP_200_OK)
 
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-    serializer = issuesSerializer(ticket)
-    return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({"msg":"failed to update Ticket","error":f"{serializer.errors}"}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 def create_ticket(request):
@@ -131,58 +143,9 @@ def create_ticket(request):
 
     if serializer.is_valid():
         serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response({"data":serializer.data,"msg":"Ticket created successfully"}, status=status.HTTP_201_CREATED)
 
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-#####################
-#                   #
-#    priorities     #
-#                   #
-#####################
-
-
-@api_view(['GET'])
-def get_all_priorities(request):
-    priorities = Priority.objects.all()
-    serializer = prioritySerializer(priorities,many=True)
-    return Response(serializer.data, status=status.HTTP_200_OK)
-
-@api_view(['GET'])
-def get_single_priority(request,id):
-    try:
-        priority = Priority.objects.get(id=id)
-    except Exception as e:
-        return Response(status=status.HTTP_404_NOT_FOUND)
-    
-    serializer = prioritySerializer(priority,many=False)
-    return Response(serializer.data, status=status.HTTP_200_OK)
-
-@api_view(['POST'])
-def add_priority(request):
-    input = request.data
-    serializer = prioritySerializer(data=input)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
-    else:
-        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-    
-@api_view(['PATCH'])
-def update_priority(request,id):
-    input = request.data
-    try:
-        priority = Priority.objects.get(id=id)
-    except Exception as e:
-        return Response({"id":-1,"title":"not found"},status=status.HTTP_404_NOT_FOUND)
-    
-    serializer = prioritySerializer(priority,data=input)
-    if serializer.is_valid():
-        serializer.save()
-        return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
-    else:
-        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    return Response({"msg":"failed to create a Ticket","error":f"{serializer.errors}"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 ######################
@@ -205,7 +168,7 @@ def get_all_departments(request):
     serializer = departmentSerializer(departments, many=True)
     # CONVERT DATA TO JSON (MANY=True BECAUSE THERE ARE MULTIPLE OBJECTS)
 
-    return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response({"data":serializer.data,"msg":"departments list fetched successfully"}, status=status.HTTP_200_OK)
     # RETURN THE DATA WITH STATUS 200 (SUCCESS)
 
 @api_view(['GET'])
@@ -216,7 +179,7 @@ def get_department(request, pk):
     serializer = departmentSerializer(department)
     # CONVERT OBJECT TO JSON
 
-    return Response(serializer.data, status=status.HTTP_200_OK)
+    return Response({"data":serializer.data,"msg":"department item fetched successfully"}, status=status.HTTP_200_OK)
     # RETURN THE DATA WITH STATUS 200
 
 @api_view(['POST'])
@@ -231,10 +194,10 @@ def add_department(request):
         serializer.save()
 
         # RETURN CREATED OBJECT WITH STATUS 201
-        return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response({"data":serializer.data,"msg":"department item created successfully"}, status=status.HTTP_201_CREATED)
 
     # IF DATA IS NOT VALID - RETURN ERRORS
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    return Response({"msg":"failed to create a department item","error":f"{serializer.errors}"}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['PATCH'])
 def update_department(request, pk):
@@ -249,7 +212,56 @@ def update_department(request, pk):
         serializer.save()
 
         # RETURN UPDATED OBJECT WITH STATUS 200
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response({"data":serializer.data,"msg":"department item updated successfully"}, status=status.HTTP_200_OK)
 
     # RETURN ERRORS IF DATA IS NOT VALID
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    return Response({"msg":"failed to update a department item","error":f"{serializer.errors}"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+#####################
+#                   #
+#    priorities     #
+#                   #
+#####################
+
+
+@api_view(['GET'])
+def get_all_priorities(request):
+    priorities = Priority.objects.all()
+    serializer = prioritySerializer(priorities,many=True)
+    return Response({"data":serializer.data,"msg":"priority list fetched successfully"}, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def get_single_priority(request,id):
+    try:
+        priority = Priority.objects.get(id=id)
+    except Exception as e:
+        return Response({"msg":"priority item not found","error":f"{e}"},status=status.HTTP_404_NOT_FOUND)
+    
+    serializer = prioritySerializer(priority,many=False)
+    return Response({"data":serializer.data,"msg":"priority item fetched successfully"}, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+def add_priority(request):
+    input = request.data
+    serializer = prioritySerializer(data=input)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({"data":serializer.data,"msg":"priority item created successfully"}, status=status.HTTP_201_CREATED)
+    else:
+        return Response({"msg":"failed to create a priority item","error":f"{serializer.errors}"},status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['PATCH'])
+def update_priority(request,id):
+    input = request.data
+    try:
+        priority = Priority.objects.get(id=id)
+    except Exception as e:
+        return Response({"msg":"priority item not found","error":f"{e}"},status=status.HTTP_404_NOT_FOUND)
+    
+    serializer = prioritySerializer(priority,data=input)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({"data":serializer.data,"msg":"priority item updated successfully"}, status=status.HTTP_202_ACCEPTED)
+    else:
+        return Response({"msg":"failed to update a priority item","error":f"{serializer.errors}"},status=status.HTTP_400_BAD_REQUEST)
