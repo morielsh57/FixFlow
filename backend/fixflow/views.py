@@ -8,10 +8,74 @@ from rest_framework import status
 from .serializers import departmentSerializer,issuesSerializer,prioritySerializer,userSerializer
 from .models import Departments,Issues,Priority,CustomUser
 from django.shortcuts import get_object_or_404
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
+
+"""
+@api_view(['GET','POST','PATCH'])   # MUST - PICK ONE / MORE
+def FUNC_NAME(request):             # MUST - PICK FUNC NAME
+    pass                            #
+
+"""
 
 @api_view(['GET'])
 def index(request):
     return Response("hello",status=status.HTTP_200_OK)
+
+
+#####################
+#                   #
+#       USER        #
+#                   #
+#####################
+
+
+@api_view(['POST'])
+def create_user(request):
+    input = request.data
+    try:
+        validate_password(input['password'])
+    except ValidationError as e:
+        return Response(e,status=status.HTTP_400_BAD_REQUEST)
+    try:
+        user = CustomUser.objects.create_user(
+            username=input["username"],
+            first_name=input["first_name"],
+            last_name=input["last_name"],
+            email=input["email"],
+            department=input["department"],
+            phone_number=input["phone_number"],
+            password=input['password'],
+        )
+        user.save()
+        return Response("User created successfully",status=status.HTTP_201_CREATED)
+    except Exception as e:
+        return Response(f"user creation failed: {e}",status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['PATCH'])
+def change_password(request):
+    input = request.data
+    try:
+        user = CustomUser.objects.get(username=input["username"])
+    except Exception as e:
+        return Response("user not found", status=status.HTTP_404_NOT_FOUND)
+    
+    try:
+        validate_password(input['password'])
+    except ValidationError as e:
+        return Response(e,status=status.HTTP_400_BAD_REQUEST)
+    
+    user.set_password(input['password'])
+    user.save()
+    return Response("password updated successfully",status=status.HTTP_200_OK)
+
+
+#####################
+#                   #
+#       LOGIN       #
+#                   #
+#####################
+
 
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
@@ -22,6 +86,13 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
 
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
+
+
+#####################
+#                   #
+#      issues       #
+#                   #
+#####################
 
 
 @api_view(['GET'])
@@ -65,16 +136,61 @@ def create_ticket(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-"""
-@api_view(['GET','POST','PATCH'])   # MUST - PICK ONE / MORE
-def FUNC_NAME(request):             # MUST - PICK FUNC NAME
-    pass                            #
+#####################
+#                   #
+#    priorities     #
+#                   #
+#####################
 
-"""
 
-# ======================
-# 4 DEPARTMENTS FUNCTIONS
-# ======================
+@api_view(['GET'])
+def get_all_priorities(request):
+    priorities = Priority.objects.all()
+    serializer = prioritySerializer(priorities,many=True)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def get_single_priority(request,id):
+    try:
+        priority = Priority.objects.get(id=id)
+    except Exception as e:
+        return Response(status=status.HTTP_404_NOT_FOUND)
+    
+    serializer = prioritySerializer(priority,many=False)
+    return Response(serializer.data, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+def add_priority(request):
+    input = request.data
+    serializer = prioritySerializer(data=input)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    else:
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['PATCH'])
+def update_priority(request,id):
+    input = request.data
+    try:
+        priority = Priority.objects.get(id=id)
+    except Exception as e:
+        return Response({"id":-1,"title":"not found"},status=status.HTTP_404_NOT_FOUND)
+    
+    serializer = prioritySerializer(priority,data=input)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+    else:
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+
+######################
+#                    #
+#    Departments     #
+#                    #
+######################
+
 
 """
 GET - get data
@@ -92,7 +208,6 @@ def get_all_departments(request):
     return Response(serializer.data, status=status.HTTP_200_OK)
     # RETURN THE DATA WITH STATUS 200 (SUCCESS)
 
-
 @api_view(['GET'])
 def get_department(request, pk):
     # THIS FUNCTION GETS ONE DEPARTMENT BY ID (PRIMARY KEY)
@@ -103,7 +218,6 @@ def get_department(request, pk):
 
     return Response(serializer.data, status=status.HTTP_200_OK)
     # RETURN THE DATA WITH STATUS 200
-
 
 @api_view(['POST'])
 def add_department(request):
@@ -121,7 +235,6 @@ def add_department(request):
 
     # IF DATA IS NOT VALID - RETURN ERRORS
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 @api_view(['PATCH'])
 def update_department(request, pk):

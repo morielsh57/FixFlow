@@ -1,18 +1,4 @@
-backend/project/.env
-
-.env
-*.env
-
-# python
-__pycache__/
-*.pyc
-
-# venv
-.venv/
-venv/
-
-# db
-db.sqlite3
-
-# ide
-.idea/
+**/.env
+**/.idea/
+**/.vscode/
+**/__pycache__/
