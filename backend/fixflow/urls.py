@@ -9,4 +9,10 @@ urlpatterns = [
     path('issue/<int:ticket_id>/', views.ticket_detail),
     path('issues-new/', views.create_ticket),
 
+    # Departments
+    path('departments/', views.get_all_departments),  # GET ALL
+    path('departments/<int:pk>/', views.get_department),  # GET ONE
+    path('departments/add/', views.add_department),  # ADD
+    path('departments/update/<int:pk>/', views.update_department),  # UPDATE
+
 ]
