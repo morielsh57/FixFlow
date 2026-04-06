@@ -6,17 +6,21 @@ class departmentSerializer(serializers.ModelSerializer):
         model = Departments
         fields = '__all__'
 
-class issuesSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Issues
-        fields = '__all__'
-
 class prioritySerializer(serializers.ModelSerializer):
     class Meta:
         model = Priority
         fields = '__all__'
-    
+
 class userSerializer(serializers.ModelSerializer):
     class Meta:
         model = CustomUser
         fields = ['username','first_name','last_name','email','phone_number','department']
+
+class issuesSerializer(serializers.ModelSerializer):
+    priority = prioritySerializer()
+    requester = userSerializer()
+    assigned = userSerializer()
+
+    class Meta:
+        model = Issues
+        fields = '__all__'
