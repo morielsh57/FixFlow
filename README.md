@@ -19,19 +19,9 @@ Daniel Cohen. <br>
 ### API endpoints
 The backend has been written by Daniel Cohen, Amit Shlomo Kedem and Tal Rozman.<br/>
 bellow is a table that summarize the available endpoints: <br/>
-The DB table that has been queried, the method that should be used, the expected payload and expected response.
+The DB table that has been queried, the method that should be used, the expected payload and expected response.<br/><br/><br/>
 
-<style>
-    table, th, td{
-        border: 1px solid black;
-        border-collapse: collapse;
-    }
-    tr:hover {
-        background-color: #3a3b3b;
-    }
-
-</style>
-<table style="white-space:pre-line;">
+<table>
     <tr>
         <th>Table</th>
         <th>Endpoint</th>
@@ -47,26 +37,26 @@ The DB table that has been queried, the method that should be used, the expected
         <td>add-user/</td>
         <td>POST</td>
         <td>
-            {
-                “username” : &lt;string&gt;,
-                “first_name” : &lt;string&gt;,
-                “last_name” : &lt;string&gt;,
-                “email” : &lt;string&gt;, 
-                “department” : &lt;int (dep_id)&gt;,
-                “phone_number” : &lt;string&gt;,
-                “password” : &lt;string&gt;
+            {<br/>
+                “username” : &lt;string&gt;,<br/>
+                “first_name” : &lt;string&gt;,<br/>
+                “last_name” : &lt;string&gt;,<br/>
+                “email” : &lt;string&gt;, <br/>
+                “department” : &lt;int (dep_id)&gt;,<br/>
+                “phone_number” : &lt;string&gt;,<br/>
+                “password” : &lt;string&gt;<br/>
             }
         </td>
         <td>
-            Success: status = 201
-            {
-                "msg" : “User created successfully”
+            Success: status = 201<br/>
+            {<br/>
+                "msg" : “User created successfully”<br/>
             }
             <hr/>
-            Failed: status = 400
-            {
-                "msg" : "user creation failed",
-                "error" : &lt;error_msg&gt;
+            Failed: status = 400<br/>
+            {<br/>
+                "msg" : "user creation failed",<br/>
+                "error" : &lt;error_msg&gt;<br/>
             }
         </td>
     </tr>
@@ -75,10 +65,10 @@ The DB table that has been queried, the method that should be used, the expected
         <td>GET</td>
         <td>NONE</td>
         <td>
-            Success: status = 200
-            {
-                "data" : &lt;list of users&gt;,
-                "msg" : "users list fetched successfully"
+            Success: status = 200<br/>
+            {<br/>
+                "data" : &lt;list of users&gt;,<br/>
+                "msg" : "users list fetched successfully"<br/>
             }
         </td>
     </tr>
@@ -87,16 +77,16 @@ The DB table that has been queried, the method that should be used, the expected
         <td>GET</td>
         <td>None</td>
         <td>
-            Success: status = 200
-            {
-                "data" : &lt;user item&gt;,
-                "msg" : "user fetched successfully"
+            Success: status = 200<br/>
+            {<br/>
+                "data" : &lt;user item&gt;,<br/>
+                "msg" : "user fetched successfully"<br/>
             }
             <hr/>
-            Failed: status = 404
-            {
-                "msg" : "user not found",
-                "error" : &lt;error_msg&gt;
+            Failed: status = 404<br/>
+            {<br/>
+                "msg" : "user not found",<br/>
+                "error" : &lt;error_msg&gt;<br/>
             }
         </td>
     </tr>
@@ -104,26 +94,26 @@ The DB table that has been queried, the method that should be used, the expected
         <td>change-password/</td>
         <td>PATCH</td>
         <td>
-            {
-            “username” : &lt;string&gt;,
-            “password” : &lt;string&gt;
+            {<br/>
+            “username” : &lt;string&gt;,<br/>
+            “password” : &lt;string&gt;<br/>
             }
         </td>
         <td>
-            Success: status = 200
-            {
-                "msg" : "password updated successfully"
+            Success: status = 200<br/>
+            {<br/>
+                "msg" : "password updated successfully"<br/>
             }
             <hr/>
-            Failed: status = 404
-            {
-                "msg" : "user not found",
-                "error" : &lt;error_msg&gt;
+            Failed: status = 404<br/>
+            {<br/>
+                "msg" : "user not found",<br/>
+                "error" : &lt;error_msg&gt;<br/>
             }
             <hr/>
-            Failed: status = 400
-            {
-                "error" : &lt;error_msg&gt;
+            Failed: status = 400<br/>
+            {<br/>
+                "error" : &lt;error_msg&gt;<br/>
             }
         </td>
     </tr>
@@ -131,21 +121,21 @@ The DB table that has been queried, the method that should be used, the expected
         <td>login/</td>
         <td>POST</td>
         <td>
-            {
-            “username” : &lt;string&gt;,
-            “password” : &lt;string&gt;
+            {<br/>
+            “username” : &lt;string&gt;,<br/>
+            “password” : &lt;string&gt;<br/>
             }
         </td>
         <td>
-            Success: status = 200
-            {
-            “refresh” : &lt;string&gt;,
-            “access” : &lt;string&gt;
+            Success: status = 200<br/>
+            {<br/>
+            “refresh” : &lt;string&gt;,<br/>
+            “access” : &lt;string&gt;<br/>
             }
             <hr/>
-            Failed: status = 400
-            {
-                &lt;error_msg&gt;
+            Failed: status = 400<br/>
+            {<br/>
+                &lt;error_msg&gt;<br/>
             }
         </td>
     </tr>
@@ -158,10 +148,10 @@ The DB table that has been queried, the method that should be used, the expected
         <td>GET</td>
         <td>None</td>
         <td>
-            Success: status = 200
-            {
-                "data" : &lt;list of Tickets&gt;,
-                "msg" : "Ticket list fetched successfully"
+            Success: status = 200<br/>
+            {<br/>
+                "data" : &lt;list of Tickets&gt;,<br/>
+                "msg" : "Ticket list fetched successfully"<br/>
             }
         </td>
     </tr>
@@ -172,51 +162,52 @@ The DB table that has been queried, the method that should be used, the expected
         <td>GET</td>
         <td>None</td>
         <td>
-            Success: status = 200
-            {
-                "data" : &lt;Ticket item&gt;,
-                "msg" : "Ticket fetched successfully"}
+            Success: status = 200<br/>
+            {<br/>
+                "data" : &lt;Ticket item&gt;,<br/>
+                "msg" : "Ticket fetched successfully"<br/>
+            }
             <hr/>
-            Failed: status = 404
-            {
-                "msg" : "Ticket not found",
-                "error" : &lt;error_msg&gt;
+            Failed: status = 404<br/>
+            {<br/>
+                "msg" : "Ticket not found",<br/>
+                "error" : &lt;error_msg&gt;<br/>
             }
         </td>
     </tr>
     <tr>
         <td>PATCH</td>
         <td>
-            Note: can be partial, any of the keys is optional.
-            {
-                “title” : &lt;string&gt; ,
-                “description” : &lt;string&gt; ,
-                “location” : &lt;string&gt; ,
-                “status” : &lt;Open/In Progress/Closed&gt; ,
-                “date_created” : &lt;date_time&gt; ,
-                “date_updated” : &lt;date_time&gt; ,
-                “priority” : &lt;int (id)&gt; ,
-                “assigned” : &lt;int (id)&gt; ,
-                “requester” : &lt;int (id)&gt; ,
+            Note: can be partial, any of the keys is optional.<br/><br/>
+            {<br/>
+                “title” : &lt;string&gt; ,<br/>
+                “description” : &lt;string&gt; ,<br/>
+                “location” : &lt;string&gt; ,<br/>
+                “status” : &lt;Open/In Progress/Closed&gt; ,<br/>
+                “date_created” : &lt;date_time&gt; ,<br/>
+                “date_updated” : &lt;date_time&gt; ,<br/>
+                “priority” : &lt;int (id)&gt; ,<br/>
+                “assigned” : &lt;int (id)&gt; ,<br/>
+                “requester” : &lt;int (id)&gt; ,<br/>
             }
         </td>
         <td>
-            Success: status = 200
-            {
-                "data" : &lt;Ticket item&gt;,
-                "msg":"Ticket updated successfully"
+            Success: status = 200<br/>
+            {<br/>
+                "data" : &lt;Ticket item&gt;,<br/>
+                "msg":"Ticket updated successfully"<br/>
             }
             <hr/>
-            Failed: status = 404
-            {
-                "msg" : "Ticket not found",
-                "error" : &lt;error_msg&gt;
+            Failed: status = 404<br/>
+            {<br/>
+                "msg" : "Ticket not found",<br/>
+                "error" : &lt;error_msg&gt;<br/>
             }
             <hr/>
-            Failed: status = 400
-            {
-                "msg" : "failed to update Ticket",
-                "error" : &lt;error_msg&gt;
+            Failed: status = 400<br/>
+            {<br/>
+                "msg" : "failed to update Ticket",<br/>
+                "error" : &lt;error_msg&gt;<br/>
             }
         </td>
     </tr>
@@ -224,29 +215,29 @@ The DB table that has been queried, the method that should be used, the expected
         <td>issues-new/</td>
         <td>POST</td>
         <td>
-            {
-                “title” : &lt;string&gt; ,
-                “description” : &lt;string&gt; ,
-                “location” : &lt;string&gt; ,
-                “status” : &lt;Open/In Progress/Closed&gt; ,
-                “date_created” : &lt;date_time&gt; ,
-                “date_updated” : &lt;date_time&gt; ,
-                “priority” : &lt;int (id)&gt; ,
-                “assigned” : &lt;int (id)&gt; ,
-                “requester” : &lt;int (id)&gt; ,
+            {<br/>
+                “title” : &lt;string&gt; ,<br/>
+                “description” : &lt;string&gt; ,<br/>
+                “location” : &lt;string&gt; ,<br/>
+                “status” : &lt;Open/In Progress/Closed&gt; ,<br/>
+                “date_created” : &lt;date_time&gt; ,<br/>
+                “date_updated” : &lt;date_time&gt; ,<br/>
+                “priority” : &lt;int (id)&gt; ,<br/>
+                “assigned” : &lt;int (id)&gt; ,<br/>
+                “requester” : &lt;int (id)&gt; ,<br/>
             }
         </td>
         <td>
-            Success: status = 201
-            {
-                "data" : &lt;Ticket item&gt;,
-                "msg":"Ticket created successfully"
+            Success: status = 201<br/>
+            {<br/>
+                "data" : &lt;Ticket item&gt;,<br/>
+                "msg":"Ticket created successfully"<br/>
             }
             <hr/>
-            Failed: status = 400
-            {
-                "msg" : "failed to create a Ticket",
-                "error" : &lt;error_msg&gt;
+            Failed: status = 400<br/>
+            {<br/>
+                "msg" : "failed to create a Ticket",<br/>
+                "error" : &lt;error_msg&gt;<br/>
             }
         </td>
     </tr>
@@ -259,10 +250,10 @@ The DB table that has been queried, the method that should be used, the expected
         <td>GET</td>
         <td>None</td>
         <td>
-            Success: status = 200
-            {
-                "data": &lt;list of departments&gt;,
-                "msg":"departments list fetched successfully"
+            Success: status = 200<br/>
+            {<br/>
+                "data": &lt;list of departments&gt;,<br/>
+                "msg":"departments list fetched successfully"<br/>
             }
         </td>
     </tr>
@@ -271,15 +262,15 @@ The DB table that has been queried, the method that should be used, the expected
         <td>GET</td>
         <td>None</td>
         <td>
-            Success: status = 200
-            {
-                "data": &lt;department item&gt;,
-                "msg":"department item fetched successfully"
+            Success: status = 200<br/>
+            {<br/>
+                "data": &lt;department item&gt;,<br/>
+                "msg":"department item fetched successfully"<br/>
             }
             <hr/>
-            Failed: status = 404
-            {
-                "detail": "No Departments matches the given query"
+            Failed: status = 404<br/>
+            {<br/>
+                "detail": "No Departments matches the given query"<br/>
             }
         </td>
     </tr>
@@ -287,21 +278,21 @@ The DB table that has been queried, the method that should be used, the expected
         <td>departments/add/</td>
         <td>POST</td>
         <td>
-            {
-                “title” : &lt;string&gt;
+            {<br/>
+                “title” : &lt;string&gt;<br/>
             }
         </td>
         <td>
-            Success: status = 201
-            {
-                "data": &lt;department item&gt;,
-                "msg":"department item created successfully"
+            Success: status = 201<br/>
+            {<br/>
+                "data": &lt;department item&gt;,<br/>
+                "msg":"department item created successfully"<br/>
             }
             <hr/>
-            Failed: status = 400
-            {
-                "msg":"failed to create a department item",
-                "error":&lt;error_msg&gt;
+            Failed: status = 400<br/>
+            {<br/>
+                "msg":"failed to create a department item",<br/>
+                "error":&lt;error_msg&gt;<br/>
             }
         </td>
     </tr>
@@ -309,26 +300,26 @@ The DB table that has been queried, the method that should be used, the expected
         <td>departments/update/&lt;int (id)&gt;/</td>
         <td>PATCH</td>
         <td>
-            {
-                “title” : &lt;string&gt;
+            {<br/>
+                “title” : &lt;string&gt;<br/>
             }
         </td>
         <td>
-            Success: status = 200
-            {
-                "data": &lt;department item&gt;,
-                "msg":"department item updated successfully"
+            Success: status = 200<br/>
+            {<br/>
+                "data": &lt;department item&gt;,<br/>
+                "msg":"department item updated successfully"<br/>
             }
             <hr/>
-            Failed: status = 404
-            {
-                "detail": "No Departments matches the given query"
+            Failed: status = 404<br/>
+            {<br/>
+                "detail": "No Departments matches the given query"<br/>
             }
             <hr/>
-            Failed: status = 400
-            {
-                "msg":"failed to update a department item",
-                "error":&lt;error_msg&gt;
+            Failed: status = 400<br/>
+            {<br/>
+                "msg":"failed to update a department item",<br/>
+                "error":&lt;error_msg&gt;<br/>
             }
         </td>
     </tr>
@@ -341,10 +332,10 @@ The DB table that has been queried, the method that should be used, the expected
         <td>GET</td>
         <td>None</td>
         <td>
-            Success: status = 200
-            {
-                "data": &lt;list of priorities&gt;,
-                "msg":"priority list fetched successfully"
+            Success: status = 200<br/>
+            {<br/>
+                "data": &lt;list of priorities&gt;,<br/>
+                "msg":"priority list fetched successfully"<br/>
             }
         </td>
     </tr>
@@ -353,16 +344,16 @@ The DB table that has been queried, the method that should be used, the expected
         <td>GET</td>
         <td>None</td>
         <td>
-            Success: status = 200
-            {
-                "data": &lt;priority item&gt;,
-                "msg":"priority item fetched successfully"
+            Success: status = 200<br/>
+            {<br/>
+                "data": &lt;priority item&gt;,<br/>
+                "msg":"priority item fetched successfully"<br/>
             }
             <hr/>
-            Failed: status = 404
-            {
-                "msg" : "priority item not found",
-                "error" : &lt;error_msg&gt;
+            Failed: status = 404<br/>
+            {<br/>
+                "msg" : "priority item not found",<br/>
+                "error" : &lt;error_msg&gt;<br/>
             }
         </td>
     </tr>
@@ -370,27 +361,27 @@ The DB table that has been queried, the method that should be used, the expected
         <td>priority/update/&lt;int (id)&gt;/</td>
         <td>PATCH</td>
         <td>
-            {
-                “title” : &lt;string&gt;
+            {<br/>
+                “title” : &lt;string&gt;<br/>
             }
         </td>
         <td>
-            Success: status = 200
-            {
-                "data": &lt;item&gt;,
-                "msg":"priority item updated successfully"
+            Success: status = 200<br/>
+            {<br/>
+                "data": &lt;item&gt;,<br/>
+                "msg":"priority item updated successfully"<br/>
             }
             <hr/>
-            Failed: status = 404
-            {
-                "msg" : "priority item not found",
-                "error" : &lt;error_msg&gt;
+            Failed: status = 404<br/>
+            {<br/>
+                "msg" : "priority item not found",<br/>
+                "error" : &lt;error_msg&gt;<br/>
             }
             <hr/>
-            Failed: status = 400
-            {
-                "msg" : "failed to update a priority item",
-                "error" : &lt;error_msg&gt;
+            Failed: status = 400<br/>
+            {<br/>
+                "msg" : "failed to update a priority item",<br/>
+                "error" : &lt;error_msg&gt;<br/>
             }
         </td>
     </tr>
@@ -398,21 +389,21 @@ The DB table that has been queried, the method that should be used, the expected
         <td>priority/add/</td>
         <td>POST</td>
         <td>
-            {
-                “title” : &lt;string&gt;
+            {<br/>
+                “title” : &lt;string&gt;<br/>
             }
         </td>
         <td>
-            Success: status = 201
-            {
-                "data": &lt;item&gt;,
-                "msg":"priority item created successfully"
+            Success: status = 201<br/>
+            {<br/>
+                "data": &lt;item&gt;,<br/>
+                "msg":"priority item created successfully"<br/>
             }
             <hr/>
-            Failed: status = 400
-            {
-                "msg" : "failed to create a priority item",
-                "error" : &lt;error_msg&gt;
+            Failed: status = 400<br/>
+            {<br/>
+                "msg" : "failed to create a priority item",<br/>
+                "error" : &lt;error_msg&gt;<br/>
             }
         </td>
     </tr>
