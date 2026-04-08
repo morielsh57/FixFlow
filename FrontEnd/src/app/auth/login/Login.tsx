@@ -5,21 +5,9 @@ import LoginPic from '../../../assets/images/LoginPic.jpg';
 
 const WelcomeMessege = () => {
     return (
-        <div
-            style={{
-                top: 12,
-                left: 12,
-                right: 12,
-                justifyContent: 'center',
-                width: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                paddingTop: '40px',
-                textAlign: 'center',
-            }}
-        >
-            <h1 style={{ color: 'black', fontSize: '45px' }}>Welcome to FixFlow</h1>
-            <h2 style={{ color: '#643fd4', marginTop: '30px', textAlign: 'center', fontSize: '38px' }}>
+        <div className="welcome-container">
+            <h1 className="first-title">Welcome to FixFlow</h1>
+            <h2 className="sub-title">
                 We are a new platform that makes your company a more organized workplace with our smart ticketing system
             </h2>
         </div>
@@ -68,17 +56,7 @@ const MotivationSentences = () => {
 const Picture = () => {
     return (
         <div className="Login-Pic">
-            <img
-                src={LoginPic}
-                className="Login-Picture"
-                style={{
-                    display: 'flex',
-                    width: '100%',
-                    height: '100%',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                }}
-            ></img>
+            <img src={LoginPic} className="Picture"></img>
         </div>
     );
 };
@@ -100,66 +78,17 @@ const Login = () => {
 
     return (
         <div className="login-container">
-            <div style={{ marginBottom: '40px' }}>
-                <WelcomeMessege />
-            </div>
+            <WelcomeMessege />
+            <MotivationSentences />
+            <main className="main-content-split">
+                <Picture />
 
-            <div style={{ marginTop: '40px' }}>
-                <MotivationSentences />
-            </div>
-
-            <main
-                className="main-content-split"
-                style={{
-                    display: 'flex',
-                    flexDirection: 'row-reverse',
-                    alignItems: 'stretch',
-                    justifyContent: 'center',
-                    width: '100%',
-                    maxWidth: '1400px',
-                    gap: '80px',
-                }}
-            >
-                <div
-                    className="Picture-right-side"
-                    style={{
-                        alignSelf: 'stretch',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        flex: 1.2,
-                        alignItems: 'center',
-                        minHeight: '800px',
-                        minWidth: '800px',
-                    }}
-                >
-                    <Picture />
-                </div>
-
-                <div
-                    className="form-left-split"
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        flex: 1,
-                    }}
-                >
+                <div className="form-left-split">
                     <h1>Login</h1>
-
-                    <form onSubmit={handleSubmit(onSubmit)} style={{ maxWidth: '400px', width: '100%' }}>
-                        <div style={{ marginBottom: '25px' }}>
-                            <label
-                                style={{
-                                    fontSize: '1.1rem',
-                                    fontWeight: '600',
-                                    color: 'black',
-                                    letterSpacing: '0.3px',
-                                    marginLeft: '4px',
-                                }}
-                            >
-                                Email
-                            </label>
+                    <form className="login-form" onSubmit={handleSubmit(onSubmit)}>
+                        {/* Email Field */}
+                        <div className="input-group">
+                            <label>Email</label>
                             <input
                                 type="email"
                                 {...register('email', {
@@ -169,32 +98,12 @@ const Login = () => {
                                         message: 'Invalid email address',
                                     },
                                 })}
-                                style={{
-                                    width: '100%',
-                                    padding: '14px 18px',
-                                    fontSize: '1.1rem',
-                                    borderRadius: '12px',
-                                    border: '2px solid #643fd4',
-                                    backgroundColor: '#fcfcfc',
-                                    outline: 'none',
-                                    transition: 'all 0.2s ease-in-out',
-                                }}
                             />
-                            {errors.email && <p style={{ color: 'red' }}>{errors.email.message}</p>}
+                            {errors.email && <p className="error-text">{errors.email.message}</p>}
                         </div>
 
-                        <div style={{ marginBottom: '35px' }}>
-                            <label
-                                style={{
-                                    fontSize: '1.1rem',
-                                    fontWeight: '600',
-                                    color: 'black',
-                                    letterSpacing: '0.3px',
-                                    marginLeft: '4px',
-                                }}
-                            >
-                                Password
-                            </label>
+                        <div className="input-group password-group">
+                            <label>Password</label>
                             <input
                                 type="password"
                                 {...register('password', {
@@ -204,70 +113,27 @@ const Login = () => {
                                         message: 'Password must be at least 6 characters',
                                     },
                                 })}
-                                style={{
-                                    width: '100%',
-                                    padding: '14px 18px',
-                                    fontSize: '1.1rem',
-                                    borderRadius: '12px',
-                                    border: '2px solid #643fd4',
-                                    backgroundColor: '#fcfcfc',
-                                    outline: 'none',
-                                    transition: 'all 0.2s ease-in-out',
-                                }}
                             />
-                            {errors.password && <p style={{ color: 'red' }}>{errors.password.message}</p>}
+                            {errors.password && <p className="error-text">{errors.password.message}</p>}
                         </div>
 
-                        <button
-                            type="submit"
-                            disabled={isSubmitting}
-                            style={{
-                                width: '100%',
-                                padding: '16px 20px',
-                                marginTop: '10px',
-                                backgroundColor: '#643fd4',
-                                color: '#fcfcfc',
-                                border: 'none',
-                                borderRadius: '12px',
-                            }}
-                        >
+                        <button type="submit" className="submit-btn" disabled={isSubmitting}>
                             Login
                         </button>
-                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '8px' }}>
+
+                        <div className="forgot-password-wrapper">
                             <button
                                 type="button"
+                                className="forgot-password-btn"
                                 onClick={() => console.log('Forgot password clicked')}
-                                style={{
-                                    background: 'none',
-                                    border: 'none',
-                                    color: '#643fd4',
-                                    fontSize: '0.95rem',
-                                    fontWeight: '500',
-                                    cursor: 'pointer',
-                                    padding: '0',
-                                    transition: 'opacity 0.2s',
-                                }}
-                                onMouseOver={(e) => (e.currentTarget.style.textDecoration = 'underline')}
-                                onMouseOut={(e) => (e.currentTarget.style.textDecoration = 'none')}
                             >
                                 Forgot Password?
                             </button>
                         </div>
 
-                        <div style={{ marginTop: '20px', textAlign: 'center', fontSize: '1rem' }}>
-                            <span style={{ color: '#666' }}>Don't have an account? </span>
-                            <button
-                                type="button"
-                                onClick={() => console.log('Sign up')}
-                                style={{
-                                    background: 'none',
-                                    border: 'none',
-                                    color: '#643fd4',
-                                    fontWeight: 'bold',
-                                    cursor: 'pointer',
-                                    padding: '0 5px',
-                                }}
-                            >
+                        <div className="signup-wrapper">
+                            <span className="text-muted">Don't have an account? </span>
+                            <button type="button" className="signup-btn" onClick={() => console.log('Sign up')}>
                                 Sign Up
                             </button>
                         </div>
