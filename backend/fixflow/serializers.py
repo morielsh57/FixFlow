@@ -12,6 +12,7 @@ class prioritySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class userSerializer(serializers.ModelSerializer):
+    department = departmentSerializer()
     class Meta:
         model = CustomUser
         fields = ['id','username','first_name','last_name','email','phone_number','department']
