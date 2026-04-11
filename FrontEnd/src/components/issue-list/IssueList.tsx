@@ -1,33 +1,34 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
+import { useAppSelector } from '../../app/store';
 import './IssueList.scss';
+import CreateIssueModal from './issue-details/create-issue-modal/CreateIssueModal';
+import EditIssueModal from './issue-details/edit-issue-modal/EditIssueModal';
 import IssueCard from './IssueCard';
-import { mockIssues } from './issue.data';
-import { Issue } from './issue.types';
+import { useIssueListController } from './hooks/useIssueListController';
+
+const LOGGED_IN_USERNAME = 'emma';
 
 const IssueList = () => {
-  const [issues, setIssues] = useState<Issue[]>([]);
+  const { openIssueCreateModal } = useIssueListController();
+  const { issues, companyPersonForAssigne } = useAppSelector(
+    (state) => state.issuesReducer,
+  );
 
-  // replace this later with the real logged-in username from auth/store
-  const loggedInUsername = 'Emma';
-
-  const fetchIssues = async () => {
-    // later replace with real API call
-    setIssues(mockIssues);
-  };
-
-  useEffect(() => {
-    fetchIssues();
-
-    const intervalId = setInterval(() => {
-      fetchIssues();
-    }, 5000);
-
-    return () => clearInterval(intervalId);
-  }, []);
+  const loggedInPerson = useMemo(
+    () =>
+      companyPersonForAssigne.find(
+        (person) => person.username.toLowerCase() === LOGGED_IN_USERNAME,
+      ),
+    [companyPersonForAssigne],
+  );
 
   const userIssues = useMemo(() => {
-    return issues.filter((issue) => issue.assignee === loggedInUsername);
-  }, [issues, loggedInUsername]);
+    if (!loggedInPerson) {
+      return issues;
+    }
+
+    return issues.filter((issue) => issue.assigned === loggedInPerson.id);
+  }, [issues, loggedInPerson]);
 
   const openIssues = useMemo(() => {
     return userIssues.filter(
@@ -45,11 +46,19 @@ const IssueList = () => {
         <div>
           <h1 className="issue-list-page__title">My Issues</h1>
           <p className="issue-list-page__subtitle">
-            Logged in as {loggedInUsername}
+            Logged in as {loggedInPerson?.first_name ?? 'User'}
           </p>
         </div>
 
         <div className="issue-list-page__summary">
+          <button
+            type="button"
+            className="issue-list-page__create-button"
+            onClick={openIssueCreateModal}
+          >
+            Create Issue
+          </button>
+
           <div className="issue-list-page__summary-box">
             <span className="issue-list-page__summary-number">{openIssues.length}</span>
             <span className="issue-list-page__summary-label">Open</span>
@@ -85,6 +94,9 @@ const IssueList = () => {
           ))}
         </div>
       </section>
+
+      <CreateIssueModal />
+      <EditIssueModal />
     </div>
   );
 };

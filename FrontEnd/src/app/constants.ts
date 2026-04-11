@@ -12,6 +12,10 @@ export const API_ROUTES = {
     REFRESH: '/token/refresh/',
   },
   USERS: '/users/',
+  ISSUES: {
+    UPDATE_ISSUE: 'issues-new/',
+    CREATE_ISSUE: 'issues-new/',
+  },
 };
 
 export const AUTH_LOCAL_STORAGE_KEYS = {
