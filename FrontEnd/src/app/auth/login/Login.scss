@@ -9,7 +9,7 @@
     width: 100%;
     overflow-y: auto;
     overflow-x: hidden;
-    background-color: colors.$purple2;
+    background-color: colors.$neutral1;
 
     .main-content-split {
         display: flex;
@@ -78,7 +78,7 @@
                         font-size: 1.2rem;
                         border-radius: 12px;
                         border: 2px solid colors.$purple6;
-                        background-color: colors.$purple1;
+                        background-color: colors.$neutral1;
                         outline: none;
                         transition: all 0.2s ease-in-out;
 
@@ -99,7 +99,7 @@
                     padding: 20px;
                     margin-top: 15px;
                     background-color: colors.$purple6;
-                    color: colors.$purple1;
+                    color: colors.$neutral1;
                     border: none;
                     border-radius: 12px;
                     font-size: 1.3rem;
