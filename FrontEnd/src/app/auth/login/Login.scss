@@ -11,50 +11,6 @@
     overflow-x: hidden;
     background-color: colors.$purple2;
 
-    .welcome-container {
-        width: 100%;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        text-align: center;
-        gap: 25px;
-        margin-top: 20px;
-        margin-bottom: 40px;
-
-        .first-title {
-            color: colors.$neutral9;
-            font-size: 48px;
-            margin: 0;
-        }
-
-        .sub-title {
-            color: colors.$purple6;
-            width: 100%;
-            font-size: 30px;
-            text-align: center;
-            max-width: 1000px;
-            margin: 0 auto;
-        }
-    }
-
-    .Motivation-Sentences {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        text-align: center;
-        max-width: 600px;
-        margin-bottom: 40px;
-        font-size: 20px;
-
-        .sentences {
-            font-size: 1.2rem;
-            color: colors.$neutral9;
-            margin-bottom: 20px;
-            line-height: 1.5;
-        }
-    }
-
     .main-content-split {
         display: flex;
         flex-direction: row-reverse;
@@ -66,19 +22,11 @@
         margin: 0 auto;
         padding: 0 20px;
 
-        @media (max-width: 768px) {
-            flex-direction: column;
-            gap: 40px;
-        }
-
         .Login-Pic {
             display: flex;
             align-self: stretch;
             flex: 1;
             min-width: 400px;
-            @media (max-width: 768px) {
-                min-width: 100%;
-            }
 
             .Picture {
                 width: 100%;
@@ -87,6 +35,7 @@
                 object-position: right;
             }
         }
+
         .form-left-split {
             display: flex;
             flex-direction: column;
@@ -219,6 +168,19 @@
                         }
                     }
                 }
+            }
+        }
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .login-container {
+        .main-content-split {
+            flex-direction: column;
+            gap: 40px;
+
+            .Login-Pic {
+                min-width: 100%;
             }
         }
     }

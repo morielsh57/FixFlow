@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import './Login.scss';
+import './Login';
 import LoginPic from '../../../assets/images/LoginPic.jpg';
 import WelcomeMessage from './WelcomeMessage';
 import MotivationSentences from './MotivationSentences';
