@@ -1,6 +1,6 @@
 import { ActionReducerMapBuilder, createAction, createReducer } from '@reduxjs/toolkit';
 import { API_ROUTES } from '../../app/constants';
-import { apiServiceCSharp, createApiThunk } from '../../shared/api/axios';
+import { apiService, createApiThunk } from '../../shared/api/axios';
 import {
   APIRequestState,
   IAPIRequestState,
@@ -55,13 +55,13 @@ const createReducerKey = (subKey: string): string => {
 export const createIssueReqAction = createApiThunk<IIssue, IIssueCreateReqPayload>(
   createReducerKey('createIssueReqAction'),
   async (reqPayload?: IIssueCreateReqPayload) =>
-    apiServiceCSharp.post<IIssue>(`${API_ROUTES.ISSUES.CREATE_ISSUE}`, reqPayload),
+    apiService.post<IIssue>(`${API_ROUTES.ISSUES.CREATE_ISSUE}`, reqPayload),
 );
 
 export const updateIssueReqAction = createApiThunk<IIssue, IIssueUpdateReqPayload>(
   createReducerKey('updateIssueReqAction'),
   async (reqPayload?: IIssueUpdateReqPayload) =>
-    apiServiceCSharp.patch<IIssue>(`${API_ROUTES.ISSUES.UPDATE_ISSUE}`, reqPayload),
+    apiService.patch<IIssue>(`${API_ROUTES.ISSUES.UPDATE_ISSUE}`, reqPayload),
 );
 
 export const openCreateIssueModal = createAction(
