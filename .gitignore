@@ -1,4 +1,5 @@
 **/.env
+**/.env.stage
 **/.idea/
 **/.vscode/
 **/__pycache__/
