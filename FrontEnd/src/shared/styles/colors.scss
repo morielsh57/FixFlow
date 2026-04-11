@@ -1,98 +1,99 @@
-// teal
-$teal1: #f2fffa;
-$teal2: #e2fff3;
-$teal3: #c1ffe7;
-$teal4: #98ffd9;
-$teal5: #2fffc4;
-$teal6: #2cf0b9;
-$teal7: #26d0a0;
-$teal8: #1faa83;
-$teal9: #16785c;
+  // teal
+  $teal1: #f2fffa;
+  $teal2: #e2fff3;
+  $teal3: #c1ffe7;
+  $teal4: #98ffd9;
+  $teal5: #2fffc4;
+  $teal6: #2cf0b9;
+  $teal7: #26d0a0;
+  $teal8: #1faa83;
+  $teal9: #16785c;
 
-// yellow
-$yellow1: #fffefe;
-$yellow2: #fefcf8;
-$yellow3: #fff5e3;
-$yellow4: #ffe9bf;
-$yellow5: #ffd984;
-$yellow6: #ffd057;
-$yellow7: #b4933e;
-$yellow8: #7a652a;
-$yellow9: #3e3316;
-$stateWarning: $yellow6;
+  // yellow
+  $yellow1: #fffefe;
+  $yellow2: #fefcf8;
+  $yellow3: #fff5e3;
+  $yellow4: #ffe9bf;
+  $yellow5: #ffd984;
+  $yellow6: #ffd057;
+  $yellow7: #b4933e;
+  $yellow8: #7a652a;
+  $yellow9: #3e3316;
+  $stateWarning: $yellow6;
 
-// neutral
-$neutral1: #ffffff;
-$neutral2: #ecebeb;
-$neutral3: #c5c3c3;
-$neutral4: #a4a2a2;
-$neutral5: #878686;
-$neutral6: #636363;
-$neutral7: #424242;
-$neutral8: #222222;
-$neutral9: #000000;
+  // neutral
+  $neutral1: #ffffff;
+  $neutral2: #ecebeb;
+  $neutral3: #c5c3c3;
+  $neutral4: #a4a2a2;
+  $neutral5: #878686;
+  $neutral6: #636363;
+  $neutral7: #424242;
+  $neutral8: #222222;
+  $neutral9: #000000;
 
-// red
-$red1: #ffedef;
-$red2: #fed7db;
-$red3: #ffa4b1;
-$red4: #ff607d;
-$red5: #d7516a;
-$red6: #ae4256;
-$red7: #843241;
-$red8: #58212b;
-$red9: #2d1016;
-$stateError: $red4;
+  // red
+  $red1: #ffedef;
+  $red2: #fed7db;
+  $red3: #ffa4b1;
+  $red4: #ff607d;
+  $red5: #d7516a;
+  $red6: #ae4256;
+  $red7: #843241;
+  $red8: #58212b;
+  $red9: #2d1016;
+  $stateError: $red4;
 
-// blue
-$blue1: #fefeff;
-$blue2: #fbfcff;
-$blue3: #f1f3ff;
-$blue4: #dbe4ff;
-$blue5: #bccdff;
-$blue6: #91b0ff;
-$blue7: #277dfe;
-$blue8: #1f67d3;
-$blue9: #174a96;
+  // blue
+  $blue1: #fefeff;
+  $blue2: #fbfcff;
+  $blue3: #f1f3ff;
+  $blue4: #dbe4ff;
+  $blue5: #bccdff;
+  $blue6: #91b0ff;
+  $blue7: #277dfe;
+  $blue8: #1f67d3;
+  $blue9: #174a96;
 
-// green
-$green1: #c9cdcb;
-$green2: #929d9b;
-$green3: #74807c;
-$green4: #566862;
-$green5: #3a564e;
-$green6: #263933;
-$green7: #1e2c28;
-$green8: #121a18;
-$green9: #0d1311;
-$green10: #ddfddd;
-$green20: #c2fac2;
-$green30: #a0fba0;
-$green40: #86fd86;
-$green50: #62fc62;
-$green60: #53ca53;
-$green70: #3e983e;
-$green80: #296429;
-$green90: #133213;
+  // green
+  $green1: #c9cdcb;
+  $green2: #929d9b;
+  $green3: #74807c;
+  $green4: #566862;
+  $green5: #3a564e;
+  $green6: #263933;
+  $green7: #1e2c28;
+  $green8: #121a18;
+  $green9: #0d1311;
+  $green10: #ddfddd;
+  $green20: #c2fac2;
+  $green30: #a0fba0;
+  $green40: #86fd86;
+  $green50: #62fc62;
+  $green60: #53ca53;
+  $green70: #3e983e;
+  $green80: #296429;
+  $green90: #133213;
 
-// purple
-$purple1: #f1effd;
-$purple2: #ded7fb;
-$purple3: #c7bdfc;
-$purple4: #a490fe;
-$purple5: #774bfd;
-$purple6: #643fd4;
-$purple7: #4a2c9d;
-$purple8: #311b6c;
-$purple9: #190e36;
+  // purple
+  $purple1: #f1effd;
+  $purple2: #ded7fb;
+  $purple3: #c7bdfc;
+  $purple4: #a490fe;
+  $purple5: #774bfd;
+  $purple6: #643fd4;
+  $purple7: #4a2c9d;
+  $purple8: #311b6c;
+  $purple9: #190e36;
 
-// orange
-$orange1: #ffefd3;
-$orange2: #ffe0a6;
-$orange3: #ffd07a;
-$orange4: #ffc14d;
-$orange5: #ffb121;
-$orange6: #cc8e1a;
-$orange7: #996a14;
-$orange8: #66470d;
-$orange9: #332307;
+  // orange
+  $orange1: #FFEFD3;
+  $orange2: #FFE0A6;
+  $orange3: #FFD07A;
+  $orange4: #FFC14D;
+  $orange5: #FFB121;
+  $orange6: #CC8E1A;
+  $orange7: #996A14;
+  $orange8: #66470D;
+  $orange9: #332307;
+  
