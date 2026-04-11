@@ -1,0 +1,99 @@
+@import '../../../../shared/styles/style.index.scss';
+
+.issue-details-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background-color: rgba($neutral9, 0);
+  @include displayFlex(flex-end, stretch, row);
+  opacity: 0;
+  transition: opacity 0.26s ease, background-color 0.26s ease;
+
+  &.issue-details-modal-overlay-open {
+    opacity: 1;
+    background-color: rgba($neutral9, 0.42);
+  }
+
+  &.issue-details-modal-overlay-close {
+    opacity: 0;
+    background-color: rgba($neutral9, 0);
+  }
+
+  .issue-details-modal-panel {
+    width: min(100%, 560px);
+    height: 100%;
+    background-color: $neutral1;
+    border-left: 4px solid $purple6;
+    transform: translateX(100%);
+    transition: transform 0.26s ease, opacity 0.26s ease;
+    opacity: 0;
+    @include displayFlex(flex-start, stretch, column);
+
+    &.issue-details-modal-panel-open {
+      transform: translateX(0);
+      opacity: 1;
+    }
+
+    &.issue-details-modal-panel-close {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+
+    .issue-details-modal-header {
+      @include displayFlex(space-between, center, row);
+      gap: 12px;
+      padding: 18px 18px 14px;
+      border-bottom: 1px solid $purple2;
+
+      .issue-details-modal-title {
+        margin: 0;
+        color: $purple8;
+        font-size: 1.3rem;
+        font-weight: 700;
+      }
+
+      .issue-details-modal-close-button {
+        border: 1px solid $purple4;
+        border-radius: 999px;
+        background-color: $neutral1;
+        color: $purple7;
+        padding: 6px 12px;
+        font-size: 0.82rem;
+        font-weight: 700;
+      }
+
+      .issue-details-modal-close-button:hover {
+        background-color: $purple1;
+      }
+    }
+
+    .issue-details-modal-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 18px;
+      @include appScrollbar;
+    }
+  }
+}
+
+@media only screen and (max-width: 700px) {
+  .issue-details-modal-overlay {
+    .issue-details-modal-panel {
+      width: 100%;
+      border-left: none;
+      border-top: 4px solid $purple6;
+    }
+
+    .issue-details-modal-header {
+      padding: 14px;
+    }
+
+    .issue-details-modal-title {
+      font-size: 1.1rem;
+    }
+
+    .issue-details-modal-content {
+      padding: 14px;
+    }
+  }
+}
