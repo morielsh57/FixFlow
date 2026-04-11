@@ -50,19 +50,21 @@ const IssueCard = ({ issue }: Props) => {
 
       <p className="issue-card__description">{issue.description}</p>
 
-      <div className="issue-card__footer">
-        <span className="issue-card__label">Assignee:</span>
-        <span className="issue-card__assignee">{assigneeLabel}</span>
-      </div>
+      <div className="issue-card__labels">
+        <span className="issue-card__chip">
+          <span className="issue-card__label">Assignee:</span>
+          <span className="issue-card__assignee">{assigneeLabel}</span>
+        </span>
 
-      <div className="issue-card__footer">
-        <span className="issue-card__label">Location:</span>
-        <span className="issue-card__assignee">{issue.location}</span>
-      </div>
+        <span className="issue-card__chip">
+          <span className="issue-card__label">Location:</span>
+          <span className="issue-card__assignee">{issue.location}</span>
+        </span>
 
-      <div className="issue-card__footer">
-        <span className="issue-card__label">Priority:</span>
-        <span className="issue-card__assignee">{priorityLabel}</span>
+        <span className="issue-card__chip">
+          <span className="issue-card__label">Priority:</span>
+          <span className="issue-card__assignee">{priorityLabel}</span>
+        </span>
       </div>
     </article>
   );
