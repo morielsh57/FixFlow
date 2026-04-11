@@ -79,7 +79,16 @@ The DB table that has been queried, the method that should be used, the expected
         <td>
             Success: status = 200<br/>
             {<br/>
-                "data" : &lt;user item&gt;,<br/>
+                "data" : <br/>
+                {<br/>
+                    "id": &lt;int&gt;,<br/>
+                    "username": &lt;string&gt;,<br/>
+                    "first_name": &lt;string&gt;,<br/>
+                    "last_name": &lt;string&gt;,<br/>
+                    "email": &lt;string&gt;,<br/>
+                    "phone_number": &lt;string&gt;,<br/>
+                    "department": &lt;Department object&gt;,<br/>
+                },<br/>
                 "msg" : "user fetched successfully"<br/>
             }
             <hr/>
@@ -164,7 +173,19 @@ The DB table that has been queried, the method that should be used, the expected
         <td>
             Success: status = 200<br/>
             {<br/>
-                "data" : &lt;Ticket item&gt;,<br/>
+                "data" :<br/>
+                {<br/>
+                    "id":&lt;int&gt;,<br/>
+                    "priority": &lt;Priority object&gt;,<br/>
+                    "requester": &lt;User object&gt;,<br/>
+                    "assigned": &lt;User object&gt;,<br/>
+                    "date_created": &lt;Date time string&gt;,<br/>
+                    "date_updated": &lt;Date time string&gt;,<br/>
+                    "title": &lt;string&gt;,<br/>
+                    "description": &lt;string&gt;,<br/>
+                    "location": &lt;string&gt;,<br/>
+                    "status": &lt;Open/In Progress/Closed&gt;<br/>
+                },<br/>
                 "msg" : "Ticket fetched successfully"<br/>
             }
             <hr/>
@@ -194,7 +215,7 @@ The DB table that has been queried, the method that should be used, the expected
         <td>
             Success: status = 200<br/>
             {<br/>
-                "data" : &lt;Ticket item&gt;,<br/>
+                "data" : &lt;Ticket object&gt;,<br/>
                 "msg":"Ticket updated successfully"<br/>
             }
             <hr/>
@@ -230,7 +251,7 @@ The DB table that has been queried, the method that should be used, the expected
         <td>
             Success: status = 201<br/>
             {<br/>
-                "data" : &lt;Ticket item&gt;,<br/>
+                "data" : &lt;Ticket object&gt;,<br/>
                 "msg":"Ticket created successfully"<br/>
             }
             <hr/>
@@ -264,8 +285,8 @@ The DB table that has been queried, the method that should be used, the expected
         <td>
             Success: status = 200<br/>
             {<br/>
-                "data": &lt;department item&gt;,<br/>
-                "msg":"department item fetched successfully"<br/>
+                "data": &lt;department object&gt;,<br/>
+                "msg":"department object fetched successfully"<br/>
             }
             <hr/>
             Failed: status = 404<br/>
@@ -285,13 +306,13 @@ The DB table that has been queried, the method that should be used, the expected
         <td>
             Success: status = 201<br/>
             {<br/>
-                "data": &lt;department item&gt;,<br/>
-                "msg":"department item created successfully"<br/>
+                "data": &lt;department object&gt;,<br/>
+                "msg":"department object created successfully"<br/>
             }
             <hr/>
             Failed: status = 400<br/>
             {<br/>
-                "msg":"failed to create a department item",<br/>
+                "msg":"failed to create a department object",<br/>
                 "error":&lt;error_msg&gt;<br/>
             }
         </td>
@@ -307,8 +328,12 @@ The DB table that has been queried, the method that should be used, the expected
         <td>
             Success: status = 200<br/>
             {<br/>
-                "data": &lt;department item&gt;,<br/>
-                "msg":"department item updated successfully"<br/>
+                "data": <br/>
+                    {<br/>
+                        "id": &lt;int&gt;,<br/>
+                        "title": &lt;string&gt;<br/>
+                    },<br/>
+                "msg":"department object updated successfully"<br/>
             }
             <hr/>
             Failed: status = 404<br/>
@@ -318,7 +343,7 @@ The DB table that has been queried, the method that should be used, the expected
             <hr/>
             Failed: status = 400<br/>
             {<br/>
-                "msg":"failed to update a department item",<br/>
+                "msg":"failed to update a department object",<br/>
                 "error":&lt;error_msg&gt;<br/>
             }
         </td>
@@ -346,13 +371,17 @@ The DB table that has been queried, the method that should be used, the expected
         <td>
             Success: status = 200<br/>
             {<br/>
-                "data": &lt;priority item&gt;,<br/>
-                "msg":"priority item fetched successfully"<br/>
+                "data": <br/>
+                    {<br/>
+                        "id": &lt;int&gt;,<br/>
+                        "title": &lt;string&gt;<br/>
+                    },<br/> 
+                "msg":"priority object fetched successfully"<br/>
             }
             <hr/>
             Failed: status = 404<br/>
             {<br/>
-                "msg" : "priority item not found",<br/>
+                "msg" : "priority object not found",<br/>
                 "error" : &lt;error_msg&gt;<br/>
             }
         </td>
@@ -368,19 +397,19 @@ The DB table that has been queried, the method that should be used, the expected
         <td>
             Success: status = 200<br/>
             {<br/>
-                "data": &lt;item&gt;,<br/>
-                "msg":"priority item updated successfully"<br/>
+                "data": &lt;priority object&gt;,<br/>
+                "msg":"priority object updated successfully"<br/>
             }
             <hr/>
             Failed: status = 404<br/>
             {<br/>
-                "msg" : "priority item not found",<br/>
+                "msg" : "priority object not found",<br/>
                 "error" : &lt;error_msg&gt;<br/>
             }
             <hr/>
             Failed: status = 400<br/>
             {<br/>
-                "msg" : "failed to update a priority item",<br/>
+                "msg" : "failed to update a priority object",<br/>
                 "error" : &lt;error_msg&gt;<br/>
             }
         </td>
@@ -396,13 +425,13 @@ The DB table that has been queried, the method that should be used, the expected
         <td>
             Success: status = 201<br/>
             {<br/>
-                "data": &lt;item&gt;,<br/>
-                "msg":"priority item created successfully"<br/>
+                "data": &lt;priority object&gt;,<br/>
+                "msg":"priority object created successfully"<br/>
             }
             <hr/>
             Failed: status = 400<br/>
             {<br/>
-                "msg" : "failed to create a priority item",<br/>
+                "msg" : "failed to create a priority object",<br/>
                 "error" : &lt;error_msg&gt;<br/>
             }
         </td>
