@@ -120,9 +120,9 @@
                     margin-top: 15px;
 
                     .forgot-password-btn {
-                        background: transparent !important;
-                        border: none !important;
-                        outline: none !important;
+                        background: transparent;
+                        border: none;
+                        outline: none;
                         color: colors.$purple6;
                         font-size: 1.05rem;
                         font-weight: 500;
@@ -132,8 +132,8 @@
 
                         &:hover,
                         &:focus {
-                            background: transparent !important;
-                            outline: none !important;
+                            background: transparent;
+                            outline: none;
                             text-decoration: underline;
                             color: colors.$purple7;
                         }
@@ -150,9 +150,9 @@
                     }
 
                     .signup-btn {
-                        background: transparent !important;
-                        border: none !important;
-                        outline: none !important;
+                        background: transparent;
+                        border: none;
+                        outline: none;
                         color: colors.$purple6;
                         font-weight: bold;
                         cursor: pointer;
@@ -161,8 +161,8 @@
 
                         &:hover,
                         &:focus {
-                            background: transparent !important;
-                            outline: none !important;
+                            background: transparent;
+                            outline: none;
                             text-decoration: underline;
                             color: colors.$purple8;
                         }
