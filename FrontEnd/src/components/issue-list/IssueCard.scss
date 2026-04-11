@@ -1,0 +1,70 @@
+@import '../../shared/styles/style.index.scss';
+
+.issue-card {
+  @include cardStyle;
+  margin-bottom: 0;
+}
+
+.issue-card__top {
+  @include displayFlex(space-between, center, row, wrap);
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.issue-card__title {
+  margin: 0;
+  color: $purple8;
+  font-size: 1.2rem;
+  font-weight: 700;
+}
+
+.issue-card__description {
+  margin: 0 0 16px;
+  color: $neutral7;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.issue-card__footer {
+  @include displayFlex(flex-start, center, row, wrap);
+  gap: 6px;
+  color: $neutral6;
+  font-size: 0.9rem;
+}
+
+.issue-card__label {
+  font-weight: 700;
+  color: $purple7;
+}
+
+.issue-card__assignee {
+  color: $neutral8;
+}
+
+.issue-card__status {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  border: 1px solid transparent;
+}
+
+.issue-card__status--open {
+  background-color: $yellow3;
+  color: $yellow8;
+  border-color: $yellow5;
+}
+
+.issue-card__status--in-progress {
+  background-color: $blue4;
+  color: $blue9;
+  border-color: $blue6;
+}
+
+.issue-card__status--closed {
+  background-color: $green10;
+  color: $green80;
+  border-color: $green30;
+}
