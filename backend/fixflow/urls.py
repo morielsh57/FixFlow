@@ -1,4 +1,3 @@
-from rest_framework_simplejwt.views import TokenObtainPairView
 from django.urls import path
 from . import views
 
@@ -8,7 +7,7 @@ urlpatterns = [
     path('users/', views.get_all_users),
     path('users/<int:id>/', views.get_user),
     path('change-password/', views.change_password),
-    path('login/', TokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('login/', views.MyTokenObtainPairView.as_view(), name='token_obtain_pair'),
     # Issues
     path('all-issues/', views.tickets),
     path('issue/<int:ticket_id>/', views.ticket_detail),
