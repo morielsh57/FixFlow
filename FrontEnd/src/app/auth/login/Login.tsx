@@ -2,13 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import './Login';
 import LoginPic from '../../../assets/images/LoginPic.jpg';
-import WelcomeMessage from './WelcomeMessage';
-import MotivationSentences from './MotivationSentences';
+import WelcomeMessage from './Welcome-Message/WelcomeMessage';
+import MotivationSentences from './Motivation-Message/MotivationSentences';
 
 const Picture = () => {
     return (
         <div className="Login-Pic">
-            <img src={LoginPic} className="Picture"></img>
+            <img src={LoginPic} className="Picture" alt="login" />
         </div>
     );
 };
