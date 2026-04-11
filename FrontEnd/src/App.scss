@@ -1,103 +1,101 @@
 @import './shared/styles/style.index.scss';
 
 .App {
-  width: 100vw;
-  height: 100vh;
-  min-height: -webkit-fill-available;
-  overflow: hidden;
-  margin: auto;
+    width: 100vw;
+    height: 100vh;
+    min-height: -webkit-fill-available;
+    overflow: hidden;
+    margin: auto;
 
-  &>* {
-    height: 100%;
-    width: 100%;
-  }
-
-  h1 {
-
-    // h1 and all its children
-    &,
-    * {
-      font-size: 32px;
-      font-family: 'Ultra' !important;
-      font-weight: normal;
-      color: $purple6;
-    }
-  }
-
-  h2,
-  h3,
-  h4,
-  h5,
-  h6 {
-
-    // h tags and all its children
-    &,
-    * {
-      color: $purple8;
-      font-family: 'Arial' !important;
-      font-weight: bold;
-    }
-  }
-
-  h2 {
-    font-size: 24px;
-  }
-
-  h3 {
-    font-size: 20px;
-  }
-
-  a {
-    color: $purple6;
-    font-size: 16px;
-  }
-
-  button:not(.mobile-navbar-trigger) {
-    font-size: 16px;
-    background-color: transparent;
-    color: $purple7;
-    border: 1px solid $purple7;
-    border-radius: 8px;
-    padding: 8px 16px;
-    cursor: pointer;
-    transition: all .3s ease;
-
-    &:hover {
-      background-color: $purple7;
-      color: white;
+    & > * {
+        height: 100%;
+        width: 100%;
     }
 
-    &:active {
-      transform: scale(0.9);
+    h1 {
+        // h1 and all its children
+        &,
+        * {
+            font-size: 32px;
+            font-family: 'Ultra' !important;
+            font-weight: normal;
+            color: $purple6;
+        }
     }
-  }
 
-  .app-card {
-    @include cardStyle;
-  }
+    h2,
+    h3,
+    h4,
+    h5,
+    h6 {
+        // h tags and all its children
+        &,
+        * {
+            color: $purple8;
+            font-family: 'Arial' !important;
+            font-weight: bold;
+        }
+    }
 
-  .rtl-list {
-    list-style: none;
-    padding-left: 0;
-    padding-right: 1.25rem;
-    // bullets will appear on the right in RTL
-    list-style-position: outside;
-    direction: rtl;
-    text-align: right;
+    h2 {
+        font-size: 24px;
+    }
 
-    li {
-      position: relative;
-      padding-right: 1.2rem; // space for the bullet on the right
-      margin: 4px 0;
+    h3 {
+        font-size: 20px;
+    }
 
-      &::before {
-        content: "•";
-        position: absolute;
-        right: 0; // bullet on the right
-        top: 0.35em;
-        font-size: 0.9em;
+    a {
         color: $purple6;
-      }
+        font-size: 16px;
     }
-  }
+
+    button:not(.mobile-navbar-trigger) {
+        font-size: 16px;
+        background-color: transparent;
+        color: $purple7;
+        border: 1px solid $purple7;
+        border-radius: 8px;
+        padding: 8px 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+
+        &:hover {
+            background-color: $purple7;
+            color: white;
+        }
+
+        &:active {
+            transform: scale(0.9);
+        }
+    }
+
+    .app-card {
+        @include cardStyle;
+    }
+
+    .rtl-list {
+        list-style: none;
+        padding-left: 0;
+        padding-right: 1.25rem;
+        // bullets will appear on the right in RTL
+        list-style-position: outside;
+        direction: rtl;
+        text-align: right;
+
+        li {
+            position: relative;
+            padding-right: 1.2rem; // space for the bullet on the right
+            margin: 4px 0;
+
+            &::before {
+                content: '•';
+                position: absolute;
+                right: 0; // bullet on the right
+                top: 0.35em;
+                font-size: 0.9em;
+                color: $purple6;
+            }
+        }
+    }
 }
