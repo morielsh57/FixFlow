@@ -1,0 +1,123 @@
+@import '../../../../shared/styles/style.index.scss';
+
+@mixin issueDetailsFormInputBase {
+  width: 100%;
+  border: 1px solid $purple3;
+  border-radius: 10px;
+  background-color: $neutral1;
+  color: $neutral8;
+  font-size: 0.95rem;
+  padding: 10px 12px;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.issue-details-form {
+  @include displayFlex(flex-start, stretch, column);
+  gap: 14px;
+
+  .issue-details-form-field {
+    @include displayFlex(flex-start, stretch, column);
+    gap: 6px;
+  }
+
+  .issue-details-form-label {
+    color: $purple7;
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+
+  .issue-details-form-input {
+    @include issueDetailsFormInputBase;
+  }
+
+  .issue-details-form-textarea {
+    @include issueDetailsFormInputBase;
+    resize: vertical;
+    min-height: 104px;
+  }
+
+  .issue-details-form-select {
+    @include issueDetailsFormInputBase;
+    cursor: pointer;
+
+    option {
+      background-color: $neutral1;
+      color: $neutral8;
+    }
+  }
+
+  .issue-details-form-app-select {
+    width: 100%;
+  }
+
+  .issue-details-form-input:focus,
+  .issue-details-form-textarea:focus,
+  .issue-details-form-select:focus {
+    border-color: $purple5;
+    box-shadow: 0 0 0 3px rgba($purple3, 0.42);
+  }
+
+  .issue-details-form-error {
+    margin: 0;
+    color: $red6;
+    font-size: 0.8rem;
+    font-weight: 600;
+  }
+
+  .issue-details-form-submit-button {
+    border: 1px solid $purple6;
+    border-radius: 10px;
+    background-color: $purple6;
+    color: $neutral1;
+    padding: 10px 14px;
+    font-size: 0.92rem;
+    font-weight: 700;
+  }
+
+  .issue-details-form-submit-button:hover {
+    background-color: $purple7;
+    border-color: $purple7;
+  }
+
+  .issue-details-form-submit-button:disabled {
+    background-color: $neutral4;
+    border-color: $neutral4;
+    cursor: not-allowed;
+  }
+
+  .issue-details-form-auto-save {
+    margin: 0;
+    color: $neutral6;
+    font-size: 0.82rem;
+  }
+
+  .issue-details-form-request-error {
+    margin: 0;
+    color: $red6;
+    font-size: 0.82rem;
+    font-weight: 600;
+  }
+
+}
+
+@media only screen and (max-width: 700px) {
+  .issue-details-form {
+    gap: 12px;
+
+    .issue-details-form-input,
+    .issue-details-form-textarea,
+    .issue-details-form-select {
+      font-size: 0.9rem;
+      padding: 9px 10px;
+    }
+
+    .issue-details-form-app-select {
+      width: 100%;
+    }
+
+    .issue-details-form-submit-button {
+      width: 100%;
+    }
+  }
+}
