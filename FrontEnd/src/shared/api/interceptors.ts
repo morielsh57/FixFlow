@@ -2,6 +2,7 @@ import type { InternalAxiosRequestConfig } from 'axios';
 import { getItemFromLocalStorage } from '../utils/localStorage.utils';
 import { EnhancedStore } from '@reduxjs/toolkit';
 import { RootState } from '../../app/store';
+import { AUTH_LOCAL_STORAGE_KEYS } from '../../app/constants';
 
 /**
  * Injecting the store to be able to use it inside axios interceptors
@@ -20,7 +21,7 @@ export const injectStoreAxiosInterceptors = (_store: EnhancedStore) => {
  */
 export const addAuthorizationHeaderInterceptor = (config: InternalAxiosRequestConfig) => {
   try {
-    let token = getItemFromLocalStorage<string>("tokenLocalStorageKey");
+    const token = getItemFromLocalStorage<string>(AUTH_LOCAL_STORAGE_KEYS.ACCESS_TOKEN);
     if (config?.headers) {
       // if there is a token saved try to use it and set it in the headers in the request.
       if (token) {

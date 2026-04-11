@@ -5,9 +5,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import { sharedStoreReducer } from '../shared/store/shared.store';
 import { injectStoreAxiosInterceptors } from '../shared/api/interceptors';
 import { enableMapSet } from 'immer';
+import { authStoreReducer } from './auth/auth.store';
+import { userStoreReducer } from '../shared/store/user.store';
 
 export const rootReducer = {
   sharedStoreReducer,
+  authStoreReducer,
+  userStoreReducer,
 };
 
 enableMapSet();
