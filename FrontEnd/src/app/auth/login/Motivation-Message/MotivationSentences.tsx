@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import './MotivationSentences.scss';
 
 const MESSAGES = [
     'Unlock a world of possibilities.',

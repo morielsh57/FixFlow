@@ -1,3 +1,5 @@
+import './WelcomeMessage.scss';
+
 const WelcomeMessage = () => {
     return (
         <div className="welcome-container">

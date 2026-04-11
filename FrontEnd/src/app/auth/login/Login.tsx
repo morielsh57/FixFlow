@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
-import './Login';
+import './Login.scss';
 import LoginPic from '../../../assets/images/LoginPic.jpg';
 import WelcomeMessage from './Welcome-Message/WelcomeMessage';
 import MotivationSentences from './Motivation-Message/MotivationSentences';
+import './Welcome-Message/WelcomeMessage.scss';
 
 const Picture = () => {
     return (
@@ -36,7 +37,9 @@ const Login = () => {
                 <Picture />
 
                 <div className="form-left-split">
-                    <h1>Login</h1>
+                    <div className="Login-Title">
+                        <h1>Login</h1>
+                    </div>
                     <form className="login-form" onSubmit={handleSubmit(onSubmit)}>
                         {/* Email Field */}
                         <div className="input-group">

@@ -43,6 +43,13 @@
             align-items: center;
             flex: 1;
 
+            .Login-Title {
+                margin-bottom: 30px;
+                color: colors.$purple6;
+                font-size: 36px;
+                margin: 0;
+            }
+
             .login-form {
                 max-width: 550px;
                 width: 100%;
