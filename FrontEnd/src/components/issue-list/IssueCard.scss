@@ -3,6 +3,7 @@
 .issue-card {
   @include cardStyle;
   margin-bottom: 0;
+  cursor: pointer;
 }
 
 .issue-card__top {
@@ -25,11 +26,20 @@
   line-height: 1.5;
 }
 
-.issue-card__footer {
+.issue-card__labels {
   @include displayFlex(flex-start, center, row, wrap);
+  gap: 10px;
+}
+
+.issue-card__chip {
+  @include displayFlex(flex-start, center, row, nowrap);
   gap: 6px;
-  color: $neutral6;
-  font-size: 0.9rem;
+  padding: 7px 12px;
+  border-radius: 999px;
+  background-color: rgba($neutral2, 0.5);
+  border: 1px solid $neutral3;
+  color: $neutral7;
+  font-size: 0.88rem;
 }
 
 .issue-card__label {
@@ -39,6 +49,7 @@
 
 .issue-card__assignee {
   color: $neutral8;
+  word-break: break-word;
 }
 
 .issue-card__status {

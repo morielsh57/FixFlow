@@ -64,7 +64,7 @@ export const createApiThunk = <TData, TArgs = void>(
  * An axios instance using our base url, and later our token
  */
 // Create the main apiService with the default base URL
-export const apiServiceCSharp = createAxiosInstance(`${process.env.REACT_APP_BASE_URL_CSHARP}`);
+export const apiService = createAxiosInstance(`${process.env.REACT_APP_BASE_URL_SERVER}`);
 
 /**
  * Create an Axios instance with the specified base URL
