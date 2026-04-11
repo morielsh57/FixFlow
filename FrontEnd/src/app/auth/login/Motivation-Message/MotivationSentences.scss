@@ -1,4 +1,4 @@
-@use '../../../../shared/styles/colors';
+@import '../../../../shared/styles/style.index.scss';
 
 .Motivation-Sentences {
     display: flex;
@@ -12,7 +12,7 @@
 
     h2.sentences {
         font-size: 1.2rem;
-        color: colors.$neutral9 !important;
+        color: $neutral9 !important;
         margin-bottom: 20px;
         line-height: 1.5;
     }

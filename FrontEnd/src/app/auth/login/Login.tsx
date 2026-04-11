@@ -8,8 +8,8 @@ import './Welcome-Message/WelcomeMessage.scss';
 
 const Picture = () => {
     return (
-        <div className="Login-Pic">
-            <img src={LoginPic} className="Picture" alt="login" />
+        <div className="login-Pic">
+            <img src={LoginPic} className="picture" alt="login" />
         </div>
     );
 };
