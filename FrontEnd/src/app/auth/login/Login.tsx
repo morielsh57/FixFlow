@@ -14,7 +14,7 @@ const Picture = () => {
     );
 };
 type LoginFormData = {
-    email: string;
+    Username: string;
     password: string;
 };
 
@@ -41,20 +41,20 @@ const Login = () => {
                         <h1>Login</h1>
                     </div>
                     <form className="login-form" onSubmit={handleSubmit(onSubmit)}>
-                        {/* Email Field */}
+                        {/* Username Field */}
                         <div className="input-group">
-                            <label>Email</label>
+                            <label>Username</label>
                             <input
-                                type="email"
-                                {...register('email', {
-                                    required: 'Email is required',
-                                    pattern: {
-                                        value: /^\S+@\S+$/i,
-                                        message: 'Invalid email address',
+                                type="text"
+                                {...register('Username', {
+                                    required: 'Username is required',
+                                    minLength: {
+                                        value: 3,
+                                        message: 'Username must be at least 3 characters',
                                     },
                                 })}
                             />
-                            {errors.email && <p className="error-text">{errors.email.message}</p>}
+                            {errors.Username && <p className="error-text">{errors.Username.message}</p>}
                         </div>
 
                         <div className="input-group password-group">
