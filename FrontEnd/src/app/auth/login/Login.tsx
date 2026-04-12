@@ -1,10 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { Spin } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
 import './Login.scss';
 import LoginPic from '../../../assets/images/LoginPic.jpg';
 import WelcomeMessage from './Welcome-Message/WelcomeMessage';
 import MotivationSentences from './Motivation-Message/MotivationSentences';
 import './Welcome-Message/WelcomeMessage.scss';
+import { useAppDispatch, useAppSelector } from '../../store';
+import { loginRequest } from '../auth.store';
+import { EAPIStatus } from '../../../shared/api/models';
 
 const Picture = () => {
     return (
@@ -14,7 +19,7 @@ const Picture = () => {
     );
 };
 type LoginFormData = {
-    Username: string;
+    username: string;
     password: string;
 };
 
@@ -22,11 +27,21 @@ const Login = () => {
     const {
         register,
         handleSubmit,
-        formState: { errors, isSubmitting },
+        formState: { errors },
     } = useForm<LoginFormData>();
+    const dispatch = useAppDispatch();
+    const { loginRes } = useAppSelector((state) => state.authStoreReducer);
+    const { getUserByIdRequest } = useAppSelector((state) => state.userStoreReducer);
+    const [loginErrorMsg, setLoginErrorMsg] = useState<string | null>(null);
+    const isLoginPending = loginRes.status === EAPIStatus.PENDING;
+    const isUserInfoPending = getUserByIdRequest.status === EAPIStatus.PENDING;
+    const isSubmitLoading = isLoginPending || isUserInfoPending;
 
     const onSubmit = (data: LoginFormData) => {
-        console.log('Login data:', data);
+        setLoginErrorMsg(null);
+        dispatch(loginRequest(data))
+            .unwrap()
+            .catch(() => setLoginErrorMsg('Invalid username or password. Please try again.'));
     };
 
     return (
@@ -46,7 +61,7 @@ const Login = () => {
                             <label>Username</label>
                             <input
                                 type="text"
-                                {...register('Username', {
+                                {...register('username', {
                                     required: 'Username is required',
                                     minLength: {
                                         value: 3,
@@ -54,7 +69,7 @@ const Login = () => {
                                     },
                                 })}
                             />
-                            {errors.Username && <p className="error-text">{errors.Username.message}</p>}
+                            {errors.username && <p className="error-text">{errors.username.message}</p>}
                         </div>
 
                         <div className="input-group password-group">
@@ -64,17 +79,26 @@ const Login = () => {
                                 {...register('password', {
                                     required: 'Password is required',
                                     minLength: {
-                                        value: 6,
-                                        message: 'Password must be at least 6 characters',
+                                        value: 8,
+                                        message: 'Password must be at least 8 characters',
                                     },
                                 })}
                             />
                             {errors.password && <p className="error-text">{errors.password.message}</p>}
                         </div>
 
-                        <button type="submit" className="submit-btn" disabled={isSubmitting}>
-                            Login
-                        </button>
+                        <div className="submit-btn-wrapper">
+                            {loginErrorMsg && <p className="login-request-error">{loginErrorMsg}</p>}
+                            <button type="submit" className="submit-btn" disabled={isSubmitLoading}>
+                                <span className="submit-btn-content">
+                                    {isSubmitLoading ? (
+                                        <Spin indicator={<LoadingOutlined className="login-btn-spinner-icon" spin />} />
+                                    ) : (
+                                        'Login'
+                                    )}
+                                </span>
+                            </button>
+                        </div>
 
                         <div className="forgot-password-wrapper">
                             <button
