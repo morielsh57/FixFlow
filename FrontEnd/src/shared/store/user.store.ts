@@ -1,6 +1,6 @@
 import type { ActionReducerMapBuilder } from '@reduxjs/toolkit';
 import { createReducer } from '@reduxjs/toolkit';
-import { API_ROUTES, AUTH_LOCAL_STORAGE_KEYS } from '../../app/constants';
+import { API_ROUTES } from '../../app/constants';
 import { apiService, createApiThunk } from '../api/axios';
 import { APIRequestState, type IAPIRequestState } from '../api/models';
 import { createAPIReducerCases, type ApiDataStateType } from './utils';
@@ -22,7 +22,7 @@ const initialState: UserStoreState = {
 
 export const getUserById = createApiThunk(
   'user/userById',
-  (params?: {id?: number}) => apiService.get<IGetUserByIdResponse>(`${API_ROUTES.USERS}/${params?.id}`),
+  (params?: {id?: number}) => apiService.get<IGetUserByIdResponse>(`${API_ROUTES.USERS}${params?.id}/`),
 );
 
 export const getUsersThunk = createApiThunk(
