@@ -137,6 +137,19 @@
                             cursor: not-allowed;
                         }
                     }
+
+                    .submit-btn-content {
+                        display: inline-flex;
+                        align-items: center;
+                        justify-content: center;
+                        min-height: 24px;
+                        width: 100%;
+
+                        .login-btn-spinner-icon {
+                            color: $neutral1;
+                            font-size: 22px;
+                        }
+                    }
                 }
 
                 .forgot-password-wrapper {

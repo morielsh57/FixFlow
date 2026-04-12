@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
+import { Spin } from 'antd';
+import { LoadingOutlined } from '@ant-design/icons';
 import './Login.scss';
 import LoginPic from '../../../assets/images/LoginPic.jpg';
 import WelcomeMessage from './Welcome-Message/WelcomeMessage';
 import MotivationSentences from './Motivation-Message/MotivationSentences';
 import './Welcome-Message/WelcomeMessage.scss';
-import { useAppDispatch } from '../../store';
+import { useAppDispatch, useAppSelector } from '../../store';
 import { loginRequest } from '../auth.store';
+import { EAPIStatus } from '../../../shared/api/models';
 
 const Picture = () => {
     return (
@@ -24,10 +27,15 @@ const Login = () => {
     const {
         register,
         handleSubmit,
-        formState: { errors, isSubmitting },
+        formState: { errors },
     } = useForm<LoginFormData>();
     const dispatch = useAppDispatch();
+    const { loginRes } = useAppSelector((state) => state.authStoreReducer);
+    const { getUserByIdRequest } = useAppSelector((state) => state.userStoreReducer);
     const [loginErrorMsg, setLoginErrorMsg] = useState<string | null>(null);
+    const isLoginPending = loginRes.status === EAPIStatus.PENDING;
+    const isUserInfoPending = getUserByIdRequest.status === EAPIStatus.PENDING;
+    const isSubmitLoading = isLoginPending || isUserInfoPending;
 
     const onSubmit = (data: LoginFormData) => {
         setLoginErrorMsg(null);
@@ -81,8 +89,14 @@ const Login = () => {
 
                         <div className="submit-btn-wrapper">
                             {loginErrorMsg && <p className="login-request-error">{loginErrorMsg}</p>}
-                            <button type="submit" className="submit-btn" disabled={isSubmitting}>
-                                Login
+                            <button type="submit" className="submit-btn" disabled={isSubmitLoading}>
+                                <span className="submit-btn-content">
+                                    {isSubmitLoading ? (
+                                        <Spin indicator={<LoadingOutlined className="login-btn-spinner-icon" spin />} />
+                                    ) : (
+                                        'Login'
+                                    )}
+                                </span>
                             </button>
                         </div>
 
