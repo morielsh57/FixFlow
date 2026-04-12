@@ -63,7 +63,10 @@ The DB table that has been queried, the method that should be used, the expected
         <tr>
         <td>users/</td>
         <td>GET</td>
-        <td>NONE</td>
+        <td>
+            Authentication required<br/>
+            NONE
+        </td>
         <td>
             Success: status = 200<br/>
             {<br/>
@@ -75,7 +78,10 @@ The DB table that has been queried, the method that should be used, the expected
         <tr>
         <td>users/&lt;int (id)&gt;/</td>
         <td>GET</td>
-        <td>None</td>
+        <td>
+            Authentication required<br/>
+            None
+        </td>
         <td>
             Success: status = 200<br/>
             {<br/>
@@ -155,7 +161,10 @@ The DB table that has been queried, the method that should be used, the expected
     <tr>
         <td>all-issues/</td>
         <td>GET</td>
-        <td>None</td>
+        <td>
+            Authentication required<br/>
+            None
+        </td>
         <td>
             Success: status = 200<br/>
             {<br/>
@@ -169,7 +178,10 @@ The DB table that has been queried, the method that should be used, the expected
     </tr>
     <tr>
         <td>GET</td>
-        <td>None</td>
+        <td>
+            Authentication required<br/>
+            None
+        </td>
         <td>
             Success: status = 200<br/>
             {<br/>
@@ -199,6 +211,7 @@ The DB table that has been queried, the method that should be used, the expected
     <tr>
         <td>PATCH</td>
         <td>
+            Authentication required<br/>
             Note: can be partial, any of the keys is optional.<br/><br/>
             {<br/>
                 “title” : &lt;string&gt; ,<br/>
@@ -236,6 +249,7 @@ The DB table that has been queried, the method that should be used, the expected
         <td>issues-new/</td>
         <td>POST</td>
         <td>
+        Authentication required<br/>
             {<br/>
                 “title” : &lt;string&gt; ,<br/>
                 “description” : &lt;string&gt; ,<br/>
@@ -269,7 +283,10 @@ The DB table that has been queried, the method that should be used, the expected
     <tr>
         <td>departments/</td>
         <td>GET</td>
-        <td>None</td>
+        <td>
+            Authentication required<br/>
+            None
+        </td>
         <td>
             Success: status = 200<br/>
             {<br/>
@@ -281,7 +298,10 @@ The DB table that has been queried, the method that should be used, the expected
     <tr>
         <td>departments/&lt;int (id)&gt;/</td>
         <td>GET</td>
-        <td>None</td>
+        <td>
+            Authentication required<br/>
+            None
+        </td>
         <td>
             Success: status = 200<br/>
             {<br/>
@@ -299,6 +319,7 @@ The DB table that has been queried, the method that should be used, the expected
         <td>departments/add/</td>
         <td>POST</td>
         <td>
+            Authentication required<br/>
             {<br/>
                 “title” : &lt;string&gt;<br/>
             }
@@ -321,6 +342,7 @@ The DB table that has been queried, the method that should be used, the expected
         <td>departments/update/&lt;int (id)&gt;/</td>
         <td>PATCH</td>
         <td>
+            Authentication required<br/>
             {<br/>
                 “title” : &lt;string&gt;<br/>
             }
@@ -355,7 +377,10 @@ The DB table that has been queried, the method that should be used, the expected
     <tr>
         <td>priority/</td>
         <td>GET</td>
-        <td>None</td>
+        <td>
+            Authentication required<br/>
+            None
+        </td>
         <td>
             Success: status = 200<br/>
             {<br/>
@@ -367,7 +392,10 @@ The DB table that has been queried, the method that should be used, the expected
     <tr>
         <td>priority/&lt;int (id)&gt;/</td>
         <td>GET</td>
-        <td>None</td>
+        <td>
+            Authentication required<br/>
+            None
+        </td>
         <td>
             Success: status = 200<br/>
             {<br/>
@@ -390,6 +418,7 @@ The DB table that has been queried, the method that should be used, the expected
         <td>priority/update/&lt;int (id)&gt;/</td>
         <td>PATCH</td>
         <td>
+            Authentication required<br/>
             {<br/>
                 “title” : &lt;string&gt;<br/>
             }
@@ -418,6 +447,7 @@ The DB table that has been queried, the method that should be used, the expected
         <td>priority/add/</td>
         <td>POST</td>
         <td>
+            Authentication required<br/>
             {<br/>
                 “title” : &lt;string&gt;<br/>
             }

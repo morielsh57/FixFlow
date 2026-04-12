@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
-from .serializers import departmentSerializer,issuesSerializer,prioritySerializer,userSerializer
+from .serializers import departmentSerializer,prioritySerializer,userSerializer,get_issuesSerializer,add_edit_issuesSerializer
 from .models import Departments,Issues,Priority,CustomUser
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.password_validation import validate_password
@@ -53,12 +53,14 @@ def create_user(request):
         return Response({"msg":"user creation failed","error":f"{e}"},status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_all_users(request):
     user = CustomUser.objects.all()
     serializer = userSerializer(user,many=True)
     return Response({"data":serializer.data,"msg":"users list fetched successfully"},status=status.HTTP_200_OK)
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_user(request,id):
     try:
         user = CustomUser.objects.get(id=id)
@@ -111,14 +113,15 @@ class MyTokenObtainPairView(TokenObtainPairView):
 #                   #
 #####################
 
-
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def tickets(request):
     open_tickets = Issues.objects.filter(status=Issues.Status.OPEN)
-    serializer = issuesSerializer(open_tickets, many=True)
+    serializer = get_issuesSerializer(open_tickets, many=True)
     return Response({"data":serializer.data,"msg":"Ticket list fetched successfully"}, status=status.HTTP_200_OK)
 
 @api_view(['GET', 'PATCH'])
+@permission_classes([IsAuthenticated])
 def ticket_detail(request, ticket_id):
     try:
         ticket = Issues.objects.get(id=ticket_id)
@@ -126,11 +129,11 @@ def ticket_detail(request, ticket_id):
         return Response({"msg": "Ticket not found", "error":f"{e}"}, status=status.HTTP_404_NOT_FOUND)
 
     if request.method == 'GET':
-        serializer = issuesSerializer(ticket)
+        serializer = get_issuesSerializer(ticket)
         return Response({"data":serializer.data,"msg":"Ticket fetched successfully"}, status=status.HTTP_200_OK)
 
     elif request.method == 'PATCH':
-        serializer = issuesSerializer(ticket, data=request.data, partial=True)
+        serializer = add_edit_issuesSerializer(ticket, data=request.data, partial=True)
 
         if serializer.is_valid():
             serializer.save()
@@ -139,8 +142,9 @@ def ticket_detail(request, ticket_id):
         return Response({"msg":"failed to update Ticket","error":f"{serializer.errors}"}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def create_ticket(request):
-    serializer = issuesSerializer(data=request.data)
+    serializer = add_edit_issuesSerializer(data=request.data)
 
     if serializer.is_valid():
         serializer.save()
@@ -163,6 +167,7 @@ PATCH - partial update
 """
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_all_departments(request):
     # THIS FUNCTION GETS ALL DEPARTMENTS FROM THE DATABASE
     departments = Departments.objects.all()
@@ -173,6 +178,7 @@ def get_all_departments(request):
     # RETURN THE DATA WITH STATUS 200 (SUCCESS)
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_department(request, pk):
     # THIS FUNCTION GETS ONE DEPARTMENT BY ID (PRIMARY KEY)
     department = get_object_or_404(Departments, pk=pk)
@@ -184,6 +190,7 @@ def get_department(request, pk):
     # RETURN THE DATA WITH STATUS 200
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def add_department(request):
     # THIS FUNCTION CREATES A NEW DEPARTMENT
 
@@ -201,6 +208,7 @@ def add_department(request):
     return Response({"msg":"failed to create a department item","error":f"{serializer.errors}"}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
 def update_department(request, pk):
     # THIS FUNCTION UPDATES AN EXISTING DEPARTMENT
     department = get_object_or_404(Departments, pk=pk)
@@ -227,12 +235,14 @@ def update_department(request, pk):
 
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_all_priorities(request):
     priorities = Priority.objects.all()
     serializer = prioritySerializer(priorities,many=True)
     return Response({"data":serializer.data,"msg":"priority list fetched successfully"}, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_single_priority(request,id):
     try:
         priority = Priority.objects.get(id=id)
@@ -243,6 +253,7 @@ def get_single_priority(request,id):
     return Response({"data":serializer.data,"msg":"priority item fetched successfully"}, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
+@permission_classes([IsAuthenticated])
 def add_priority(request):
     input = request.data
     serializer = prioritySerializer(data=input)
@@ -253,6 +264,7 @@ def add_priority(request):
         return Response({"msg":"failed to create a priority item","error":f"{serializer.errors}"},status=status.HTTP_400_BAD_REQUEST)
     
 @api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
 def update_priority(request,id):
     input = request.data
     try:
