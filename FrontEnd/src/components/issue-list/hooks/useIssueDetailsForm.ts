@@ -87,13 +87,15 @@ export const useIssueDetailsForm = ({
   const {
     issues,
     issuePriorities,
-    companyPersonForAssigne,
+    priorityListRes,
     createIssueReqState,
     updateIssueReqState,
   } = useAppSelector((state) => state.issuesReducer);
+  const { userList } = useAppSelector((state) => state.userStoreReducer);
 
-  const defaultPriorityId = issuePriorities[0]?.id ?? 0;
-  const defaultAssigneeId = companyPersonForAssigne[0]?.id ?? 0;
+  const priorityList = priorityListRes.data?.data ?? issuePriorities;
+  const defaultPriorityId = priorityList[0]?.id ?? 0;
+  const defaultAssigneeId = userList[0]?.id ?? 0;
 
   const defaultValues = useMemo(
     () => getFormDefaults(mode, issue, defaultPriorityId, defaultAssigneeId),
@@ -106,7 +108,7 @@ export const useIssueDetailsForm = ({
     register,
     handleSubmit,
     reset,
-    setValue,
+    control,
     watch,
     formState,
   } = useForm<IIssueDetailsFormValues>({
@@ -138,7 +140,7 @@ export const useIssueDetailsForm = ({
       dispatch(updateIssueOptimisticAction(payload));
       dispatch(updateIssueReqAction(payload));
     },
-    [dispatch, issue, mode],
+    [dispatch, issue, mode, priorityList],
   );
 
   const handleTextBlur = useCallback(
@@ -150,26 +152,23 @@ export const useIssueDetailsForm = ({
 
   const handleStatusChange = useCallback(
     (value: IIssueDetailsFormValues['status']) => {
-      setValue('status', value, { shouldDirty: true, shouldValidate: true });
       patchFieldIfNeeded('status', value);
     },
-    [patchFieldIfNeeded, setValue],
+    [patchFieldIfNeeded],
   );
 
   const handlePriorityChange = useCallback(
     (value: number) => {
-      setValue('priority', value, { shouldDirty: true, shouldValidate: true });
       patchFieldIfNeeded('priority', value);
     },
-    [patchFieldIfNeeded, setValue],
+    [patchFieldIfNeeded],
   );
 
   const handleAssignedChange = useCallback(
     (value: number) => {
-      setValue('assigned', value, { shouldDirty: true, shouldValidate: true });
       patchFieldIfNeeded('assigned', value);
     },
-    [patchFieldIfNeeded, setValue],
+    [patchFieldIfNeeded],
   );
 
   const onCreateSubmit = handleSubmit((values) => {
@@ -202,10 +201,11 @@ export const useIssueDetailsForm = ({
 
   return {
     register,
+    control,
     watch,
     formState,
-    issuePriorities,
-    companyPersonForAssigne,
+    priorityList,
+    userList,
     onCreateSubmit,
     handleTextBlur,
     handleStatusChange,

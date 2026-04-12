@@ -1,10 +1,11 @@
-import { useMemo } from 'react';
-import { useAppSelector } from '../../app/store';
+import { useEffect, useMemo } from 'react';
+import { useAppDispatch, useAppSelector } from '../../app/store';
 import './IssueList.scss';
 import CreateIssueModal from './issue-details/create-issue-modal/CreateIssueModal';
 import EditIssueModal from './issue-details/edit-issue-modal/EditIssueModal';
 import IssueCard from './IssueCard';
 import { useIssueListController } from './hooks/useIssueListController';
+import { getIssuesReqAction, getPriorityListReqAction } from './issues.store';
 
 const LOGGED_IN_USERNAME = 'emma';
 
@@ -13,6 +14,12 @@ const IssueList = () => {
   const { issues, companyPersonForAssigne } = useAppSelector(
     (state) => state.issuesReducer,
   );
+  const dispatch = useAppDispatch();
+
+  useEffect(() => {
+    dispatch(getIssuesReqAction());
+    dispatch(getPriorityListReqAction());
+  }, [dispatch]);
 
   const loggedInPerson = useMemo(
     () =>

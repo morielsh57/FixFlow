@@ -12,7 +12,6 @@ import {
 import {
   mockCompanyPersonForAssigne,
   mockIssuePriorities,
-  mockIssues,
 } from './issue.data';
 import {
   ICompanyPersonForAssigne,
@@ -35,33 +34,49 @@ export interface IssuesStoreState {
   issuePriorities: IIssuePriority[];
   companyPersonForAssigne: ICompanyPersonForAssigne[];
   issueDetailsModal: IIssueDetailsModalState;
-  createIssueReqState: IAPIRequestState<IIssue>;
-  updateIssueReqState: IAPIRequestState<IIssue>;
+  createIssueReqState: IAPIRequestState<{data: IIssue}>;
+  updateIssueReqState: IAPIRequestState<{data: IIssue}>;
+  priorityListRes: IAPIRequestState<{data: IIssuePriority[]}>;
+  getIssuesRes: IAPIRequestState<{data: IIssue[]}>;
 }
 
 const initialState: IssuesStoreState = {
-  issues: mockIssues,
+  issues: [],
   issuePriorities: mockIssuePriorities,
   companyPersonForAssigne: mockCompanyPersonForAssigne,
   issueDetailsModal: getInitialIssueDetailsModalState(),
-  createIssueReqState: APIRequestState.create<IIssue>(),
-  updateIssueReqState: APIRequestState.create<IIssue>(),
+  createIssueReqState: APIRequestState.create<{data: IIssue}>(),
+  updateIssueReqState: APIRequestState.create<{data: IIssue}>(),
+  priorityListRes: APIRequestState.create<{data: IIssuePriority[]}>(),
+  getIssuesRes: APIRequestState.create<{data: IIssue[]}>(),
 };
 
 const createReducerKey = (subKey: string): string => {
   return 'issues/' + subKey;
 };
 
-export const createIssueReqAction = createApiThunk<IIssue, IIssueCreateReqPayload>(
-  createReducerKey('createIssueReqAction'),
-  async (reqPayload?: IIssueCreateReqPayload) =>
-    apiService.post<IIssue>(`${API_ROUTES.ISSUES.CREATE_ISSUE}`, reqPayload),
+export const getIssuesReqAction = createApiThunk(
+  createReducerKey('getIssuesReqAction'),
+  async () =>
+    apiService.get<{data: IIssue[]}>(`${API_ROUTES.ISSUES.GET_ISSUES}`),
 );
 
-export const updateIssueReqAction = createApiThunk<IIssue, IIssueUpdateReqPayload>(
+export const createIssueReqAction = createApiThunk(
+  createReducerKey('createIssueReqAction'),
+  async (reqPayload?: IIssueCreateReqPayload) =>
+    apiService.post<{data: IIssue}>(`${API_ROUTES.ISSUES.CREATE_ISSUE}`, reqPayload),
+);
+
+export const updateIssueReqAction = createApiThunk(
   createReducerKey('updateIssueReqAction'),
   async (reqPayload?: IIssueUpdateReqPayload) =>
-    apiService.patch<IIssue>(`${API_ROUTES.ISSUES.UPDATE_ISSUE}`, reqPayload),
+    apiService.patch<{data: IIssue}>(`${API_ROUTES.ISSUES.UPDATE_ISSUE}${reqPayload?.id}/`, reqPayload),
+);
+
+export const getPriorityListReqAction = createApiThunk(
+  createReducerKey('getPriorityListReqAction'),
+  async () =>
+    apiService.get<{data: IIssuePriority[]}>(`${API_ROUTES.ISSUES.GET_PRIORITIES}`),
 );
 
 export const openCreateIssueModal = createAction(
@@ -110,6 +125,17 @@ export const issuesReducer = createReducer(initialState, (builder) => {
     }
   });
 
+  createAPIReducerCases(getIssuesReqAction, 'getIssuesRes', builder, {
+    onPending(state) {
+      const issuesState = state as IssuesStoreState;
+      issuesState.getIssuesRes.error = undefined;
+    },
+    onFulfilled(state, reqData) {
+      const issuesState = state as IssuesStoreState;
+      issuesState.issues = [...reqData.data];
+    },
+    onRejected() {},
+  });
   createAPIReducerCases(createIssueReqAction, 'createIssueReqState', builder, {
     onPending(state) {
       const issuesState = state as IssuesStoreState;
@@ -117,7 +143,7 @@ export const issuesReducer = createReducer(initialState, (builder) => {
     },
     onFulfilled(state, reqData) {
       const issuesState = state as IssuesStoreState;
-      reconcileCreatedIssueOnList(issuesState.issues, reqData);
+      reconcileCreatedIssueOnList(issuesState.issues, reqData.data);
     },
     onRejected() {},
   });
@@ -131,13 +157,15 @@ export const issuesReducer = createReducer(initialState, (builder) => {
       const issuesState = state as IssuesStoreState;
       applyIssueUpdateOnList(
         issuesState.issues,
-        mapIssueToUpdateReqPayload(reqData),
+        mapIssueToUpdateReqPayload(reqData.data),
       );
 
-      if (issuesState.issueDetailsModal.issue?.id === reqData.id) {
-        issuesState.issueDetailsModal.issue = reqData;
+      if (issuesState.issueDetailsModal.issue?.id === reqData.data.id) {
+        issuesState.issueDetailsModal.issue = reqData.data;
       }
     },
     onRejected() {},
   });
+
+    createAPIReducerCases(getPriorityListReqAction, 'priorityListRes', builder,{});
 });

@@ -39,6 +39,18 @@ export interface IIssueCreateReqPayload {
   requester: number;
 }
 
+export interface IIssueCreateReqServerPayload {
+  title: string;
+  description: string;
+  location: string;
+  status: IssueStatus;
+  date_created: string;
+  date_updated: string;
+  priority: IIssuePriority;
+  assigned: number;
+  requester: number;
+}
+
 export interface IIssueUpdateReqPayload {
   id: number;
   title?: string;
@@ -47,6 +59,17 @@ export interface IIssueUpdateReqPayload {
   status?: IssueStatus;
   date_updated?: string;
   priority?: number;
+  assigned?: number;
+}
+
+export interface IIssueUpdateReqServerPayload {
+  id: number;
+  title?: string;
+  description?: string;
+  location?: string;
+  status?: IssueStatus;
+  date_updated?: string;
+  priority?: IIssuePriority;
   assigned?: number;
 }
 

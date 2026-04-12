@@ -13,8 +13,10 @@ export const API_ROUTES = {
   },
   USERS: '/users/',
   ISSUES: {
-    UPDATE_ISSUE: 'issues-new/',
-    CREATE_ISSUE: 'issues-new/',
+    GET_ISSUES: '/all-issues/',
+    UPDATE_ISSUE: '/issue/',
+    CREATE_ISSUE: '/issues-new/',
+    GET_PRIORITIES: '/priority/',
   },
 };
 
