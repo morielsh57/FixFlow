@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import './Login.scss';
 import LoginPic from '../../../assets/images/LoginPic.jpg';
 import WelcomeMessage from './Welcome-Message/WelcomeMessage';
 import MotivationSentences from './Motivation-Message/MotivationSentences';
 import './Welcome-Message/WelcomeMessage.scss';
+import { useAppDispatch } from '../../store';
+import { loginRequest } from '../auth.store';
 
 const Picture = () => {
     return (
@@ -14,7 +16,7 @@ const Picture = () => {
     );
 };
 type LoginFormData = {
-    Username: string;
+    username: string;
     password: string;
 };
 
@@ -24,9 +26,14 @@ const Login = () => {
         handleSubmit,
         formState: { errors, isSubmitting },
     } = useForm<LoginFormData>();
+    const dispatch = useAppDispatch();
+    const [loginErrorMsg, setLoginErrorMsg] = useState<string | null>(null);
 
     const onSubmit = (data: LoginFormData) => {
-        console.log('Login data:', data);
+        setLoginErrorMsg(null);
+        dispatch(loginRequest(data))
+            .unwrap()
+            .catch(() => setLoginErrorMsg('Invalid username or password. Please try again.'));
     };
 
     return (
@@ -46,7 +53,7 @@ const Login = () => {
                             <label>Username</label>
                             <input
                                 type="text"
-                                {...register('Username', {
+                                {...register('username', {
                                     required: 'Username is required',
                                     minLength: {
                                         value: 3,
@@ -54,7 +61,7 @@ const Login = () => {
                                     },
                                 })}
                             />
-                            {errors.Username && <p className="error-text">{errors.Username.message}</p>}
+                            {errors.username && <p className="error-text">{errors.username.message}</p>}
                         </div>
 
                         <div className="input-group password-group">
@@ -64,17 +71,20 @@ const Login = () => {
                                 {...register('password', {
                                     required: 'Password is required',
                                     minLength: {
-                                        value: 6,
-                                        message: 'Password must be at least 6 characters',
+                                        value: 8,
+                                        message: 'Password must be at least 8 characters',
                                     },
                                 })}
                             />
                             {errors.password && <p className="error-text">{errors.password.message}</p>}
                         </div>
 
-                        <button type="submit" className="submit-btn" disabled={isSubmitting}>
-                            Login
-                        </button>
+                        <div className="submit-btn-wrapper">
+                            {loginErrorMsg && <p className="login-request-error">{loginErrorMsg}</p>}
+                            <button type="submit" className="submit-btn" disabled={isSubmitting}>
+                                Login
+                            </button>
+                        </div>
 
                         <div className="forgot-password-wrapper">
                             <button
