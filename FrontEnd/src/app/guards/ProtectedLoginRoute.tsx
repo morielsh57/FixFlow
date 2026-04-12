@@ -6,7 +6,7 @@ interface IProps {
   children: ReactElement;
 }
 
-// will wrap the auth routing - if there is token and userInfo with phone number navigate the user inside the app to the chat page
+// will wrap the auth routing - if there is token navigate the user inside the app to the issues page
 export const ProtectedLoginRoute: FunctionComponent<IProps> = ({ children }) => {
   const tokenLocalStorage = localStorage.getItem(AUTH_LOCAL_STORAGE_KEYS.ACCESS_TOKEN);
 
