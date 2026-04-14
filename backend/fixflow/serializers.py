@@ -17,11 +17,16 @@ class userSerializer(serializers.ModelSerializer):
         model = CustomUser
         fields = ['id','username','first_name','last_name','email','phone_number','department']
 
-class issuesSerializer(serializers.ModelSerializer):
+class get_issuesSerializer(serializers.ModelSerializer):
     priority = prioritySerializer()
     requester = userSerializer()
     assigned = userSerializer()
 
+    class Meta:
+        model = Issues
+        fields = '__all__'
+
+class add_edit_issuesSerializer(serializers.ModelSerializer):
     class Meta:
         model = Issues
         fields = '__all__'

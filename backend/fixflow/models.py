@@ -16,9 +16,10 @@ class Priority(models.Model):
 
 class Issues(models.Model):
     class Status(models.TextChoices):
-        OPEN = "open", "Open"
-        IN_PROGRESS = "in_progress", "In Progress"
-        CLOSED = "closed", "Closed"
+        # Format: VARIABLE = "database_value", "Display Label"
+        OPEN = "Open", "Open"
+        IN_PROGRESS = "In Progress", "In Progress"
+        CLOSED = "Closed", "Closed"
 
     id = models.AutoField(primary_key=True)
     date_created = models.DateTimeField(default=timezone.now)
