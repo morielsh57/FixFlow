@@ -21,7 +21,6 @@ export const Auth: React.FC<React.PropsWithChildren> = ({ children }) => {
         setItemInLocalStorage(AUTH_LOCAL_STORAGE_KEYS.ACCESS_TOKEN, access);
         setItemInLocalStorage(AUTH_LOCAL_STORAGE_KEYS.REFRESH_TOKEN, refresh);
         const userId = getUserIdFromToken(access);
-        setItemInLocalStorage(AUTH_LOCAL_STORAGE_KEYS.USER_ID, userId);
         // on success login get the user data and navigate to the issues page
         dispatch(getUserById({ id: userId }))
           .unwrap()
