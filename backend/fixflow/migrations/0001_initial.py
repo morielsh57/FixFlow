@@ -72,6 +72,7 @@ class Migration(migrations.Migration):
                 ('assigned', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='assigned_issues', to=settings.AUTH_USER_MODEL)),
                 ('requester', models.ForeignKey(on_delete=django.db.models.deletion.PROTECT, related_name='requested_issues', to=settings.AUTH_USER_MODEL)),
                 ('priority', models.ForeignKey(default='TBD', on_delete=django.db.models.deletion.SET_DEFAULT, to='fixflow.priority')),
+                ('status',models.CharField(max_length=20)),
             ],
         ),
     ]
