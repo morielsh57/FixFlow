@@ -12,7 +12,6 @@ jobs:
     outputs:
       backend: ${{ steps.filter.outputs.backend }}
       frontend: ${{ steps.filter.outputs.frontend }}
-      root: ${{ steps.filter.outputs.root }}
     steps:
       - uses: actions/checkout@v3
       - uses: dorny/paths-filter@v2
@@ -23,13 +22,10 @@ jobs:
               - 'backend/**'
             frontend:
               - 'FrontEnd/**'
-            root:
-              - '*'
-              - '!*.{md,pdf}'
 
   backend-testing:
     needs: changes
-    if: ${{ needs.changes.outputs.backend == 'true' || needs.changes.outputs.root == 'true' }}
+    if: ${{ needs.changes.outputs.backend == 'true'}}
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
@@ -66,7 +62,7 @@ jobs:
 
   frontend-testing:
     needs: changes
-    if: ${{ needs.changes.outputs.frontend == 'true' || needs.changes.outputs.root == 'true' }}    
+    if: ${{ needs.changes.outputs.frontend == 'true'}}    
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
