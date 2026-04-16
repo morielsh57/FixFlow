@@ -1,55 +1,9 @@
-
-Risk ID,Category,Title,Description,Potential Impact ,"Impact Rating
-(1-10)","Probability
-(1-10)","Risk Score
-(impact * probability)",Rank,Mitigation plan
-R-01,Technical,"Integration
-Issues","Lack of alignment in data structure. For example, the server returns an object (dictionary) while the client expects an Array.","Critical client-side errors
-that prevent users from
-performing basic
-Actions.",9,6,54,2,"Create detailed API
-Documentation."
-,R-02,Resource,"Frontend–Backend
-integration
-Delays","Delay in connecting frontend components with backend API endpoints, causing incomplete system functionality during the sprint","Blocks feature
-completion and slows
-overall progress,
-especially for login and
-issue management
-Flows",8,8,64,1,"Use mock data and
-perform incremental
-integration once
-backend endpoints
-are stable"
-,R-03,Technical,Authentication / API Errors,Issues with login or authentication endpoints may prevent users from accessing the system properly,"Prevents system usage
-and testing of core
-features like issue
-creation and tracking",10,4,40,3,"Test endpoints
-independently (e.g.,
-Postman), debug
-authentication flow,
-and isolate issues
-before integration"
-,R-04,Timeline,"Incomplete
-Sprint 2
-Features","Some user stories (e.g., issue viewing, opening issues) remain unfinished due to time constraints","Reduces MVP
-completeness and
-affects demo quality",6,6,36,4,"Prioritize “Must”
-features and defer
-less critical tasks
-(MoSCoW method)"
-,R-05,Reputational,"Stale and
-Non-Uniform
-Data","Relying on local SQLite databases results in fragmented and ""stale"" data across different developers' local machines.","Inconsistent testing
-environments, leading
-to integration failures
-and masked bugs
-During Frontend – Backend Synchronization.",4,5,20,5,"Deploy a centralized
-MySQL database to
-establish a single
-source of truth and
-uniform real-time data
-for the entire team."
-,,,,,,,,,,
-,,,,,,,,,,
-,Total Risk Score,214,,,,,Project Risk Rating,Medium,
+Risk ID, Category    , Title                                , Description                                                                                                                     , Potential Impact                                                                                                               , "Impact Rating(1-10)", "Probability(1-10)", "Risk Score(impact * probability)", Rank  , Mitigation plan
+R-01   , Technical   , "Integration Issues"                 , "Lack of alignment in data structure. For example, the server returns an object (dictionary) while the client expects an Array.", "Critical client-side errors that prevent users from performing basic Actions."                                                ,                     9, 6                  ,                                 54, 2     , "Create detailed API Documentation."
+R-02   , Resource    , "Frontend–Backend integration Delays", "Delay in connecting frontend components with backend API endpoints, causing incomplete system functionality during the sprint" , "Blocks feature completion and slows overall progress, especially for login and issue management Flows"                        ,                     8, 8                  ,                                 64, 1     , "Use mock data and perform incremental integration once backend endpoints are stable"
+R-03   , Technical   , Authentication / API Errors          , Issues with login or authentication endpoints may prevent users from accessing the system properly                              , "Prevents system usage and testing of core features like issue creation and tracking"                                          ,                    10, 4                  ,                                 40, 3     , "Test endpoints independently (e.g.,Postman), debug authentication flow, and isolate issues before integration"
+R-04   , Timeline    , "Incomplete Sprint 2 Features"       , "Some user stories (e.g., issue viewing, opening issues) remain unfinished due to time constraints"                             , "Reduces MVP completeness and affects demo quality"                                                                            ,                     6, 6                  ,                                 36, 4     , "Prioritize “Must” features and defer less critical tasks (MoSCoW method)"
+R-05   , Reputational, "Stale and Non-Uniform Data"         , "Relying on local SQLite databases results in fragmented and ""stale"" data across different developers' local machines."       , "Inconsistent testing environments, leading to integration failures and masked bugs During Frontend – Backend Synchronization.",                     4, 5                  ,                                 20, 5     , "Deploy a centralized MySQL database to establish a single source of truth and uniform real-time data for the entire team."
+       ,             ,                                      ,                                                                                                                                 ,                                                                                                                                ,                      ,                    ,                                   ,       , 
+       ,             ,                                      ,                                                                                                                                 ,                                                                                                                                ,                      ,                    ,                                   ,       , 
+       ,             , Total Risk Score                     ,                                                                                                                                 , 214                                                                                                                            ,                      , Project Risk Rating,                                   , Medium, 
