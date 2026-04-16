@@ -6,7 +6,7 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('fixflow', '0001_initial'),
+        ('fixflow', '0002_alter_customuser_department_and_more'),
     ]
 
     operations = [
