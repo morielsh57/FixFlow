@@ -2,13 +2,13 @@
 
 .App {
   width: 100vw;
-  height: 100vh;
+  height: 100dvh;
   min-height: -webkit-fill-available;
   overflow: hidden;
   margin: auto;
 
   &>* {
-    height: 100%;
+    height: 100dvh;
     width: 100%;
   }
 
