@@ -1,7 +1,7 @@
 import {
   IIssue,
   IIssueDetailsModalState,
-  IIssueUpdateReqPayload,
+  IIssueOptimisticUpdatePayload,
   IssueModalMode,
 } from './issue.types';
 
@@ -25,7 +25,7 @@ export const setIssueDetailsModalState = (
 
 export const applyIssueUpdateOnList = (
   issues: IIssue[],
-  patch: IIssueUpdateReqPayload,
+  patch: IIssueOptimisticUpdatePayload,
 ): void => {
   const issueIndex = issues.findIndex((issue) => issue.id === patch.id);
 
@@ -58,8 +58,7 @@ export const reconcileCreatedIssueOnList = (
       issue.title === serverIssue.title &&
       issue.description === serverIssue.description &&
       issue.location === serverIssue.location &&
-      issue.date_created === serverIssue.date_created &&
-      issue.requester === serverIssue.requester,
+      issue.requester.id === serverIssue.requester.id,
   );
 
   if (issueIndexBySignature >= 0) {
@@ -70,17 +69,3 @@ export const reconcileCreatedIssueOnList = (
   issues.unshift(serverIssue);
 };
 
-export const mapIssueToUpdateReqPayload = (
-  issue: IIssue,
-): IIssueUpdateReqPayload => {
-  return {
-    id: issue.id,
-    title: issue.title,
-    description: issue.description,
-    location: issue.location,
-    status: issue.status,
-    date_updated: issue.date_updated,
-    priority: issue.priority,
-    assigned: issue.assigned,
-  };
-};

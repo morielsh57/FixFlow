@@ -25,7 +25,6 @@ const IssueDetailsForm = ({ mode, issue }: IssueDetailsFormProps) => {
     handleAssignedChange,
     createIssueReqState,
     updateIssueReqState,
-    watch,
   } = useIssueDetailsForm({
     mode,
     issue,
@@ -46,9 +45,6 @@ const IssueDetailsForm = ({ mode, issue }: IssueDetailsFormProps) => {
   const isCreateMode = mode === 'create';
   const createRequestError = createIssueReqState.error?.message;
   const updateRequestError = updateIssueReqState.error?.message;
-  const statusValue = watch('status');
-  const priorityValue = watch('priority');
-  const assignedValue = watch('assigned');
 
   const statusOptions: IAppSelectOption[] = [
     {
@@ -151,7 +147,7 @@ const IssueDetailsForm = ({ mode, issue }: IssueDetailsFormProps) => {
             render={({ field }) => (
               <AppSelect
                 id="issue-status"
-                value={field.value ?? statusValue}
+                value={field.value}
                 className="issue-details-form-app-select"
                 options={statusOptions}
                 onBlur={field.onBlur}
@@ -177,12 +173,12 @@ const IssueDetailsForm = ({ mode, issue }: IssueDetailsFormProps) => {
             required: 'Priority is required.',
           }}
           render={({ field }) => (
-            <AppSelect
-              id="issue-priority"
-              value={priorityValue}
-              className="issue-details-form-app-select"
-              options={priorityOptions}
-              onBlur={field.onBlur}
+              <AppSelect
+                id="issue-priority"
+                value={field.value}
+                className="issue-details-form-app-select"
+                options={priorityOptions}
+                onBlur={field.onBlur}
               onChange={(nextValue) => {
                 field.onChange(Number(nextValue));
                 handlePriorityChange(Number(nextValue));
@@ -204,11 +200,11 @@ const IssueDetailsForm = ({ mode, issue }: IssueDetailsFormProps) => {
             min: 1,
           }}
           render={({ field }) => (
-            <AppSelect
-              id="issue-assigned"
-              value={field.value ?? assignedValue}
-              className="issue-details-form-app-select"
-              searchSelect
+              <AppSelect
+                id="issue-assigned"
+                value={field.value}
+                className="issue-details-form-app-select"
+                searchSelect
               onSearch={() => {}}
               placeholder="Select a person"
               options={assignedOptions}

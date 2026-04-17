@@ -13,10 +13,14 @@
 }
 
 .issue-card__title {
+  flex: 1;
   margin: 0;
   color: $purple8;
   font-size: 1.2rem;
   font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .issue-card__description {
@@ -24,6 +28,11 @@
   color: $neutral7;
   font-size: 0.95rem;
   line-height: 1.5;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
 }
 
 .issue-card__labels {
@@ -50,6 +59,15 @@
 .issue-card__assignee {
   color: $neutral8;
   word-break: break-word;
+}
+
+.issue-card__assignee--me {
+  color: $coral8;
+  background-color: rgba($coral3, 0.4);
+  border: 1px solid $coral8;
+  border-radius: 999px;
+  padding: 2px 8px;
+  font-weight: 700;
 }
 
 .issue-card__status {

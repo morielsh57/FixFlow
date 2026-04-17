@@ -1,3 +1,5 @@
+import { IUser } from '../../shared/store/user.types';
+
 export type IssueStatus = 'Open' | 'In Progress' | 'Closed';
 
 export type IssueModalMode = 'create' | 'edit';
@@ -10,9 +12,9 @@ export interface IIssue {
   status: IssueStatus;
   date_created: string;
   date_updated: string;
-  priority: number;
-  assigned: number;
-  requester: number;
+  priority: IIssuePriority;
+  assigned: IUser;
+  requester: IUser;
 }
 
 export interface IIssuePriority {
@@ -27,63 +29,40 @@ export interface ICompanyPersonForAssigne {
   last_name: string;
 }
 
-export interface IIssueCreateReqPayload {
-  title: string;
-  description: string;
-  location: string;
-  status: IssueStatus;
-  date_created: string;
-  date_updated: string;
-  priority: number;
-  assigned: number;
-  requester: number;
-}
-
-export interface IIssueCreateReqServerPayload {
-  title: string;
-  description: string;
-  location: string;
-  status: IssueStatus;
-  date_created: string;
-  date_updated: string;
-  priority: IIssuePriority;
-  assigned: number;
-  requester: number;
-}
-
-export interface IIssueUpdateReqPayload {
-  id: number;
-  title?: string;
-  description?: string;
-  location?: string;
-  status?: IssueStatus;
-  date_updated?: string;
-  priority?: number;
-  assigned?: number;
-}
-
-export interface IIssueUpdateReqServerPayload {
-  id: number;
-  title?: string;
-  description?: string;
-  location?: string;
-  status?: IssueStatus;
-  date_updated?: string;
-  priority?: IIssuePriority;
-  assigned?: number;
-}
-
-export interface IIssueDetailsFormValues {
+export interface IIssueCreateReqPayloadWithoutRequester {
   title: string;
   description: string;
   location: string;
   status: IssueStatus;
   priority: number;
   assigned: number;
+}
+export interface IIssueCreateReqPayload extends IIssueCreateReqPayloadWithoutRequester {
+  requester: number;
+}
+
+export interface IIssueUpdateReqPayload extends Partial<IIssueCreateReqPayloadWithoutRequester> {}
+
+export interface IIssueDetailsFormValues extends IIssueCreateReqPayloadWithoutRequester {}
+
+export interface IIssueUpdateReqActionPayload {
+  id: number;
+  payload: IIssueUpdateReqPayload;
+}
+export interface IIssueOptimisticUpdatePayload extends Partial<IIssue> {
+  id: number;
 }
 
 export interface IIssueDetailsModalState {
   isOpen: boolean;
   mode: IssueModalMode;
   issue?: IIssue;
+}
+
+export interface IIssueCreateReqServerPayload {
+  data: IIssue;
+}
+
+export interface IIssueUpdateReqServerPayload {
+  data: IIssue;
 }

@@ -7,45 +7,49 @@ import IssueCard from './IssueCard';
 import { useIssueListController } from './hooks/useIssueListController';
 import { getIssuesReqAction, getPriorityListReqAction } from './issues.store';
 
-const LOGGED_IN_USERNAME = 'emma';
-
 const IssueList = () => {
   const { openIssueCreateModal } = useIssueListController();
-  const { issues, companyPersonForAssigne } = useAppSelector(
+  const { issues } = useAppSelector(
     (state) => state.issuesReducer,
   );
+  const { user } = useAppSelector(
+    (state) => state.userStoreReducer,
+  );
   const dispatch = useAppDispatch();
+
 
   useEffect(() => {
     dispatch(getIssuesReqAction());
     dispatch(getPriorityListReqAction());
   }, [dispatch]);
 
-  const loggedInPerson = useMemo(
-    () =>
-      companyPersonForAssigne.find(
-        (person) => person.username.toLowerCase() === LOGGED_IN_USERNAME,
-      ),
-    [companyPersonForAssigne],
-  );
-
   const userIssues = useMemo(() => {
-    if (!loggedInPerson) {
-      return issues;
+    if (!user) {
+      return [];
     }
 
-    return issues.filter((issue) => issue.assigned === loggedInPerson.id);
-  }, [issues, loggedInPerson]);
+    return issues.filter(
+      (issue) => issue.assigned.id === user.id || issue.requester.id === user.id,
+    );
+  }, [issues, user]);
 
   const openIssues = useMemo(() => {
-    return userIssues.filter(
-      (issue) => issue.status === 'Open' || issue.status === 'In Progress'
-    );
+    return userIssues.filter((issue) => issue.status.toLowerCase() !== 'closed');
   }, [userIssues]);
 
   const closedIssues = useMemo(() => {
-    return userIssues.filter((issue) => issue.status === 'Closed');
+    return userIssues.filter((issue) => issue.status.toLowerCase() === 'closed');
   }, [userIssues]);
+
+  const userName = () => {
+    if (user?.first_name) {
+      return `${user.first_name} ${user.last_name}`;
+    } else if (user?.username) {
+      return user.username;
+    }
+
+    return 'User';
+  };
 
   return (
     <div className="issue-list-page">
@@ -53,7 +57,7 @@ const IssueList = () => {
         <div>
           <h1 className="issue-list-page__title">My Issues</h1>
           <p className="issue-list-page__subtitle">
-            Logged in as {loggedInPerson?.first_name ?? 'User'}
+            Logged in as {userName()}
           </p>
         </div>
 
