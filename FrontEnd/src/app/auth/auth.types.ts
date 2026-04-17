@@ -3,14 +3,9 @@ export interface SignupRequest {
   first_name: string;
   last_name: string;
   email: string;
-  department: number;
+  department: number | null;
   phone_number: string;
   password: string;
-}
-
-export interface SignupResponse {
-  msg: string;
-  error?: string;
 }
 
 export interface LoginRequest {

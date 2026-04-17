@@ -1,21 +1,22 @@
 @import '../../../shared/styles/style.index.scss';
 
-.login-page-container {
-  .login-form {
-    max-width: 550px;
+.signup-page-container {
+  .signup-form {
+    max-width: 620px;
     width: 100%;
-    flex: 1;
+
+    .input-grid-two {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 18px;
+    }
 
     .input-group {
-      margin-bottom: 30px;
-
-      &.password-group {
-        margin-bottom: 40px;
-      }
+      margin-bottom: 22px;
 
       label {
         display: block;
-        font-size: 1.2rem;
+        font-size: 1rem;
         font-weight: 600;
         color: $neutral9;
         letter-spacing: 0.3px;
@@ -25,8 +26,8 @@
 
       input {
         width: 100%;
-        padding: 18px 22px;
-        font-size: 1.2rem;
+        padding: 14px 18px;
+        font-size: 1rem;
         border-radius: 12px;
         border: 2px solid $purple6;
         background-color: rgba($purple1, 0.7);
@@ -41,15 +42,16 @@
       .error-text {
         color: $stateError;
         margin-top: 8px;
-        font-size: 1rem;
+        margin-bottom: 0;
+        font-size: 0.9rem;
       }
     }
 
     .submit-btn-wrapper {
       position: relative;
-      margin-top: 42px;
+      margin-top: 30px;
 
-      .login-request-error {
+      .signup-request-error {
         position: absolute;
         bottom: calc(100% + 8px);
         left: 0;
@@ -63,12 +65,12 @@
 
       .submit-btn {
         width: 100%;
-        padding: 20px;
+        padding: 16px;
         background-color: $purple6;
         color: $purple1;
         border: none;
         border-radius: 12px;
-        font-size: 1.3rem;
+        font-size: 1.15rem;
         font-weight: 700;
         cursor: pointer;
         transition: background-color 0.2s, transform 0.1s;
@@ -94,51 +96,23 @@
         min-height: 24px;
         width: 100%;
 
-        .login-btn-spinner-icon {
+        .signup-btn-spinner-icon {
           color: $neutral1;
           font-size: 22px;
         }
       }
     }
 
-    .forgot-password-wrapper {
-      display: flex;
-      justify-content: center;
-      margin-top: 15px;
-      // TODO: remove the display none after implementing the forgot password feature
-      display: none;
-
-      .forgot-password-btn {
-        background: transparent;
-        border: none;
-        outline: none;
-        color: $purple6;
-        font-size: 1.05rem;
-        font-weight: 500;
-        cursor: pointer;
-        padding: 5px;
-        transition: color 0.2s;
-
-        &:hover,
-        &:focus {
-          background: transparent;
-          outline: none;
-          text-decoration: underline;
-          color: $purple7;
-        }
-      }
-    }
-
-    .signup-wrapper {
-      margin-top: 30px;
+    .login-wrapper {
+      margin-top: 22px;
       text-align: center;
-      font-size: 1.1rem;
+      font-size: 1rem;
 
       .text-muted {
         color: $neutral6;
       }
 
-      .signup-btn {
+      .login-btn {
         background: transparent;
         border: none;
         outline: none;
@@ -161,7 +135,14 @@
 }
 
 @media screen and (max-width: 900px) {
-  .login-page-container .login-form {
-    width: 100%;
+  .signup-page-container {
+    .signup-form {
+      width: 100%;
+
+      .input-grid-two {
+        grid-template-columns: 1fr;
+        gap: 0;
+      }
+    }
   }
 }

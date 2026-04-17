@@ -7,11 +7,21 @@ import { setItemInLocalStorage } from '../../shared/utils/localStorage.utils';
 import { APP_ROUTING_PATHS, AUTH_LOCAL_STORAGE_KEYS } from '../constants';
 import { getUserIdFromToken } from './auth.utils';
 import { getUserById } from '../../shared/store/user.store';
+import { loginRequest } from './auth.store';
 
 export const Auth: React.FC<React.PropsWithChildren> = ({ children }) => {
-  const { loginRes } = useAppSelector((store) => store.authStoreReducer);
+  const { loginRes, signupRes, signupLoginPayload } = useAppSelector((store) => store.authStoreReducer);
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
+
+  // observe signup results, and if successful, dispatch login with the same credentials
+  useApiData(signupRes, {
+    onFulfilled() {
+      if (signupLoginPayload?.username && signupLoginPayload.password) {
+        dispatch(loginRequest(signupLoginPayload));
+      }
+    },
+  });
 
   // observe login results, and if successful, save the tokens and navigate to the issues page
   useApiData(loginRes, {
@@ -26,7 +36,7 @@ export const Auth: React.FC<React.PropsWithChildren> = ({ children }) => {
           .unwrap()
           .finally(() => {
             navigate(`${APP_ROUTING_PATHS.HOME}/${APP_ROUTING_PATHS.ISSUES}`);
-          })
+          });
       }
     },
   });

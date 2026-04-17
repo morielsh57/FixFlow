@@ -1,6 +1,7 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import { Main } from './components/main/Main';
 import Login from './app/auth/login/Login';
+import Signup from './app/auth/signup/Signup';
 import HomeExamples from './components/examples/Home';
 import IssueList from './components/issue-list/IssueList';
 import { APP_ROUTING_PATHS } from './app/constants';
@@ -18,6 +19,11 @@ function App() {
             <Route path={APP_ROUTING_PATHS.LOGIN} element={
               <ProtectedLoginRoute>
                 <Login />
+              </ProtectedLoginRoute>
+            } />
+            <Route path={APP_ROUTING_PATHS.SIGNUP} element={
+              <ProtectedLoginRoute>
+                <Signup />
               </ProtectedLoginRoute>
             } />
             <Route
