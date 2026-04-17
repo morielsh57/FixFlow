@@ -1,4 +1,3 @@
-import { useMemo } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/store';
 import './IssueCard.scss';
 import { openEditIssueModal } from './issues.store';
@@ -10,26 +9,14 @@ interface Props {
 
 const IssueCard = ({ issue }: Props) => {
   const dispatch = useAppDispatch();
-  const { companyPersonForAssigne, issuePriorities } = useAppSelector(
-    (state) => state.issuesReducer,
-  );
+  const { user } = useAppSelector((state) => state.userStoreReducer);
 
-  const assigneeLabel = useMemo(() => {
-    const assignee = companyPersonForAssigne.find(
-      (person) => person.id === issue.assigned,
-    );
-
-    if (!assignee) {
-      return 'Unknown user';
-    }
-
-    return `${assignee.first_name} ${assignee.last_name} (${assignee.username})`;
-  }, [companyPersonForAssigne, issue.assigned]);
-
-  const priorityLabel = useMemo(() => {
-    const priority = issuePriorities.find((item) => item.id === issue.priority);
-    return priority?.title ?? `P-${issue.priority}`;
-  }, [issue.priority, issuePriorities]);
+  const isAssignedToMe = Boolean(user?.id && issue.assigned.id === user.id);
+  const assigneeLabel = isAssignedToMe
+    ? 'Assigned to me'
+    : `${issue.assigned.first_name} ${issue.assigned.last_name}`;
+  const reporterLabel = `${issue.requester.first_name} ${issue.requester.last_name}`;
+  const priorityLabel = issue.priority.title;
 
   const onOpenIssueDetails = () => {
     dispatch(openEditIssueModal(issue));
@@ -38,7 +25,9 @@ const IssueCard = ({ issue }: Props) => {
   return (
     <article className="issue-card" onClick={onOpenIssueDetails}>
       <div className="issue-card__top">
-        <h2 className="issue-card__title">{issue.title}</h2>
+        <h2 className="issue-card__title" title={issue.title}>
+          {issue.title}
+        </h2>
         <span
           className={`issue-card__status issue-card__status--${issue.status
             .toLowerCase()
@@ -48,12 +37,23 @@ const IssueCard = ({ issue }: Props) => {
         </span>
       </div>
 
-      <p className="issue-card__description">{issue.description}</p>
+      <p className="issue-card__description" title={issue.description}>
+        {issue.description}
+      </p>
 
       <div className="issue-card__labels">
         <span className="issue-card__chip">
           <span className="issue-card__label">Assignee:</span>
-          <span className="issue-card__assignee">{assigneeLabel}</span>
+          <span
+            className={`issue-card__assignee ${isAssignedToMe ? 'issue-card__assignee--me' : ''}`}
+          >
+            {assigneeLabel}
+          </span>
+        </span>
+
+        <span className="issue-card__chip">
+          <span className="issue-card__label">Reporter:</span>
+          <span className="issue-card__assignee">{reporterLabel}</span>
         </span>
 
         <span className="issue-card__chip">

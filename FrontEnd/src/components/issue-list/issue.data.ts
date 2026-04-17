@@ -3,7 +3,9 @@ import {
   IIssue,
   IIssuePriority,
 } from './issue.types';
+import { IUser } from '../../shared/store/user.types';
 
+// mock data for testing
 export const mockIssuePriorities: IIssuePriority[] = [
   { id: 1, title: 'Low' },
   { id: 2, title: 'Medium' },
@@ -18,6 +20,45 @@ export const mockCompanyPersonForAssigne: ICompanyPersonForAssigne[] = [
   { id: 4, username: 'lea', first_name: 'Lea', last_name: 'Taylor' },
 ];
 
+const mockIssueUsers: IUser[] = [
+  {
+    id: 1,
+    username: 'emma',
+    first_name: 'Emma',
+    last_name: 'Smith',
+    email: 'emma@example.com',
+    phone_number: '0500000001',
+    department: null,
+  },
+  {
+    id: 2,
+    username: 'alice',
+    first_name: 'Alice',
+    last_name: 'Brown',
+    email: 'alice@example.com',
+    phone_number: '0500000002',
+    department: null,
+  },
+  {
+    id: 3,
+    username: 'david',
+    first_name: 'David',
+    last_name: 'Miller',
+    email: 'david@example.com',
+    phone_number: '0500000003',
+    department: null,
+  },
+  {
+    id: 4,
+    username: 'lea',
+    first_name: 'Lea',
+    last_name: 'Taylor',
+    email: 'lea@example.com',
+    phone_number: '0500000004',
+    department: null,
+  },
+];
+
 export const mockIssues: IIssue[] = [
   {
     id: 1,
@@ -27,9 +68,9 @@ export const mockIssues: IIssue[] = [
     status: 'Open',
     date_created: '2026-03-30T08:15:00.000Z',
     date_updated: '2026-04-08T09:30:00.000Z',
-    priority: 3,
-    assigned: 1,
-    requester: 1,
+    priority: mockIssuePriorities[2],
+    assigned: mockIssueUsers[0],
+    requester: mockIssueUsers[0],
   },
   {
     id: 2,
@@ -39,9 +80,9 @@ export const mockIssues: IIssue[] = [
     status: 'In Progress',
     date_created: '2026-03-25T10:20:00.000Z',
     date_updated: '2026-04-09T14:15:00.000Z',
-    priority: 2,
-    assigned: 1,
-    requester: 1,
+    priority: mockIssuePriorities[1],
+    assigned: mockIssueUsers[0],
+    requester: mockIssueUsers[0],
   },
   {
     id: 3,
@@ -51,9 +92,9 @@ export const mockIssues: IIssue[] = [
     status: 'Closed',
     date_created: '2026-03-15T11:00:00.000Z',
     date_updated: '2026-04-01T16:40:00.000Z',
-    priority: 4,
-    assigned: 1,
-    requester: 1,
+    priority: mockIssuePriorities[3],
+    assigned: mockIssueUsers[0],
+    requester: mockIssueUsers[0],
   },
   {
     id: 4,
@@ -63,8 +104,8 @@ export const mockIssues: IIssue[] = [
     status: 'Open',
     date_created: '2026-03-28T09:45:00.000Z',
     date_updated: '2026-04-07T13:10:00.000Z',
-    priority: 1,
-    assigned: 2,
-    requester: 1,
+    priority: mockIssuePriorities[0],
+    assigned: mockIssueUsers[1],
+    requester: mockIssueUsers[0],
   },
 ];

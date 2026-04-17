@@ -5,6 +5,7 @@ import {
   closeIssueModal,
   createIssueOptimisticAction,
   createIssueReqAction,
+  removeIssueOptimisticActionById,
   updateIssueOptimisticAction,
   updateIssueReqAction,
 } from '../issues.store';
@@ -12,9 +13,13 @@ import {
   IIssue,
   IIssueCreateReqPayload,
   IIssueDetailsFormValues,
-  IIssueUpdateReqPayload,
+  IIssueOptimisticUpdatePayload,
+  IIssuePriority,
+  IIssueUpdateReqActionPayload,
   IssueModalMode,
 } from '../issue.types';
+import { IUser } from '../../../shared/store/user.types';
+import { showErrorAlert } from '../../../shared/utils/alerts.utils';
 
 interface UseIssueDetailsFormControllerParams {
   mode: IssueModalMode;
@@ -23,60 +28,6 @@ interface UseIssueDetailsFormControllerParams {
 
 type FormFieldName = keyof IIssueDetailsFormValues;
 
-const getNextIssueId = (issues: IIssue[]) =>
-  issues.reduce((maxId, issue) => Math.max(maxId, issue.id), 0) + 1;
-
-const getFormDefaults = (
-  mode: IssueModalMode,
-  issue: IIssue | undefined,
-  defaultPriorityId: number,
-  defaultAssigneeId: number,
-): IIssueDetailsFormValues => {
-  if (mode === 'edit' && issue) {
-    return {
-      title: issue.title,
-      description: issue.description,
-      location: issue.location,
-      status: issue.status,
-      priority: issue.priority,
-      assigned: issue.assigned,
-    };
-  }
-
-  return {
-    title: '',
-    description: '',
-    location: '',
-    status: 'Open',
-    priority: defaultPriorityId,
-    assigned: defaultAssigneeId,
-  };
-};
-
-const createUpdatePayload = (
-  id: number,
-  field: FormFieldName,
-  value: string | number,
-): IIssueUpdateReqPayload => {
-  const dateUpdated = new Date().toISOString();
-
-  switch (field) {
-    case 'title':
-      return { id, title: value as string, date_updated: dateUpdated };
-    case 'description':
-      return { id, description: value as string, date_updated: dateUpdated };
-    case 'location':
-      return { id, location: value as string, date_updated: dateUpdated };
-    case 'status':
-      return { id, status: value as IIssueUpdateReqPayload['status'], date_updated: dateUpdated };
-    case 'priority':
-      return { id, priority: value as number, date_updated: dateUpdated };
-    case 'assigned':
-      return { id, assigned: value as number, date_updated: dateUpdated };
-    default:
-      return { id, date_updated: dateUpdated };
-  }
-};
 
 export const useIssueDetailsForm = ({
   mode,
@@ -86,14 +37,15 @@ export const useIssueDetailsForm = ({
 
   const {
     issues,
-    issuePriorities,
-    companyPersonForAssigne,
+    priorityListRes,
     createIssueReqState,
     updateIssueReqState,
   } = useAppSelector((state) => state.issuesReducer);
+  const { userList, user } = useAppSelector((state) => state.userStoreReducer);
 
-  const defaultPriorityId = issuePriorities[0]?.id ?? 0;
-  const defaultAssigneeId = companyPersonForAssigne[0]?.id ?? 0;
+  const priorityList = priorityListRes.data?.data ?? [];
+  const defaultPriorityId = priorityList[0]?.id ?? 1;
+  const defaultAssigneeId = userList[0]?.id ?? 1;
 
   const defaultValues = useMemo(
     () => getFormDefaults(mode, issue, defaultPriorityId, defaultAssigneeId),
@@ -101,23 +53,37 @@ export const useIssueDetailsForm = ({
   );
 
   const latestValuesRef = useRef<IIssueDetailsFormValues>(defaultValues);
+  const initializedIssueIdRef = useRef<number | undefined>(undefined);
 
   const {
     register,
     handleSubmit,
     reset,
-    setValue,
-    watch,
+    control,
     formState,
   } = useForm<IIssueDetailsFormValues>({
     mode: 'onChange',
     defaultValues,
   });
 
+  // reset the form data with defaultValues when the modal is opened or when the issue changes (in edit mode)
   useEffect(() => {
-    latestValuesRef.current = defaultValues;
-    reset(defaultValues);
-  }, [defaultValues, reset]);
+    if (mode === 'create') {
+      latestValuesRef.current = defaultValues;
+      reset(defaultValues);
+      initializedIssueIdRef.current = undefined;
+      return;
+    }
+
+    if (mode === 'edit' && !!issue?.id) {
+      // only reset the form with issue details when the opened issue changes
+      if (initializedIssueIdRef.current !== issue.id) {
+        latestValuesRef.current = defaultValues;
+        reset(defaultValues);
+        initializedIssueIdRef.current = issue.id;
+      }
+    }
+  }, [defaultValues, issue?.id, mode, reset]);
 
   const patchFieldIfNeeded = useCallback(
     (field: FormFieldName, value: string | number) => {
@@ -131,14 +97,32 @@ export const useIssueDetailsForm = ({
 
       latestValuesRef.current = {
         ...latestValuesRef.current,
-        [field]: value as never,
+        [field]: value,
       };
 
-      const payload = createUpdatePayload(issue.id, field, value);
-      dispatch(updateIssueOptimisticAction(payload));
-      dispatch(updateIssueReqAction(payload));
+      const optimisticPayload = createOptimisticUpdatePayload(
+        issue.id,
+        field,
+        value,
+        priorityList,
+        userList,
+      );
+      const requestPayload = { [field]: value };
+      const updateRequestArgs: IIssueUpdateReqActionPayload = {
+        id: issue.id,
+        payload: requestPayload,
+      };
+
+      dispatch(updateIssueOptimisticAction(optimisticPayload));
+      void dispatch(updateIssueReqAction(updateRequestArgs))
+        .unwrap()
+        .catch((error) => {
+          const errorMessage = (error as { message?: string })?.message;
+          showErrorAlert(errorMessage);
+          // TODO: revert the optimistic update by patching the field back to the original value
+        });
     },
-    [dispatch, issue, mode],
+    [dispatch, issue, mode, priorityList, userList],
   );
 
   const handleTextBlur = useCallback(
@@ -150,62 +134,82 @@ export const useIssueDetailsForm = ({
 
   const handleStatusChange = useCallback(
     (value: IIssueDetailsFormValues['status']) => {
-      setValue('status', value, { shouldDirty: true, shouldValidate: true });
       patchFieldIfNeeded('status', value);
     },
-    [patchFieldIfNeeded, setValue],
+    [patchFieldIfNeeded],
   );
 
   const handlePriorityChange = useCallback(
     (value: number) => {
-      setValue('priority', value, { shouldDirty: true, shouldValidate: true });
       patchFieldIfNeeded('priority', value);
     },
-    [patchFieldIfNeeded, setValue],
+    [patchFieldIfNeeded],
   );
 
   const handleAssignedChange = useCallback(
     (value: number) => {
-      setValue('assigned', value, { shouldDirty: true, shouldValidate: true });
       patchFieldIfNeeded('assigned', value);
     },
-    [patchFieldIfNeeded, setValue],
+    [patchFieldIfNeeded],
   );
 
   const onCreateSubmit = handleSubmit((values) => {
-    if (mode !== 'create') {
+    if (mode !== 'create' || !user?.id) {
       return;
     }
 
-    const nowIsoDate = new Date().toISOString();
     const payload: IIssueCreateReqPayload = {
       title: values.title,
       description: values.description,
       location: values.location,
       status: 'Open',
-      date_created: nowIsoDate,
-      date_updated: nowIsoDate,
       priority: Number(values.priority),
       assigned: Number(values.assigned),
-      requester: 1,
+      requester: user.id,
     };
 
+    const selectedPriority = priorityList.find(
+      (priority) => priority.id === payload.priority,
+    );
+
+    const selectedAssignee = userList.find(
+      (person) => person.id === payload.assigned,
+    );
+
+    const nowIsoDate = new Date().toISOString();
     const optimisticIssue: IIssue = {
       id: getNextIssueId(issues),
-      ...payload,
+      date_created: nowIsoDate,
+      date_updated: nowIsoDate,
+      title: payload.title,
+      description: payload.description,
+      location: payload.location,
+      status: payload.status,
+      priority: selectedPriority!,
+      assigned: selectedAssignee!,
+      requester: user,
     };
 
     dispatch(createIssueOptimisticAction(optimisticIssue));
-    dispatch(createIssueReqAction(payload));
-    dispatch(closeIssueModal());
+    dispatch(createIssueReqAction(payload))
+      .unwrap()
+      .then(() => {
+        dispatch(closeIssueModal());
+      })
+      .catch(() => {
+        // pop the new optimisticIssue from the issues list and show error alert since creation failed
+        dispatch(removeIssueOptimisticActionById(optimisticIssue.id));
+        showErrorAlert("Failed to create issue. Please try again.");
+      });
+
   });
 
   return {
     register,
-    watch,
+    control,
     formState,
-    issuePriorities,
-    companyPersonForAssigne,
+    priorityList,
+    userList,
     onCreateSubmit,
     handleTextBlur,
     handleStatusChange,
@@ -214,4 +218,60 @@ export const useIssueDetailsForm = ({
     createIssueReqState,
     updateIssueReqState,
   };
+};
+
+// Hook helpers
+const getFormDefaults = (
+  mode: IssueModalMode,
+  issue: IIssue | undefined,
+  defaultPriorityId: number,
+  defaultAssigneeId: number,
+): IIssueDetailsFormValues => {
+  if (mode === 'edit' && issue) {
+    return {
+      title: issue.title,
+      description: issue.description,
+      location: issue.location,
+      status: issue.status,
+      priority: issue.priority.id,
+      assigned: issue.assigned.id,
+    };
+  }
+
+  // default values for create mode
+  return {
+    title: '',
+    description: '',
+    location: '',
+    status: 'Open',
+    priority: defaultPriorityId,
+    assigned: defaultAssigneeId,
+  };
+};
+
+const getNextIssueId = (issues: IIssue[]) =>
+  issues.reduce((maxId, issue) => Math.max(maxId, issue.id), 0) + 1;
+
+const createOptimisticUpdatePayload = (
+  id: number,
+  field: FormFieldName,
+  value: string | number,
+  priorityList: IIssuePriority[],
+  userList: IUser[],
+): IIssueOptimisticUpdatePayload => {
+  const dateUpdated = new Date().toISOString();
+
+  const payload = { id, date_updated: dateUpdated } as IIssueOptimisticUpdatePayload;
+
+  if (field === 'priority') {
+    const priorityId = Number(value);
+    payload.priority = priorityList.find((priority) => priority.id === priorityId)
+    return payload;
+  } else if (field === 'assigned') {
+    const assignedId = Number(value);
+    payload.assigned = userList.find((person) => person.id === assignedId)
+    return payload;
+  } else {
+    return { ...payload, [field]: value } as IIssueOptimisticUpdatePayload;
+  }
 };

@@ -1,3 +1,4 @@
+import { Controller } from 'react-hook-form';
 import './IssueDetailsForm.scss';
 import AppSelect, {
   IAppSelectOption,
@@ -13,9 +14,10 @@ interface IssueDetailsFormProps {
 const IssueDetailsForm = ({ mode, issue }: IssueDetailsFormProps) => {
   const {
     register,
+    control,
     formState,
-    issuePriorities,
-    companyPersonForAssigne,
+    priorityList,
+    userList,
     onCreateSubmit,
     handleTextBlur,
     handleStatusChange,
@@ -23,7 +25,6 @@ const IssueDetailsForm = ({ mode, issue }: IssueDetailsFormProps) => {
     handleAssignedChange,
     createIssueReqState,
     updateIssueReqState,
-    watch,
   } = useIssueDetailsForm({
     mode,
     issue,
@@ -41,28 +42,9 @@ const IssueDetailsForm = ({ mode, issue }: IssueDetailsFormProps) => {
     required: 'Location is required.',
   });
 
-  const statusField = register('status', {
-    required: 'Status is required.',
-  });
-
-  const priorityField = register('priority', {
-    required: 'Priority is required.',
-    valueAsNumber: true,
-    min: 1,
-  });
-
-  const assignedField = register('assigned', {
-    required: 'Assigned user is required.',
-    valueAsNumber: true,
-    min: 1,
-  });
-
   const isCreateMode = mode === 'create';
   const createRequestError = createIssueReqState.error?.message;
   const updateRequestError = updateIssueReqState.error?.message;
-  const statusValue = watch('status');
-  const priorityValue = watch('priority');
-  const assignedValue = watch('assigned');
 
   const statusOptions: IAppSelectOption[] = [
     {
@@ -82,12 +64,12 @@ const IssueDetailsForm = ({ mode, issue }: IssueDetailsFormProps) => {
     },
   ];
 
-  const priorityOptions: IAppSelectOption[] = issuePriorities.map((priority) => ({
+  const priorityOptions: IAppSelectOption[] = priorityList.map((priority) => ({
     value: priority.id,
     label: priority.title,
   }));
 
-  const assignedOptions: IAppSelectOption[] = companyPersonForAssigne.map((person) => ({
+  const assignedOptions: IAppSelectOption[] = userList.map((person) => ({
     value: person.id,
     searchLabel: `${person.first_name} ${person.last_name} ${person.username}`,
     label: `${person.first_name} ${person.last_name}`,
@@ -158,20 +140,24 @@ const IssueDetailsForm = ({ mode, issue }: IssueDetailsFormProps) => {
           <label className="issue-details-form-label" htmlFor="issue-status">
             Status
           </label>
-          <AppSelect
-            id="issue-status"
-            value={statusValue}
-            className="issue-details-form-app-select"
-            options={statusOptions}
-            onBlur={() =>
-              statusField.onBlur({
-                target: { name: statusField.name },
-                type: 'blur',
-              } as never)
-            }
-            onChange={(nextValue) => {
-              handleStatusChange(nextValue as IssueStatus);
-            }}
+          <Controller
+            name="status"
+            control={control}
+            rules={{ required: 'Status is required.' }}
+            render={({ field }) => (
+              <AppSelect
+                id="issue-status"
+                value={field.value}
+                className="issue-details-form-app-select"
+                options={statusOptions}
+                onBlur={field.onBlur}
+                onChange={(nextValue) => {
+                  const normalizedValue = nextValue as IssueStatus;
+                  field.onChange(normalizedValue);
+                  handleStatusChange(normalizedValue);
+                }}
+              />
+            )}
           />
         </div>
       )}
@@ -180,20 +166,25 @@ const IssueDetailsForm = ({ mode, issue }: IssueDetailsFormProps) => {
         <label className="issue-details-form-label" htmlFor="issue-priority">
           Priority
         </label>
-        <AppSelect
-          id="issue-priority"
-          value={priorityValue}
-          className="issue-details-form-app-select"
-          options={priorityOptions}
-          onBlur={() =>
-            priorityField.onBlur({
-              target: { name: priorityField.name },
-              type: 'blur',
-            } as never)
-          }
-          onChange={(nextValue) => {
-            handlePriorityChange(Number(nextValue));
+        <Controller
+          name="priority"
+          control={control}
+          rules={{
+            required: 'Priority is required.',
           }}
+          render={({ field }) => (
+              <AppSelect
+                id="issue-priority"
+                value={field.value}
+                className="issue-details-form-app-select"
+                options={priorityOptions}
+                onBlur={field.onBlur}
+              onChange={(nextValue) => {
+                field.onChange(Number(nextValue));
+                handlePriorityChange(Number(nextValue));
+              }}
+            />
+          )}
         />
       </div>
 
@@ -201,23 +192,30 @@ const IssueDetailsForm = ({ mode, issue }: IssueDetailsFormProps) => {
         <label className="issue-details-form-label" htmlFor="issue-assigned">
           Assigned
         </label>
-        <AppSelect
-          id="issue-assigned"
-          value={assignedValue}
-          className="issue-details-form-app-select"
-          searchSelect
-          onSearch={() => {}}
-          placeholder="Select a person"
-          options={assignedOptions}
-          onBlur={() =>
-            assignedField.onBlur({
-              target: { name: assignedField.name },
-              type: 'blur',
-            } as never)
-          }
-          onChange={(nextValue) => {
-            handleAssignedChange(Number(nextValue));
+        <Controller
+          name="assigned"
+          control={control}
+          rules={{
+            required: 'Assigned user is required.',
+            min: 1,
           }}
+          render={({ field }) => (
+              <AppSelect
+                id="issue-assigned"
+                value={field.value}
+                className="issue-details-form-app-select"
+                searchSelect
+              onSearch={() => {}}
+              placeholder="Select a person"
+              options={assignedOptions}
+              onBlur={field.onBlur}
+              onChange={(nextValue) => {
+                const normalizedValue = Number(nextValue);
+                field.onChange(normalizedValue);
+                handleAssignedChange(normalizedValue);
+              }}
+            />
+          )}
         />
       </div>
 

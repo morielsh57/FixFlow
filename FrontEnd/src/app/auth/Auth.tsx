@@ -24,7 +24,7 @@ export const Auth: React.FC<React.PropsWithChildren> = ({ children }) => {
         // on success login get the user data and navigate to the issues page
         dispatch(getUserById({ id: userId }))
           .unwrap()
-          .then(() => {
+          .finally(() => {
             navigate(`${APP_ROUTING_PATHS.HOME}/${APP_ROUTING_PATHS.ISSUES}`);
           })
       }

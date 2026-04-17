@@ -7,18 +7,21 @@ export const APP_ROUTING_PATHS = {
 
 export const API_ROUTES = {
   AUTH: {
-    SIGNUP: '/add-user/',
-    LOGIN: '/login/',
-    REFRESH: '/token/refresh/',
+    SIGNUP: '/add-user',
+    LOGIN: '/login',
+    REFRESH: '/token/refresh',
   },
-  USERS: '/users/',
+  USERS: '/users',
   ISSUES: {
-    UPDATE_ISSUE: 'issues-new/',
-    CREATE_ISSUE: 'issues-new/',
+    GET_ISSUES: '/all-issues',
+    UPDATE_ISSUE: '/issue',
+    CREATE_ISSUE: '/issues-new',
+    GET_PRIORITIES: '/priority',
   },
 };
 
 export const AUTH_LOCAL_STORAGE_KEYS = {
   ACCESS_TOKEN: 'accessToken',
   REFRESH_TOKEN: 'refreshToken',
+  USER: 'user',
 };

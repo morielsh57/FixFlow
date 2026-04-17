@@ -10,58 +10,70 @@ import {
   createAPIReducerCases,
 } from '../../shared/store/utils';
 import {
-  mockCompanyPersonForAssigne,
   mockIssuePriorities,
-  mockIssues,
 } from './issue.data';
 import {
-  ICompanyPersonForAssigne,
   IIssue,
   IIssueCreateReqPayload,
   IIssueDetailsModalState,
+  IIssueOptimisticUpdatePayload,
   IIssuePriority,
-  IIssueUpdateReqPayload,
+  IIssueUpdateReqActionPayload,
 } from './issue.types';
 import {
   applyIssueUpdateOnList,
   getInitialIssueDetailsModalState,
-  mapIssueToUpdateReqPayload,
-  reconcileCreatedIssueOnList,
   setIssueDetailsModalState,
 } from './issues.utils';
+import { showErrorAlert } from '../../shared/utils/alerts.utils';
 
 export interface IssuesStoreState {
   issues: IIssue[];
-  issuePriorities: IIssuePriority[];
-  companyPersonForAssigne: ICompanyPersonForAssigne[];
   issueDetailsModal: IIssueDetailsModalState;
-  createIssueReqState: IAPIRequestState<IIssue>;
-  updateIssueReqState: IAPIRequestState<IIssue>;
+  createIssueReqState: IAPIRequestState<{data: IIssue}>;
+  updateIssueReqState: IAPIRequestState<{data: IIssue}>;
+  priorityListRes: IAPIRequestState<{data: IIssuePriority[]}>;
+  getIssuesRes: IAPIRequestState<{data: IIssue[]}>;
 }
 
 const initialState: IssuesStoreState = {
-  issues: mockIssues,
-  issuePriorities: mockIssuePriorities,
-  companyPersonForAssigne: mockCompanyPersonForAssigne,
+  issues: [],
   issueDetailsModal: getInitialIssueDetailsModalState(),
-  createIssueReqState: APIRequestState.create<IIssue>(),
-  updateIssueReqState: APIRequestState.create<IIssue>(),
+  createIssueReqState: APIRequestState.create<{data: IIssue}>(),
+  updateIssueReqState: APIRequestState.create<{data: IIssue}>(),
+  priorityListRes: APIRequestState.create<{data: IIssuePriority[]}>(),
+  getIssuesRes: APIRequestState.create<{data: IIssue[]}>(),
 };
 
 const createReducerKey = (subKey: string): string => {
   return 'issues/' + subKey;
 };
 
-export const createIssueReqAction = createApiThunk<IIssue, IIssueCreateReqPayload>(
-  createReducerKey('createIssueReqAction'),
-  async (reqPayload?: IIssueCreateReqPayload) =>
-    apiService.post<IIssue>(`${API_ROUTES.ISSUES.CREATE_ISSUE}`, reqPayload),
+export const getIssuesReqAction = createApiThunk(
+  createReducerKey('getIssuesReqAction'),
+  async () =>
+    apiService.get<{data: IIssue[]}>(`${API_ROUTES.ISSUES.GET_ISSUES}`),
 );
 
-export const updateIssueReqAction = createApiThunk<IIssue, IIssueUpdateReqPayload>(
+export const createIssueReqAction = createApiThunk(
+  createReducerKey('createIssueReqAction'),
+  async (reqPayload?: IIssueCreateReqPayload) =>
+    apiService.post<{data: IIssue}>(`${API_ROUTES.ISSUES.CREATE_ISSUE}`, reqPayload),
+);
+
+export const updateIssueReqAction = createApiThunk(
   createReducerKey('updateIssueReqAction'),
-  async (reqPayload?: IIssueUpdateReqPayload) =>
-    apiService.patch<IIssue>(`${API_ROUTES.ISSUES.UPDATE_ISSUE}`, reqPayload),
+  async (reqPayload?: IIssueUpdateReqActionPayload) =>
+    apiService.patch<{data: IIssue}>(
+      `${API_ROUTES.ISSUES.UPDATE_ISSUE}/${reqPayload?.id}`,
+      reqPayload?.payload,
+    ),
+);
+
+export const getPriorityListReqAction = createApiThunk(
+  createReducerKey('getPriorityListReqAction'),
+  async () =>
+    apiService.get<{data: IIssuePriority[]}>(`${API_ROUTES.ISSUES.GET_PRIORITIES}`),
 );
 
 export const openCreateIssueModal = createAction(
@@ -78,7 +90,11 @@ export const createIssueOptimisticAction = createAction<IIssue>(
   createReducerKey('createIssueOptimisticAction'),
 );
 
-export const updateIssueOptimisticAction = createAction<IIssueUpdateReqPayload>(
+export const removeIssueOptimisticActionById = createAction<number>(
+  createReducerKey('removeIssueOptimisticActionById'),
+);
+
+export const updateIssueOptimisticAction = createAction<IIssueOptimisticUpdatePayload>(
   createReducerKey('updateIssueOptimisticAction'),
 );
 
@@ -96,7 +112,13 @@ export const issuesReducer = createReducer(initialState, (builder) => {
   });
 
   builder.addCase(createIssueOptimisticAction, (state, action) => {
+    // push the new issue to the top of the list optimistically
     state.issues.unshift(action.payload);
+  });
+
+  builder.addCase(removeIssueOptimisticActionById, (state, action) => {
+    // remove the issue with the given id from the list
+    state.issues = state.issues.filter((issue) => issue.id !== action.payload);
   });
 
   builder.addCase(updateIssueOptimisticAction, (state, action) => {
@@ -110,15 +132,23 @@ export const issuesReducer = createReducer(initialState, (builder) => {
     }
   });
 
+  createAPIReducerCases(getIssuesReqAction, 'getIssuesRes', builder, {
+    onPending(state) {
+      const issuesState = state as IssuesStoreState;
+      issuesState.getIssuesRes.error = undefined;
+    },
+    onFulfilled(state, reqData) {
+      const issuesState = state as IssuesStoreState;
+      issuesState.issues = [...reqData.data];
+    },
+    onRejected() {},
+  });
   createAPIReducerCases(createIssueReqAction, 'createIssueReqState', builder, {
     onPending(state) {
       const issuesState = state as IssuesStoreState;
       issuesState.createIssueReqState.error = undefined;
     },
-    onFulfilled(state, reqData) {
-      const issuesState = state as IssuesStoreState;
-      reconcileCreatedIssueOnList(issuesState.issues, reqData);
-    },
+    onFulfilled() {},
     onRejected() {},
   });
 
@@ -127,17 +157,11 @@ export const issuesReducer = createReducer(initialState, (builder) => {
       const issuesState = state as IssuesStoreState;
       issuesState.updateIssueReqState.error = undefined;
     },
-    onFulfilled(state, reqData) {
-      const issuesState = state as IssuesStoreState;
-      applyIssueUpdateOnList(
-        issuesState.issues,
-        mapIssueToUpdateReqPayload(reqData),
-      );
-
-      if (issuesState.issueDetailsModal.issue?.id === reqData.id) {
-        issuesState.issueDetailsModal.issue = reqData;
-      }
+    onFulfilled() {},
+    onRejected() {
+      showErrorAlert('Failed to update issue. Please try again.');
     },
-    onRejected() {},
   });
+
+  createAPIReducerCases(getPriorityListReqAction, 'priorityListRes', builder, {});
 });
