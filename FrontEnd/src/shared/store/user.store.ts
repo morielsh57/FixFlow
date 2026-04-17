@@ -23,7 +23,7 @@ const initialState: UserStoreState = {
 
 export const getUserById = createApiThunk(
   'user/userById',
-  (params?: {id?: number}) => apiService.get<IGetUserByIdResponse>(`${API_ROUTES.USERS}${params?.id}/`),
+  (params?: {id?: number}) => apiService.get<IGetUserByIdResponse>(`${API_ROUTES.USERS}/${params?.id}`),
 );
 
 export const getUsersThunk = createApiThunk(

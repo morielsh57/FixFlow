@@ -7,16 +7,16 @@ export const APP_ROUTING_PATHS = {
 
 export const API_ROUTES = {
   AUTH: {
-    SIGNUP: '/add-user/',
-    LOGIN: '/login/',
-    REFRESH: '/token/refresh/',
+    SIGNUP: '/add-user',
+    LOGIN: '/login',
+    REFRESH: '/token/refresh',
   },
-  USERS: '/users/',
+  USERS: '/users',
   ISSUES: {
-    GET_ISSUES: '/all-issues/',
-    UPDATE_ISSUE: '/issue/',
-    CREATE_ISSUE: '/issues-new/',
-    GET_PRIORITIES: '/priority/',
+    GET_ISSUES: '/all-issues',
+    UPDATE_ISSUE: '/issue',
+    CREATE_ISSUE: '/issues-new',
+    GET_PRIORITIES: '/priority',
   },
 };
 

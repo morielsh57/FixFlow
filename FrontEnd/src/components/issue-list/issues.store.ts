@@ -65,7 +65,7 @@ export const updateIssueReqAction = createApiThunk(
   createReducerKey('updateIssueReqAction'),
   async (reqPayload?: IIssueUpdateReqActionPayload) =>
     apiService.patch<{data: IIssue}>(
-      `${API_ROUTES.ISSUES.UPDATE_ISSUE}${reqPayload?.id}/`,
+      `${API_ROUTES.ISSUES.UPDATE_ISSUE}/${reqPayload?.id}`,
       reqPayload?.payload,
     ),
 );
