@@ -24,9 +24,8 @@ export const Auth: React.FC<React.PropsWithChildren> = ({ children }) => {
         // on success login get the user data and navigate to the issues page
         dispatch(getUserById({ id: userId }))
           .unwrap()
-          .then((userData) => {
+          .finally(() => {
             navigate(`${APP_ROUTING_PATHS.HOME}/${APP_ROUTING_PATHS.ISSUES}`);
-            setItemInLocalStorage(AUTH_LOCAL_STORAGE_KEYS.USER, userData.data);
           })
       }
     },
