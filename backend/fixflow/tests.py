@@ -159,7 +159,7 @@ class IssuesAPITests(TestCase):
             assigned=self.user
         )
 
-        response = self.client.get('/all-issues/')
+        response = self.client.get('/all-issues')
         
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue('data' in response.data)
