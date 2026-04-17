@@ -60,6 +60,11 @@ jobs:
           cd backend
           python manage.py test
 
+  deployment:
+    needs: backend-testing
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
       - name: Deploy to Render
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         env:
