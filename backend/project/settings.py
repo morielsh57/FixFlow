@@ -183,5 +183,3 @@ STATIC_URL = 'static/'
 CORS_ALLOW_ALL_ORIGINS = True
 
 AUTH_USER_MODEL = 'fixflow.CustomUser'
-
-APPEND_SLASH = True
