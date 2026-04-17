@@ -116,8 +116,8 @@ class MyTokenObtainPairView(TokenObtainPairView):
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def tickets(request):
-    open_tickets = Issues.objects.filter(status=Issues.Status.OPEN)
-    serializer = get_issuesSerializer(open_tickets, many=True)
+    all_tickets = Issues.objects.all()
+    serializer = get_issuesSerializer(all_tickets, many=True)
     return Response({"data":serializer.data,"msg":"Ticket list fetched successfully"}, status=status.HTTP_200_OK)
 
 @api_view(['GET', 'PATCH'])
