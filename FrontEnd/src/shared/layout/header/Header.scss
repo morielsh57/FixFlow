@@ -1,0 +1,32 @@
+@import '../../styles/style.index.scss';
+
+.app-header {
+  @include displayFlex(space-between, center);
+  width: 100%;
+  min-height: 72px;
+  padding: 16px 28px;
+  border-bottom: 1px solid $purple2;
+  background: linear-gradient(180deg, $neutral1 50%, rgba($purple1, 0.7) 100%);
+  box-shadow: 0 4px 12px $neutral8;
+}
+
+.app-header--user {
+  margin: 0;
+  color: $neutral7;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.app-header--logout-btn {
+  font-weight: 700;
+}
+
+@media only screen and (max-width: 700px) {
+  .app-header {
+    padding: 14px 16px;
+  }
+
+  .app-header--user {
+    font-size: 0.85rem;
+  }
+}
