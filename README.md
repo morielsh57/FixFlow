@@ -34,7 +34,7 @@ The DB table that has been queried, the method that should be used, the expected
         <td rowspan="6">User</td>
     </tr>
     <tr>
-        <td>add-user/</td>
+        <td>add-user</td>
         <td>POST</td>
         <td>
             {<br/>
@@ -61,7 +61,7 @@ The DB table that has been queried, the method that should be used, the expected
         </td>
     </tr>
         <tr>
-        <td>users/</td>
+        <td>users</td>
         <td>GET</td>
         <td>
             Authentication required<br/>
@@ -76,7 +76,7 @@ The DB table that has been queried, the method that should be used, the expected
         </td>
     </tr>
         <tr>
-        <td>users/&lt;int (id)&gt;/</td>
+        <td>users/&lt;int (id)&gt;</td>
         <td>GET</td>
         <td>
             Authentication required<br/>
@@ -106,7 +106,7 @@ The DB table that has been queried, the method that should be used, the expected
         </td>
     </tr>
     <tr>
-        <td>change-password/</td>
+        <td>change-password</td>
         <td>PATCH</td>
         <td>
             {<br/>
@@ -133,7 +133,7 @@ The DB table that has been queried, the method that should be used, the expected
         </td>
     </tr>
     <tr>
-        <td>login/</td>
+        <td>login</td>
         <td>POST</td>
         <td>
             {<br/>
@@ -159,7 +159,7 @@ The DB table that has been queried, the method that should be used, the expected
         <td rowspan="6">Issues</td>
     </tr>
     <tr>
-        <td>all-issues/</td>
+        <td>all-issues</td>
         <td>GET</td>
         <td>
             Authentication required<br/>
@@ -174,7 +174,7 @@ The DB table that has been queried, the method that should be used, the expected
         </td>
     </tr>
     <tr>
-        <td rowspan="3">issue/&lt;int (id)&gt;/</td>
+        <td rowspan="3">issue/&lt;int (id)&gt;</td>
     </tr>
     <tr>
         <td>GET</td>
@@ -246,7 +246,7 @@ The DB table that has been queried, the method that should be used, the expected
         </td>
     </tr>
     <tr>
-        <td>issues-new/</td>
+        <td>issues-new</td>
         <td>POST</td>
         <td>
         Authentication required<br/>
@@ -281,7 +281,7 @@ The DB table that has been queried, the method that should be used, the expected
         <td rowspan="5">Departments</td>
     </tr>
     <tr>
-        <td>departments/</td>
+        <td>departments</td>
         <td>GET</td>
         <td>
             Authentication required<br/>
@@ -296,7 +296,7 @@ The DB table that has been queried, the method that should be used, the expected
         </td>
     </tr>
     <tr>
-        <td>departments/&lt;int (id)&gt;/</td>
+        <td>departments/&lt;int (id)&gt;</td>
         <td>GET</td>
         <td>
             Authentication required<br/>
@@ -316,7 +316,7 @@ The DB table that has been queried, the method that should be used, the expected
         </td>
     </tr>
     <tr>
-        <td>departments/add/</td>
+        <td>departments/add</td>
         <td>POST</td>
         <td>
             Authentication required<br/>
@@ -339,7 +339,7 @@ The DB table that has been queried, the method that should be used, the expected
         </td>
     </tr>
     <tr>
-        <td>departments/update/&lt;int (id)&gt;/</td>
+        <td>departments/update/&lt;int (id)&gt;</td>
         <td>PATCH</td>
         <td>
             Authentication required<br/>
@@ -375,7 +375,7 @@ The DB table that has been queried, the method that should be used, the expected
         <td rowspan="5">Priority</td>
     </tr>
     <tr>
-        <td>priority/</td>
+        <td>priority</td>
         <td>GET</td>
         <td>
             Authentication required<br/>
@@ -390,7 +390,7 @@ The DB table that has been queried, the method that should be used, the expected
         </td>
     </tr>
     <tr>
-        <td>priority/&lt;int (id)&gt;/</td>
+        <td>priority/&lt;int (id)&gt;</td>
         <td>GET</td>
         <td>
             Authentication required<br/>
@@ -415,7 +415,7 @@ The DB table that has been queried, the method that should be used, the expected
         </td>
     </tr>
     <tr>
-        <td>priority/update/&lt;int (id)&gt;/</td>
+        <td>priority/update/&lt;int (id)&gt;</td>
         <td>PATCH</td>
         <td>
             Authentication required<br/>
@@ -444,7 +444,7 @@ The DB table that has been queried, the method that should be used, the expected
         </td>
     </tr>
     <tr>
-        <td>priority/add/</td>
+        <td>priority/add</td>
         <td>POST</td>
         <td>
             Authentication required<br/>
