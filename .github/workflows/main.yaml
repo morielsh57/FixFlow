@@ -50,15 +50,22 @@ jobs:
 
       - name: Run Django Tests
         env:
-          DB_HOST: "localhost"
-          DB_PORT: "3306"
-          DB_NAME: "dummy_db"
-          DB_USER: "dummy_user"
-          DB_PASS: "dummy_password"
-          SECRET_KEY: "dummy_key"
+          DB_HOST: ${{ secrets.DB_HOST }}
+          DB_PORT: "12643"
+          DB_NAME: "test"
+          DB_USER: ${{ secrets.DB_USER }}
+          DB_PASS: ${{ secrets.DB_PASS }}
+          SECRET_KEY: ${{ secrets.SECRET_KEY }}
         run: |
           cd backend
           python manage.py test
+
+      - name: Deploy to Render
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          curl "$deploy_url"
 
   frontend-testing:
     needs: changes
