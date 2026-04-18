@@ -4,12 +4,12 @@ import { useEffect } from 'react';
 import { useAppDispatch } from '../../app/store';
 import { getUserById, getUsersThunk } from '../../shared/store/user.store';
 import { getPriorityListReqAction } from '../issue-list/issues.store';
-import { get } from 'http';
 import { getItemFromLocalStorage } from '../../shared/utils/localStorage.utils';
 import { AUTH_LOCAL_STORAGE_KEYS } from '../../app/constants';
 import { IUser } from '../../shared/store/user.types';
 import { logOut } from '../../shared/utils/logout';
 import { getUserIdFromToken } from '../../app/auth/auth.utils';
+import Header from '../../shared/layout/header/Header';
 
 export const Main = () => {
   const dispatch = useAppDispatch();
@@ -30,6 +30,7 @@ export const Main = () => {
 
   return (
     <div className="app-main">
+      <Header />
       <Outlet />
     </div>
   );

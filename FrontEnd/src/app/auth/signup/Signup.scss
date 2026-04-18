@@ -1,6 +1,10 @@
 @import '../../../shared/styles/style.index.scss';
 
 .signup-page-container {
+  .main-content-split .signup-signin-pic {
+    display: none;
+  }
+
   .signup-form {
     max-width: 620px;
     width: 100%;

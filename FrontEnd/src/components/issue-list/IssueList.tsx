@@ -41,24 +41,11 @@ const IssueList = () => {
     return userIssues.filter((issue) => issue.status.toLowerCase() === 'closed');
   }, [userIssues]);
 
-  const userName = () => {
-    if (user?.first_name) {
-      return `${user.first_name} ${user.last_name}`;
-    } else if (user?.username) {
-      return user.username;
-    }
-
-    return 'User';
-  };
-
   return (
     <div className="issue-list-page">
       <div className="issue-list-page__header">
         <div>
           <h1 className="issue-list-page__title">My Issues</h1>
-          <p className="issue-list-page__subtitle">
-            Logged in as {userName()}
-          </p>
         </div>
 
         <div className="issue-list-page__summary">
