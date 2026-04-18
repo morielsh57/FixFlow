@@ -1,25 +1,29 @@
 import type { ActionReducerMapBuilder } from '@reduxjs/toolkit';
-import { createReducer } from '@reduxjs/toolkit';
+import { createAction, createReducer } from '@reduxjs/toolkit';
 import { API_ROUTES, AUTH_LOCAL_STORAGE_KEYS } from '../constants';
 import { apiService, createApiThunk } from '../../shared/api/axios';
 import { APIRequestState, type IAPIRequestState } from '../../shared/api/models';
 import { createAPIReducerCases, type ApiDataStateType } from '../../shared/store/utils';
 import { setItemInLocalStorage } from '../../shared/utils/localStorage.utils';
-import { LoginRequest, LoginResponse, SignupRequest, SignupResponse } from './auth.types';
+import { LoginRequest, LoginResponse, SignupRequest } from './auth.types';
 
 export interface AuthStoreState extends ApiDataStateType {
-  signupRes: IAPIRequestState<SignupResponse>;
+  signupRes: IAPIRequestState<void>;
   loginRes: IAPIRequestState<LoginResponse>;
+  signupLoginPayload?: LoginRequest;
 }
 
 const initialState: AuthStoreState = {
-  signupRes: APIRequestState.create<SignupResponse>(),
+  signupRes: APIRequestState.create<void>(),
   loginRes: APIRequestState.create<LoginResponse>(),
+  signupLoginPayload: undefined,
 };
 
-export const signupRequest = createApiThunk<SignupResponse, SignupRequest>(
+export const setSignupLoginPayload = createAction<LoginRequest>('auth/setSignupLoginPayload');
+
+export const signupRequest = createApiThunk<void, SignupRequest>(
   'auth/signup',
-  (payload) => apiService.post<SignupResponse>(API_ROUTES.AUTH.SIGNUP, payload),
+  (payload) => apiService.post<void>(API_ROUTES.AUTH.SIGNUP, payload),
 );
 
 export const loginRequest = createApiThunk<LoginResponse, LoginRequest>(
@@ -29,6 +33,10 @@ export const loginRequest = createApiThunk<LoginResponse, LoginRequest>(
 
 export const authStoreReducer = createReducer(initialState, (builder) => {
   const apiBuilder = builder as unknown as ActionReducerMapBuilder<ApiDataStateType>;
+
+  builder.addCase(setSignupLoginPayload, (state, action) => {
+    state.signupLoginPayload = action.payload;
+  });
 
   createAPIReducerCases(signupRequest, 'signupRes', apiBuilder);
   createAPIReducerCases(loginRequest, 'loginRes', apiBuilder, {

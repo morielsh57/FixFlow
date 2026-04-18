@@ -1,0 +1,28 @@
+@import '../../../../shared/styles/style.index.scss';
+
+.Motivation-Sentences {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  max-width: 600px;
+  margin-bottom: 40px;
+  font-size: 20px;
+
+  h2.sentences {
+    font-size: 1.2rem;
+    color: $neutral9;
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .Motivation-Sentences {
+    margin-bottom: 24px;
+    h2.sentences{
+      margin: 0;
+    }
+  }
+}
