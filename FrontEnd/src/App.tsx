@@ -2,7 +2,6 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import { Main } from './components/main/Main';
 import Login from './app/auth/login/Login';
 import Signup from './app/auth/signup/Signup';
-import HomeExamples from './components/examples/Home';
 import IssueList from './components/issue-list/IssueList';
 import { APP_ROUTING_PATHS } from './app/constants';
 import './App.scss';
@@ -39,7 +38,6 @@ function App() {
               </ProtectedInnerAppRoute>
             }
           >
-            <Route path={APP_ROUTING_PATHS.HOME} element={<HomeExamples />} />
             <Route path={APP_ROUTING_PATHS.ISSUES} element={<IssueList />} />
           </Route>
           <Route
