@@ -9,6 +9,7 @@ class Departments(models.Model):
 class CustomUser(AbstractUser):
     department = models.ForeignKey(Departments,null=True,on_delete=models.SET_NULL)
     phone_number = models.CharField(max_length=15)
+    is_manager = models.BooleanField(null=False,default=False)
 
 class Priority(models.Model):
     id = models.AutoField(primary_key=True)
@@ -28,6 +29,7 @@ class Issues(models.Model):
     description = models.CharField(max_length=800)
     location = models.CharField(max_length=250)
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.OPEN)
-    priority = models.ForeignKey(Priority,null=False,on_delete=models.SET_DEFAULT,default="TBD")
+    department = models.ForeignKey(Departments,null=False,on_delete=models.SET_DEFAULT,default=1)
+    priority = models.ForeignKey(Priority,null=False,on_delete=models.SET_DEFAULT,default=1)
     requester = models.ForeignKey(CustomUser,null=False,on_delete=models.PROTECT,related_name='requested_issues') # CANNOT DELETE USER THAT OPENED AN ISSUE
     assigned = models.ForeignKey(CustomUser,null=False,on_delete=models.PROTECT,related_name='assigned_issues') # CANNOT DELETE USER THAT IS ASSIGNED TO AN ISSUE
