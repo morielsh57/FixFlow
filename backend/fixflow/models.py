@@ -10,6 +10,7 @@ class CustomUser(AbstractUser):
     department = models.ForeignKey(Departments,null=True,on_delete=models.SET_NULL)
     phone_number = models.CharField(max_length=15)
     is_manager = models.BooleanField(null=False,default=False)
+    theme = models.CharField(max_length=250,default=None)
 
 class Priority(models.Model):
     id = models.AutoField(primary_key=True)

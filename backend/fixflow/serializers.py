@@ -15,7 +15,7 @@ class userSerializer(serializers.ModelSerializer):
     department = departmentSerializer()
     class Meta:
         model = CustomUser
-        fields = ['id','username','first_name','last_name','email','phone_number','department','is_manager']
+        fields = ['id','username','first_name','last_name','email','phone_number','department','is_manager','theme']
 
 class get_issuesSerializer(serializers.ModelSerializer):
     department = departmentSerializer()
