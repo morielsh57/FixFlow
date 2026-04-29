@@ -73,6 +73,7 @@ def get_user(request,id):
     return Response({"data":serializer.data,"msg":"user fetched successfully"},status=status.HTTP_200_OK)
 
 @api_view(['PATCH'])
+@permission_classes([IsAuthenticated])
 def update_user(request,id):
     try:
         user = CustomUser.objects.get(id=id)
