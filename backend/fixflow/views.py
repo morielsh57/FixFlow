@@ -112,6 +112,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
         token = super().get_token(user)
         token['username'] = user.username
         token['id'] = user.id
+        token['manager'] = user.is_manager
         return token
 
 class MyTokenObtainPairView(TokenObtainPairView):
