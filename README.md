@@ -31,7 +31,7 @@ The DB table that has been queried, the method that should be used, the expected
     </tr>
     <!-- USER -->
     <tr>
-        <td rowspan="6">User</td>
+        <td rowspan="7">User</td>
     </tr>
     <tr>
         <td>add-user</td>
@@ -44,7 +44,9 @@ The DB table that has been queried, the method that should be used, the expected
                 “email” : &lt;string&gt;, <br/>
                 “department” : &lt;int (dep_id)&gt;,<br/>
                 “phone_number” : &lt;string&gt;,<br/>
-                “password” : &lt;string&gt;<br/>
+                “password” : &lt;string&gt;,<br/>
+                "is_manager" : &lt;boolean (optional)&gt;,<br/>
+                "theme" : &lt;string (optional)&gt;<br/>
             }
         </td>
         <td>
@@ -75,7 +77,7 @@ The DB table that has been queried, the method that should be used, the expected
             }
         </td>
     </tr>
-        <tr>
+    <tr>
         <td>users/&lt;int (id)&gt;</td>
         <td>GET</td>
         <td>
@@ -101,6 +103,40 @@ The DB table that has been queried, the method that should be used, the expected
             Failed: status = 404<br/>
             {<br/>
                 "msg" : "user not found",<br/>
+                "error" : &lt;error_msg&gt;<br/>
+            }
+        </td>
+    </tr>
+        <tr>
+        <td>users/&lt;int (id)&gt;/update</td>
+        <td>PATCH</td>
+        <td>
+            Authentication required<br/>
+            Note: can be partial, any of the keys is optional.<br/><br/>
+            {<br/>
+                “first_name” : &lt;string&gt;,<br/>
+                “last_name” : &lt;string&gt;,<br/>
+                “email” : &lt;string&gt;, <br/>
+                “department” : &lt;int (dep_id)&gt;,<br/>
+                “phone_number” : &lt;string&gt;,<br/>
+                “password” : &lt;string&gt;,<br/>
+                "is_manager" : &lt;boolean&gt;,<br/>
+                "theme" : &lt;string&gt;<br/>
+            }<br/>
+        </td>
+        <td>
+            Success: status = 200<br/>
+            {<br/>
+                "data" : <br/>
+                {<br/>
+                    &lt;user instance&gt;<br/>
+                },<br/>
+                "msg" : "user updated successfully"<br/>
+            }
+            <hr/>
+            Failed: status = 404<br/>
+            {<br/>
+                "msg" : "failed to update user",<br/>
                 "error" : &lt;error_msg&gt;<br/>
             }
         </td>
@@ -284,7 +320,6 @@ The DB table that has been queried, the method that should be used, the expected
         <td>departments</td>
         <td>GET</td>
         <td>
-            Authentication required<br/>
             None
         </td>
         <td>
@@ -299,7 +334,6 @@ The DB table that has been queried, the method that should be used, the expected
         <td>departments/&lt;int (id)&gt;</td>
         <td>GET</td>
         <td>
-            Authentication required<br/>
             None
         </td>
         <td>
