@@ -22,6 +22,7 @@ class PriorityModelTests(TestCase):
         self.assertEqual(priority.title, "Urgent")
         self.assertIsNotNone(priority.id)
 
+
 class CustomUserModelTests(TestCase):
     def setUp(self):
         self.department = Departments.objects.create(title="Engineering")
@@ -68,7 +69,8 @@ class IssuesModelExtendedTests(TestCase):
             location="Room 101",
             priority=self.priority,
             requester=self.user_requester,
-            assigned=self.user_assignee
+            assigned=self.user_assignee,
+            department=self.department,
         )
         
         # Verify the count increased by exactly 1
@@ -94,7 +96,8 @@ class IssuesModelExtendedTests(TestCase):
             status=Issues.Status.OPEN,
             priority=self.priority,
             requester=self.user_requester,
-            assigned=self.user_assignee
+            assigned=self.user_assignee,
+            department=self.department,
         )
         
         # Verify the count increased by exactly 1
@@ -116,7 +119,8 @@ class IssuesModelExtendedTests(TestCase):
             location="Main Office",
             priority=self.priority,
             requester=self.user_requester,
-            assigned=self.user_assignee
+            assigned=self.user_assignee,
+            department=self.department,
         )
         
         # Attempting to delete the assigned user should fail due to on_delete=models.PROTECT
@@ -156,7 +160,8 @@ class IssuesAPITests(TestCase):
             status=Issues.Status.OPEN,
             priority=self.priority,
             requester=self.user,
-            assigned=self.user
+            assigned=self.user,
+            department=self.department
         )
 
         response = self.client.get('/all-issues')
