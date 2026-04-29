@@ -61,31 +61,24 @@ def get_all_users(request):
     serializer = get_userSerializer(user,many=True)
     return Response({"data":serializer.data,"msg":"users list fetched successfully"},status=status.HTTP_200_OK)
 
-@api_view(['GET'])
+@api_view(['GET','PATCH'])
 @permission_classes([IsAuthenticated])
-def get_user(request,id):
+def get_edit_user(request,id):
     try:
         user = CustomUser.objects.get(id=id)
     except Exception as e:
         return Response({"msg":"user not found","error":f"{e}"}, status=status.HTTP_404_NOT_FOUND)
-    
-    serializer = get_userSerializer(user,many=False)
-    return Response({"data":serializer.data,"msg":"user fetched successfully"},status=status.HTTP_200_OK)
+    if request.method == 'GET':
+        serializer = get_userSerializer(user,many=False)
+        return Response({"data":serializer.data,"msg":"user fetched successfully"},status=status.HTTP_200_OK)
 
-@api_view(['PATCH'])
-@permission_classes([IsAuthenticated])
-def update_user(request,id):
-    try:
-        user = CustomUser.objects.get(id=id)
-    except Exception as e:
-        return Response({"msg":"user not found","error":f"{e}"}, status=status.HTTP_404_NOT_FOUND)
-    
-    serializer = edit_userSerializer(user, data=request.data, partial=True)
-    if serializer.is_valid():
-        serializer.save()
-        return Response({"data":serializer.data,"msg":"User updated successfully"}, status=status.HTTP_200_OK)
+    if request.method == 'PATCH':
+        serializer = edit_userSerializer(user, data=request.data, partial=True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"data":serializer.data,"msg":"User updated successfully"}, status=status.HTTP_200_OK)
 
-    return Response({"msg":"failed to update user","error":f"{serializer.errors}"}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"msg":"failed to update user","error":f"{serializer.errors}"}, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['PATCH'])
