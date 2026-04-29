@@ -11,7 +11,7 @@ export interface IAppSelectOption {
 
 interface AppSelectProps {
   id?: string;
-  value?: string | number;
+  value?: string | number | null;
   options: IAppSelectOption[];
   placeholder?: string;
   className?: string;

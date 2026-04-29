@@ -1,3 +1,5 @@
+import { IDepartment } from './departments/departments.types';
+
 export interface IUser {
   id: number;
   username: string;
@@ -5,7 +7,7 @@ export interface IUser {
   last_name: string;
   email: string;
   phone_number: string;
-  department: number | null;
+  department: IDepartment | null;
 }
 
 export interface IGetUsersResponse {

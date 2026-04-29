@@ -1,4 +1,7 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useAppDispatch, useAppSelector } from '../../store';
+import { getDepartmentsThunk } from '../../../shared/store/departments/departments.store';
+import { EAPIStatus } from '../../../shared/api/models';
 import Picture from './Picture/Picture';
 import WelcomeMessage from './Welcome-Message/WelcomeMessage';
 import MotivationSentences from './Motivation-Message/MotivationSentences';
@@ -25,6 +28,21 @@ const SignupSigninPageWrapper: React.FC<ISignupSigninPageWrapperProps> = ({
   viewType, 
   wrapperClassName = '' 
 }) => {
+  const dispatch = useAppDispatch();
+  const { departments, getDepartmentsRequest } = useAppSelector(
+    (state) => state.departmentsStoreReducer,
+  );
+
+  useEffect(() => {
+    // Guard against an infinite dispatch loop:
+    // fetch only once when data does not exist and the request is still IDLE.
+    if (departments.length > 0 || getDepartmentsRequest.status !== EAPIStatus.IDLE) {
+      return;
+    }
+
+    dispatch(getDepartmentsThunk());
+  }, [departments.length, dispatch, getDepartmentsRequest.status]);
+
   return (
     <div className={`signup-signin-container ${wrapperClassName}`}>
       <WelcomeMessage />
