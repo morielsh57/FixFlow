@@ -24,11 +24,11 @@ jobs:
               - 'FrontEnd/**'
 
   backend-testing:
-    # needs: changes
-    # if: ${{ needs.changes.outputs.backend == 'true'}}
+    needs: changes
+    if: ${{ needs.changes.outputs.backend == 'true'}}
     runs-on: ubuntu-latest
     strategy:
-      max-parallel: 4
+      max-parallel: 1
       matrix:
         python-version: ["3.11", "3.12", "3.13", "3.14"]
     steps:
