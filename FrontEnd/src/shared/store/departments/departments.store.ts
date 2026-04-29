@@ -13,7 +13,7 @@ export interface DepartmentsStoreState extends ApiDataStateType {
 
 const initialState: DepartmentsStoreState = {
   getDepartmentsRequest: APIRequestState.create<IGetDepartmentsResponse>(),
-  departments: [{id: 1, title: 'Default1'}, { id: 2, title: 'IT' }],
+  departments: [],
 };
 
 export const getDepartmentsThunk = createApiThunk(
