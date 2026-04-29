@@ -108,7 +108,7 @@ The DB table that has been queried, the method that should be used, the expected
         </td>
     </tr>
         <tr>
-        <td>users/&lt;int (id)&gt;/update</td>
+        <td>users/&lt;int (id)&gt;</td>
         <td>PATCH</td>
         <td>
             Authentication required<br/>
