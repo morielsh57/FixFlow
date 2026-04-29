@@ -13,6 +13,7 @@ export const API_ROUTES = {
     REFRESH: '/token/refresh',
   },
   USERS: '/users',
+  DEPARTMENTS: '/departments',
   ISSUES: {
     GET_ISSUES: '/all-issues',
     UPDATE_ISSUE: '/issue',
