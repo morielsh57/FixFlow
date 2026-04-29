@@ -5,7 +5,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
 from rest_framework import status
-from .serializers import departmentSerializer,prioritySerializer,userSerializer,get_issuesSerializer,add_edit_issuesSerializer
+from .serializers import departmentSerializer,prioritySerializer,get_userSerializer,edit_userSerializer,get_issuesSerializer,add_edit_issuesSerializer
 from .models import Departments,Issues,Priority,CustomUser
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.password_validation import validate_password
@@ -43,9 +43,11 @@ def create_user(request):
             first_name=input["first_name"],
             last_name=input["last_name"],
             email=input["email"],
-            department=input["department"],
+            department_id=input["department"],
             phone_number=input["phone_number"],
             password=input['password'],
+            is_manager=input.get('is_manager', False),
+            theme=input.get('theme', None),
         )
         user.save()
         return Response({"msg":"User created successfully"},status=status.HTTP_201_CREATED)
@@ -56,7 +58,7 @@ def create_user(request):
 @permission_classes([IsAuthenticated])
 def get_all_users(request):
     user = CustomUser.objects.all()
-    serializer = userSerializer(user,many=True)
+    serializer = get_userSerializer(user,many=True)
     return Response({"data":serializer.data,"msg":"users list fetched successfully"},status=status.HTTP_200_OK)
 
 @api_view(['GET'])
@@ -67,8 +69,23 @@ def get_user(request,id):
     except Exception as e:
         return Response({"msg":"user not found","error":f"{e}"}, status=status.HTTP_404_NOT_FOUND)
     
-    serializer = userSerializer(user,many=False)
+    serializer = get_userSerializer(user,many=False)
     return Response({"data":serializer.data,"msg":"user fetched successfully"},status=status.HTTP_200_OK)
+
+@api_view(['PATCH'])
+def update_user(request,id):
+    try:
+        user = CustomUser.objects.get(id=id)
+    except Exception as e:
+        return Response({"msg":"user not found","error":f"{e}"}, status=status.HTTP_404_NOT_FOUND)
+    
+    serializer = edit_userSerializer(user, data=request.data, partial=True)
+    if serializer.is_valid():
+        serializer.save()
+        return Response({"data":serializer.data,"msg":"User updated successfully"}, status=status.HTTP_200_OK)
+
+    return Response({"msg":"failed to update user","error":f"{serializer.errors}"}, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['PATCH'])
 def change_password(request):
@@ -167,7 +184,6 @@ PATCH - partial update
 """
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def get_all_departments(request):
     # THIS FUNCTION GETS ALL DEPARTMENTS FROM THE DATABASE
     departments = Departments.objects.all()
@@ -178,7 +194,6 @@ def get_all_departments(request):
     # RETURN THE DATA WITH STATUS 200 (SUCCESS)
 
 @api_view(['GET'])
-@permission_classes([IsAuthenticated])
 def get_department(request, pk):
     # THIS FUNCTION GETS ONE DEPARTMENT BY ID (PRIMARY KEY)
     department = get_object_or_404(Departments, pk=pk)
