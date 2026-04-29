@@ -24,8 +24,8 @@ jobs:
               - 'FrontEnd/**'
 
   backend-testing:
-    needs: changes
-    if: ${{ needs.changes.outputs.backend == 'true'}}
+    # needs: changes
+    # if: ${{ needs.changes.outputs.backend == 'true'}}
     runs-on: ubuntu-latest
     strategy:
       max-parallel: 4
@@ -52,13 +52,13 @@ jobs:
         env:
           DB_HOST: ${{ secrets.DB_HOST }}
           DB_PORT: "12643"
-          DB_NAME: "test"
+          # DB_NAME: "test"
           DB_USER: ${{ secrets.DB_USER }}
           DB_PASS: ${{ secrets.DB_PASS }}
           SECRET_KEY: ${{ secrets.SECRET_KEY }}
         run: |
           cd backend
-          python manage.py test
+          python manage.py test --keepdb
 
       - name: Deploy to Render backend
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'

@@ -135,6 +135,9 @@ DATABASES = {
             "password" : os.environ.get("DB_PASS"),
             "ssl":"REQUIRED"
         },
+        "TEST": {
+            "NAME": "test",
+        },
     }
 }
 
