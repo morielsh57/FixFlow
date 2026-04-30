@@ -1,4 +1,4 @@
-name: FixFlow CI Pipeline
+name: FixFlow CI/CD Pipeline
 
 on:
   push:
