@@ -135,14 +135,14 @@ DATABASES = {
             "password" : os.environ.get("DB_PASS"),
             "ssl":"REQUIRED"
         },
+        "TEST": {
+            "NAME": "test",
+        },
     }
 }
 
 if 'test' in sys.argv:
-    DATABASES['default'] = {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': ':memory:',
-    }
+    DATABASES['default']['OPTIONS']["database"] = "test"
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
