@@ -29,7 +29,8 @@
       align-self: stretch;
       flex: 1;
       min-width: 400px;
-
+      display: none;
+      
       .picture {
         width: 100%;
         object-fit: contain;

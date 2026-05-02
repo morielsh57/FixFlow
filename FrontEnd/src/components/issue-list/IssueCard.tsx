@@ -11,10 +11,12 @@ const IssueCard = ({ issue }: Props) => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector((state) => state.userStoreReducer);
 
-  const isAssignedToMe = Boolean(user?.id && issue.assigned.id === user.id);
-  const assigneeLabel = isAssignedToMe
-    ? 'Assigned to me'
-    : `${issue.assigned.first_name} ${issue.assigned.last_name}`;
+  const isAssignedToMe = Boolean(user?.id && issue.assigned?.id === user.id);
+  const assigneeLabel = !issue.assigned
+    ? 'Unassigned'
+    : isAssignedToMe
+      ? 'Assigned to me'
+      : `${issue.assigned.first_name} ${issue.assigned.last_name}`;
   const reporterLabel = `${issue.requester.first_name} ${issue.requester.last_name}`;
   const priorityLabel = issue.priority.title;
 

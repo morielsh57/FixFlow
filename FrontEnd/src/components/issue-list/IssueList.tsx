@@ -29,9 +29,25 @@ const IssueList = () => {
     }
 
     return issues.filter(
-      (issue) => issue.assigned.id === user.id || issue.requester.id === user.id,
+      (issue) => issue.assigned?.id === user.id || issue.requester.id === user.id,
     );
   }, [issues, user]);
+
+  const isManager = Boolean(user?.is_manager);
+  const userDepartmentId = user?.department?.id;
+
+  const unassignedDepartmentIssues = useMemo(() => {
+    if (!isManager || !userDepartmentId) {
+      return [];
+    }
+
+    return issues.filter((issue) => {
+      const isSameDepartment = issue.department?.id === userDepartmentId;
+      const isUnassigned = !issue.assigned;
+      const isNotClosed = issue.status.toLowerCase() !== 'closed';
+      return isSameDepartment && isUnassigned && isNotClosed;
+    });
+  }, [isManager, issues, userDepartmentId]);
 
   const openIssues = useMemo(() => {
     return userIssues.filter((issue) => issue.status.toLowerCase() !== 'closed');
@@ -68,6 +84,23 @@ const IssueList = () => {
           </div>
         </div>
       </div>
+
+      {isManager && (
+        <section className="issue-section">
+          <div className="issue-section__header">
+            <h2 className="issue-section__title">Unassigned Department Issues</h2>
+          </div>
+          <div className="issue-section__list">
+            {unassignedDepartmentIssues.length > 0 ? (
+              unassignedDepartmentIssues.map((issue) => (
+                <IssueCard key={issue.id} issue={issue} />
+              ))
+            ) : (
+              <p className="issue-section__empty">No unassigned issues in your department.</p>
+            )}
+          </div>
+        </section>
+      )}
 
       <section className="issue-section">
         <div className="issue-section__header">

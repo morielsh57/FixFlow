@@ -8,6 +8,7 @@ export interface IUser {
   email: string;
   phone_number: string;
   department: IDepartment | null;
+  is_manager: boolean;
 }
 
 export interface IGetUsersResponse {

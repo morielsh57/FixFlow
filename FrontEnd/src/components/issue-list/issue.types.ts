@@ -1,3 +1,4 @@
+import { IDepartment } from '../../shared/store/departments/departments.types';
 import { IUser } from '../../shared/store/user.types';
 
 export type IssueStatus = 'Open' | 'In Progress' | 'Closed';
@@ -13,8 +14,9 @@ export interface IIssue {
   date_created: string;
   date_updated: string;
   priority: IIssuePriority;
-  assigned: IUser;
+  assigned: IUser | null;
   requester: IUser;
+  department?: IDepartment;
 }
 
 export interface IIssuePriority {
@@ -34,8 +36,9 @@ export interface IIssueCreateReqPayloadWithoutRequester {
   description: string;
   location: string;
   status: IssueStatus;
+  department: number;
   priority: number;
-  assigned: number;
+  assigned?: number;
 }
 export interface IIssueCreateReqPayload extends IIssueCreateReqPayloadWithoutRequester {
   requester: number;
@@ -43,7 +46,9 @@ export interface IIssueCreateReqPayload extends IIssueCreateReqPayloadWithoutReq
 
 export interface IIssueUpdateReqPayload extends Partial<IIssueCreateReqPayloadWithoutRequester> {}
 
-export interface IIssueDetailsFormValues extends IIssueCreateReqPayloadWithoutRequester {}
+export interface IIssueDetailsFormValues extends Omit<IIssueCreateReqPayloadWithoutRequester, 'assigned'> {
+  assigned?: number;
+}
 
 export interface IIssueUpdateReqActionPayload {
   id: number;

@@ -13,11 +13,13 @@ import {
   IIssue,
   IIssueCreateReqPayload,
   IIssueDetailsFormValues,
+  IIssueUpdateReqPayload,
   IIssueOptimisticUpdatePayload,
   IIssuePriority,
   IIssueUpdateReqActionPayload,
   IssueModalMode,
 } from '../issue.types';
+import { IDepartment } from '../../../shared/store/departments/departments.types';
 import { IUser } from '../../../shared/store/user.types';
 import { showErrorAlert } from '../../../shared/utils/alerts.utils';
 
@@ -42,14 +44,15 @@ export const useIssueDetailsForm = ({
     updateIssueReqState,
   } = useAppSelector((state) => state.issuesReducer);
   const { userList, user } = useAppSelector((state) => state.userStoreReducer);
+  const { departments } = useAppSelector((state) => state.departmentsStoreReducer);
 
   const priorityList = priorityListRes.data?.data ?? [];
   const defaultPriorityId = priorityList[0]?.id ?? 1;
-  const defaultAssigneeId = userList[0]?.id ?? 1;
+  const defaultDepartmentId = user?.department?.id ?? departments[0]?.id ?? 1;
 
   const defaultValues = useMemo(
-    () => getFormDefaults(mode, issue, defaultPriorityId, defaultAssigneeId),
-    [mode, issue, defaultPriorityId, defaultAssigneeId],
+    () => getFormDefaults(mode, issue, defaultPriorityId, defaultDepartmentId),
+    [mode, issue, defaultPriorityId, defaultDepartmentId],
   );
 
   const latestValuesRef = useRef<IIssueDetailsFormValues>(defaultValues);
@@ -60,11 +63,28 @@ export const useIssueDetailsForm = ({
     handleSubmit,
     reset,
     control,
+    watch,
     formState,
   } = useForm<IIssueDetailsFormValues>({
     mode: 'onChange',
     defaultValues,
   });
+  const selectedDepartmentId = watch('department');
+  const loggedinUserDepartmentId = user?.department?.id;
+  const shouldShowDepartmentField = mode === 'create' || issue?.department?.title === "TBD" || Boolean(user?.is_manager);
+  const shouldShowAssignedField = Boolean(
+    user?.is_manager &&
+    loggedinUserDepartmentId &&
+    Number(selectedDepartmentId) === loggedinUserDepartmentId,
+  );
+
+  const usersFromSelectedDepartment = useMemo(() => {
+    if (!selectedDepartmentId) {
+      return [];
+    }
+
+    return userList.filter((person) => person.department?.id === Number(selectedDepartmentId));
+  }, [selectedDepartmentId, userList]);
 
   // reset the form data with defaultValues when the modal is opened or when the issue changes (in edit mode)
   useEffect(() => {
@@ -106,8 +126,9 @@ export const useIssueDetailsForm = ({
         value,
         priorityList,
         userList,
+        departments,
       );
-      const requestPayload = { [field]: value };
+      const requestPayload = { [field]: value } as IIssueUpdateReqPayload;
       const updateRequestArgs: IIssueUpdateReqActionPayload = {
         id: issue.id,
         payload: requestPayload,
@@ -122,7 +143,7 @@ export const useIssueDetailsForm = ({
           // TODO: revert the optimistic update by patching the field back to the original value
         });
     },
-    [dispatch, issue, mode, priorityList, userList],
+    [departments, dispatch, issue, mode, priorityList, userList],
   );
 
   const handleTextBlur = useCallback(
@@ -153,6 +174,13 @@ export const useIssueDetailsForm = ({
     [patchFieldIfNeeded],
   );
 
+  const handleDepartmentChange = useCallback(
+    (value: number) => {
+      patchFieldIfNeeded('department', value);
+    },
+    [patchFieldIfNeeded],
+  );
+
   const onCreateSubmit = handleSubmit((values) => {
     if (mode !== 'create' || !user?.id) {
       return;
@@ -163,10 +191,14 @@ export const useIssueDetailsForm = ({
       description: values.description,
       location: values.location,
       status: 'Open',
+      department: Number(values.department),
       priority: Number(values.priority),
-      assigned: Number(values.assigned),
       requester: user.id,
     };
+
+    if (values.assigned !== undefined && values.assigned !== null) {
+      payload.assigned = Number(values.assigned);
+    }
 
     const selectedPriority = priorityList.find(
       (priority) => priority.id === payload.priority,
@@ -174,6 +206,10 @@ export const useIssueDetailsForm = ({
 
     const selectedAssignee = userList.find(
       (person) => person.id === payload.assigned,
+    );
+
+    const selectedDepartment = departments.find(
+      (department) => department.id === payload.department,
     );
 
     const nowIsoDate = new Date().toISOString();
@@ -186,8 +222,9 @@ export const useIssueDetailsForm = ({
       location: payload.location,
       status: payload.status,
       priority: selectedPriority!,
-      assigned: selectedAssignee!,
+      assigned: selectedAssignee ?? null,
       requester: user,
+      department: selectedDepartment!,
     };
 
     dispatch(createIssueOptimisticAction(optimisticIssue));
@@ -209,10 +246,14 @@ export const useIssueDetailsForm = ({
     control,
     formState,
     priorityList,
-    userList,
+    departments,
+    shouldShowDepartmentField,
+    usersFromSelectedDepartment,
+    shouldShowAssignedField,
     onCreateSubmit,
     handleTextBlur,
     handleStatusChange,
+    handleDepartmentChange,
     handlePriorityChange,
     handleAssignedChange,
     createIssueReqState,
@@ -225,7 +266,7 @@ const getFormDefaults = (
   mode: IssueModalMode,
   issue: IIssue | undefined,
   defaultPriorityId: number,
-  defaultAssigneeId: number,
+  defaultDepartmentId: number,
 ): IIssueDetailsFormValues => {
   if (mode === 'edit' && issue) {
     return {
@@ -233,8 +274,9 @@ const getFormDefaults = (
       description: issue.description,
       location: issue.location,
       status: issue.status,
+      department: issue.department?.id ?? defaultDepartmentId,
       priority: issue.priority.id,
-      assigned: issue.assigned.id,
+      assigned: issue.assigned?.id,
     };
   }
 
@@ -244,8 +286,9 @@ const getFormDefaults = (
     description: '',
     location: '',
     status: 'Open',
+    department: defaultDepartmentId,
     priority: defaultPriorityId,
-    assigned: defaultAssigneeId,
+    assigned: undefined,
   };
 };
 
@@ -258,6 +301,7 @@ const createOptimisticUpdatePayload = (
   value: string | number,
   priorityList: IIssuePriority[],
   userList: IUser[],
+  departments: IDepartment[],
 ): IIssueOptimisticUpdatePayload => {
   const dateUpdated = new Date().toISOString();
 
@@ -266,6 +310,10 @@ const createOptimisticUpdatePayload = (
   if (field === 'priority') {
     const priorityId = Number(value);
     payload.priority = priorityList.find((priority) => priority.id === priorityId)
+    return payload;
+  } else if (field === 'department') {
+    const departmentId = Number(value);
+    payload.department = departments.find((department) => department.id === departmentId);
     return payload;
   } else if (field === 'assigned') {
     const assignedId = Number(value);
