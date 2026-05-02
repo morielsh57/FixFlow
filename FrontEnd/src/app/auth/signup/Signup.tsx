@@ -9,12 +9,14 @@ import { EAPIStatus, IAPIError } from '../../../shared/api/models';
 import { setSignupLoginPayload, signupRequest } from '../auth.store';
 import './Signup.scss';
 import SignupSigninPageWrapper, { EViewType } from '../signin-signup-page-wrapper/SignupSigninPageWrapper';
+import AppSelect, { IAppSelectOption } from '../../../shared/components/app-select/AppSelect';
 
 type SignupFormData = {
   username: string;
   first_name: string;
   last_name: string;
   email: string;
+  department: number;
   phone_number: string;
   password: string;
   confirm_password: string;
@@ -26,6 +28,9 @@ const Signup = () => {
   const navigate = useNavigate();
   const dispatch = useAppDispatch();
   const { signupRes, loginRes } = useAppSelector((state) => state.authStoreReducer);
+  const { departments, getDepartmentsRequest } = useAppSelector(
+    (state) => state.departmentsStoreReducer,
+  );
   const [signupErrorMsg, setSignupErrorMsg] = useState<string | null>(null);
 
   const {
@@ -39,6 +44,7 @@ const Signup = () => {
       first_name: '',
       last_name: '',
       email: '',
+      department: 1,
       phone_number: '',
       password: '',
       confirm_password: '',
@@ -47,7 +53,13 @@ const Signup = () => {
 
   const isSignupPending = signupRes.status === EAPIStatus.PENDING;
   const isAutoLoginPending = loginRes.status === EAPIStatus.PENDING;
+  const isDepartmentsPending = getDepartmentsRequest.status === EAPIStatus.PENDING;
   const isSubmitLoading = isSignupPending || isAutoLoginPending;
+  const departmentOptions: IAppSelectOption[] = departments.map((department) => ({
+    value: department.id,
+    label: department.title,
+    searchLabel: department.title,
+  }));
 
   const onSubmit = (data: SignupFormData) => {
     setSignupErrorMsg(null);
@@ -60,7 +72,7 @@ const Signup = () => {
         first_name: data.first_name,
         last_name: data.last_name,
         email: data.email,
-        department: null,
+        department: data.department !== null ? Number(data.department) : null,
         phone_number: data.phone_number,
         password: data.password,
       }),
@@ -160,6 +172,34 @@ const Signup = () => {
             render={({ field }) => <input id="signup-phone-number" type="tel" {...field} />}
           />
           {errors.phone_number && <p className="error-text">{errors.phone_number.message}</p>}
+        </div>
+
+        <div className="input-group">
+          <label htmlFor="signup-department">Department</label>
+          <Controller
+            name="department"
+            control={control}
+            rules={{
+              required: 'Department is required',
+            }}
+            render={({ field }) => (
+              <AppSelect
+                id="signup-department"
+                value={field.value}
+                className="signup-app-select"
+                searchSelect
+                onSearch={() => {}}
+                disabled={isDepartmentsPending}
+                placeholder={isDepartmentsPending ? 'Loading departments...' : 'Select a department'}
+                options={departmentOptions}
+                onBlur={field.onBlur}
+                onChange={(nextValue) => {
+                  field.onChange(Number(nextValue));
+                }}
+              />
+            )}
+          />
+          {errors.department && <p className="error-text">{errors.department.message}</p>}
         </div>
 
         <div className="input-grid-two">

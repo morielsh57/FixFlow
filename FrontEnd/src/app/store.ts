@@ -8,12 +8,14 @@ import { enableMapSet } from 'immer';
 import { authStoreReducer } from './auth/auth.store';
 import { userStoreReducer } from '../shared/store/user.store';
 import { issuesReducer } from '../components/issue-list/issues.store';
+import { departmentsStoreReducer } from '../shared/store/departments/departments.store';
 
 export const rootReducer = {
   sharedStoreReducer,
   authStoreReducer,
   userStoreReducer,
   issuesReducer,
+  departmentsStoreReducer,
 };
 
 enableMapSet();

@@ -88,7 +88,7 @@ const clearAuthAndRedirectToLogin = () => {
   removeItemFromLocalStorage(AUTH_LOCAL_STORAGE_KEYS.ACCESS_TOKEN);
   removeItemFromLocalStorage(AUTH_LOCAL_STORAGE_KEYS.REFRESH_TOKEN);
 
-  if (typeof window !== 'undefined') {
+  if (typeof window !== 'undefined' && !window.location.href.includes(APP_ROUTING_PATHS.AUTH)) {
     window.location.href = `${APP_ROUTING_PATHS.AUTH}/${APP_ROUTING_PATHS.LOGIN}`;
   }
 };
