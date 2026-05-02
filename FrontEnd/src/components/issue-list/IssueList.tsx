@@ -42,7 +42,6 @@ const IssueList = () => {
     }
 
     return issues.filter((issue) => {
-      console.log('Checking issue:', issue.title, issue.department?.id);
       const isSameDepartment = issue.department?.id === userDepartmentId;
       const isUnassigned = !issue.assigned;
       const isNotClosed = issue.status.toLowerCase() !== 'closed';
