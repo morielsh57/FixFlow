@@ -1,4 +1,4 @@
-name: FixFlow CI Pipeline
+name: FixFlow CI/CD Pipeline
 
 on:
   push:
@@ -60,12 +60,17 @@ jobs:
           cd backend
           python manage.py test --keepdb
 
-      - name: Deploy to Render backend
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        env:
-          deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
-        run: |
-          curl "$deploy_url"
+  backend-deploy:
+    needs: backend-testing
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Deploy to Render backend
+      env:
+        deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+      run: |
+        curl "$deploy_url"
 
   frontend-testing:
     needs: changes
