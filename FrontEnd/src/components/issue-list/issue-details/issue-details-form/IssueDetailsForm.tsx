@@ -18,6 +18,7 @@ const IssueDetailsForm = ({ mode, issue }: IssueDetailsFormProps) => {
     formState,
     priorityList,
     departments,
+    shouldShowDepartmentField,
     usersFromSelectedDepartment,
     shouldShowAssignedField,
     onCreateSubmit,
@@ -171,38 +172,40 @@ const IssueDetailsForm = ({ mode, issue }: IssueDetailsFormProps) => {
         </div>
       )}
 
-      <div className="issue-details-form-field">
-        <label className="issue-details-form-label" htmlFor="issue-department">
-          Department
-        </label>
-        <Controller
-          name="department"
-          control={control}
-          rules={{
-            required: 'Department is required.',
-          }}
-          render={({ field }) => (
-            <AppSelect
-              id="issue-department"
-              value={field.value}
-              className="issue-details-form-app-select"
-              searchSelect
-              onSearch={() => {}}
-              placeholder="Select a department"
-              options={departmentOptions}
-              onBlur={field.onBlur}
-              onChange={(nextValue) => {
-                const normalizedValue = Number(nextValue);
-                field.onChange(normalizedValue);
-                handleDepartmentChange(normalizedValue);
-              }}
-            />
+      {shouldShowDepartmentField && (
+        <div className="issue-details-form-field">
+          <label className="issue-details-form-label" htmlFor="issue-department">
+            Department
+          </label>
+          <Controller
+            name="department"
+            control={control}
+            rules={{
+              required: 'Department is required.',
+            }}
+            render={({ field }) => (
+              <AppSelect
+                id="issue-department"
+                value={field.value}
+                className="issue-details-form-app-select"
+                searchSelect
+                onSearch={() => {}}
+                placeholder="Select a department"
+                options={departmentOptions}
+                onBlur={field.onBlur}
+                onChange={(nextValue) => {
+                  const normalizedValue = Number(nextValue);
+                  field.onChange(normalizedValue);
+                  handleDepartmentChange(normalizedValue);
+                }}
+              />
+            )}
+          />
+          {formState.errors.department && (
+            <p className="issue-details-form-error">{formState.errors.department.message}</p>
           )}
-        />
-        {formState.errors.department && (
-          <p className="issue-details-form-error">{formState.errors.department.message}</p>
-        )}
-      </div>
+        </div>
+      )}
 
       <div className="issue-details-form-field">
         <label className="issue-details-form-label" htmlFor="issue-priority">

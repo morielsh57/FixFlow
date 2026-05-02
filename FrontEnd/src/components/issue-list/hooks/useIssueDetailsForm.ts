@@ -71,6 +71,7 @@ export const useIssueDetailsForm = ({
   });
   const selectedDepartmentId = watch('department');
   const loggedinUserDepartmentId = user?.department?.id;
+  const shouldShowDepartmentField = mode === 'create' || issue?.department?.title === "TBD" || Boolean(user?.is_manager);
   const shouldShowAssignedField = Boolean(
     user?.is_manager &&
     loggedinUserDepartmentId &&
@@ -246,6 +247,7 @@ export const useIssueDetailsForm = ({
     formState,
     priorityList,
     departments,
+    shouldShowDepartmentField,
     usersFromSelectedDepartment,
     shouldShowAssignedField,
     onCreateSubmit,
