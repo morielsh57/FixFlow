@@ -248,6 +248,7 @@ def update_department(request, pk):
 @permission_classes([IsAuthenticated])
 def get_all_priorities(request):
     priorities = Priority.objects.all()
+    priorities = priorities.exclude(id=1)
     serializer = prioritySerializer(priorities,many=True)
     return Response({"data":serializer.data,"msg":"priority list fetched successfully"}, status=status.HTTP_200_OK)
 
