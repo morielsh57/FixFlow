@@ -19,7 +19,10 @@ const Header = () => {
 
   return (
     <header className="app-header">
-      <p className="app-header--user">Logged in as {getUserName()}</p>
+      <div className='user-details-wrapper'>
+        <p className="header-user-name">Logged in as <span>{getUserName()}</span></p>
+        {user?.is_manager && user?.department?.title && <p className="header-department-manager"><span>{user.department.title}</span> Department Manager</p>}
+      </div>
 
       <button type="button" className="app-header--logout-btn" onClick={logOut}>
         Logout

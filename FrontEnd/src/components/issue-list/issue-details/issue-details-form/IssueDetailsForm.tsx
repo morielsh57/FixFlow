@@ -17,10 +17,13 @@ const IssueDetailsForm = ({ mode, issue }: IssueDetailsFormProps) => {
     control,
     formState,
     priorityList,
-    userList,
+    departments,
+    usersFromSelectedDepartment,
+    shouldShowAssignedField,
     onCreateSubmit,
     handleTextBlur,
     handleStatusChange,
+    handleDepartmentChange,
     handlePriorityChange,
     handleAssignedChange,
     createIssueReqState,
@@ -69,7 +72,13 @@ const IssueDetailsForm = ({ mode, issue }: IssueDetailsFormProps) => {
     label: priority.title,
   }));
 
-  const assignedOptions: IAppSelectOption[] = userList.map((person) => ({
+  const departmentOptions: IAppSelectOption[] = departments.map((department) => ({
+    value: department.id,
+    label: department.title,
+    searchLabel: department.title,
+  }));
+
+  const assignedOptions: IAppSelectOption[] = usersFromSelectedDepartment.map((person) => ({
     value: person.id,
     searchLabel: `${person.first_name} ${person.last_name} ${person.username}`,
     label: `${person.first_name} ${person.last_name}`,
@@ -163,6 +172,39 @@ const IssueDetailsForm = ({ mode, issue }: IssueDetailsFormProps) => {
       )}
 
       <div className="issue-details-form-field">
+        <label className="issue-details-form-label" htmlFor="issue-department">
+          Department
+        </label>
+        <Controller
+          name="department"
+          control={control}
+          rules={{
+            required: 'Department is required.',
+          }}
+          render={({ field }) => (
+            <AppSelect
+              id="issue-department"
+              value={field.value}
+              className="issue-details-form-app-select"
+              searchSelect
+              onSearch={() => {}}
+              placeholder="Select a department"
+              options={departmentOptions}
+              onBlur={field.onBlur}
+              onChange={(nextValue) => {
+                const normalizedValue = Number(nextValue);
+                field.onChange(normalizedValue);
+                handleDepartmentChange(normalizedValue);
+              }}
+            />
+          )}
+        />
+        {formState.errors.department && (
+          <p className="issue-details-form-error">{formState.errors.department.message}</p>
+        )}
+      </div>
+
+      <div className="issue-details-form-field">
         <label className="issue-details-form-label" htmlFor="issue-priority">
           Priority
         </label>
@@ -188,36 +230,34 @@ const IssueDetailsForm = ({ mode, issue }: IssueDetailsFormProps) => {
         />
       </div>
 
-      <div className="issue-details-form-field">
-        <label className="issue-details-form-label" htmlFor="issue-assigned">
-          Assigned
-        </label>
-        <Controller
-          name="assigned"
-          control={control}
-          rules={{
-            required: 'Assigned user is required.',
-            min: 1,
-          }}
-          render={({ field }) => (
+      {shouldShowAssignedField && (
+        <div className="issue-details-form-field">
+          <label className="issue-details-form-label" htmlFor="issue-assigned">
+            Assigned (Optional)
+          </label>
+          <Controller
+            name="assigned"
+            control={control}
+            render={({ field }) => (
               <AppSelect
                 id="issue-assigned"
                 value={field.value}
                 className="issue-details-form-app-select"
                 searchSelect
-              onSearch={() => {}}
-              placeholder="Select a person"
-              options={assignedOptions}
-              onBlur={field.onBlur}
-              onChange={(nextValue) => {
-                const normalizedValue = Number(nextValue);
-                field.onChange(normalizedValue);
-                handleAssignedChange(normalizedValue);
-              }}
-            />
-          )}
-        />
-      </div>
+                onSearch={() => {}}
+                placeholder="Select a person"
+                options={assignedOptions}
+                onBlur={field.onBlur}
+                onChange={(nextValue) => {
+                  const normalizedValue = Number(nextValue);
+                  field.onChange(normalizedValue);
+                  handleAssignedChange(normalizedValue);
+                }}
+              />
+            )}
+          />
+        </div>
+      )}
 
       {isCreateMode ? (
         <button

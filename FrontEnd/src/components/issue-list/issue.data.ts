@@ -29,6 +29,7 @@ const mockIssueUsers: IUser[] = [
     email: 'emma@example.com',
     phone_number: '0500000001',
     department: null,
+    is_manager: true,
   },
   {
     id: 2,
@@ -38,6 +39,7 @@ const mockIssueUsers: IUser[] = [
     email: 'alice@example.com',
     phone_number: '0500000002',
     department: null,
+    is_manager: false,
   },
   {
     id: 3,
@@ -47,6 +49,7 @@ const mockIssueUsers: IUser[] = [
     email: 'david@example.com',
     phone_number: '0500000003',
     department: null,
+    is_manager: false,
   },
   {
     id: 4,
@@ -56,6 +59,7 @@ const mockIssueUsers: IUser[] = [
     email: 'lea@example.com',
     phone_number: '0500000004',
     department: null,
+    is_manager: true,
   },
 ];
 
@@ -71,6 +75,7 @@ export const mockIssues: IIssue[] = [
     priority: mockIssuePriorities[2],
     assigned: mockIssueUsers[0],
     requester: mockIssueUsers[0],
+    department: { id: 1, title: 'IT'},
   },
   {
     id: 2,
@@ -83,6 +88,7 @@ export const mockIssues: IIssue[] = [
     priority: mockIssuePriorities[1],
     assigned: mockIssueUsers[0],
     requester: mockIssueUsers[0],
+    department: { id: 1, title: 'IT'},
   },
   {
     id: 3,
@@ -95,6 +101,7 @@ export const mockIssues: IIssue[] = [
     priority: mockIssuePriorities[3],
     assigned: mockIssueUsers[0],
     requester: mockIssueUsers[0],
+    department: { id: 1, title: 'IT'},
   },
   {
     id: 4,
@@ -107,5 +114,6 @@ export const mockIssues: IIssue[] = [
     priority: mockIssuePriorities[0],
     assigned: mockIssueUsers[1],
     requester: mockIssueUsers[0],
+    department: { id: 1, title: 'IT'},
   },
 ];
