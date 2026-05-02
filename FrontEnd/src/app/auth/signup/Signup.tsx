@@ -16,7 +16,7 @@ type SignupFormData = {
   first_name: string;
   last_name: string;
   email: string;
-  department: number;
+  department?: number;
   phone_number: string;
   password: string;
   confirm_password: string;
@@ -44,7 +44,7 @@ const Signup = () => {
       first_name: '',
       last_name: '',
       email: '',
-      department: 3,
+      department: undefined,
       phone_number: '',
       password: '',
       confirm_password: '',
@@ -72,7 +72,7 @@ const Signup = () => {
         first_name: data.first_name,
         last_name: data.last_name,
         email: data.email,
-        department: data.department !== null ? Number(data.department) : null,
+        department: Number(data.department),
         phone_number: data.phone_number,
         password: data.password,
       }),
@@ -190,7 +190,7 @@ const Signup = () => {
                 searchSelect
                 onSearch={() => {}}
                 disabled={isDepartmentsPending}
-                placeholder={isDepartmentsPending ? 'Loading departments...' : 'Select a department'}
+                placeholder="Select your department"
                 options={departmentOptions}
                 onBlur={field.onBlur}
                 onChange={(nextValue) => {
