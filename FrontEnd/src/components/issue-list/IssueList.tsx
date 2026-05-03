@@ -6,6 +6,7 @@ import EditIssueModal from './issue-details/edit-issue-modal/EditIssueModal';
 import IssueCard from './IssueCard';
 import { useIssueListController } from './hooks/useIssueListController';
 import { getIssuesReqAction, getPriorityListReqAction } from './issues.store';
+import { IIssue } from './issue.types';
 
 const IssueList = () => {
   const { openIssueCreateModal } = useIssueListController();
@@ -23,14 +24,17 @@ const IssueList = () => {
     dispatch(getPriorityListReqAction());
   }, [dispatch]);
 
+  const isUserIssue = (issue: IIssue) => {
+    if (!user) return false;
+    return issue.assigned?.id === user.id || issue.requester.id === user.id;
+  }
+
   const userIssues = useMemo(() => {
     if (!user) {
       return [];
     }
 
-    return issues.filter(
-      (issue) => issue.assigned?.id === user.id || issue.requester.id === user.id,
-    );
+    return issues.filter(isUserIssue);
   }, [issues, user]);
 
   const isManager = Boolean(user?.is_manager);
@@ -40,7 +44,6 @@ const IssueList = () => {
     if (!isManager || !userDepartmentId) {
       return [];
     }
-
     return issues.filter((issue) => {
       const isSameDepartment = issue.department?.id === userDepartmentId;
       const isUnassigned = !issue.assigned;
@@ -49,6 +52,30 @@ const IssueList = () => {
     });
   }, [isManager, issues, userDepartmentId]);
 
+  const openedAssignedDepartmentIssues = useMemo(() => {
+    if (!isManager || !userDepartmentId) {
+      return [];
+    }
+    return issues.filter((issue) => {
+      const isSameDepartment = issue.department?.id === userDepartmentId;
+      const isNotAssignedToMe = !!issue.assigned && !isUserIssue(issue);
+      const isNotClosed = issue.status.toLowerCase() !== 'closed';
+      return isSameDepartment && isNotAssignedToMe && isNotClosed;
+    });
+  }, [isManager, issues, userDepartmentId, user?.id]);
+
+  const closedAssignedDepartmentIssues = useMemo(() => {
+    if (!isManager || !userDepartmentId) {
+      return [];
+    }
+    return issues.filter((issue) => {
+      const isSameDepartment = issue.department?.id === userDepartmentId;
+      const isNotAssignedToMe = !!issue.assigned && !isUserIssue(issue);
+      const isClosed = issue.status.toLowerCase() === 'closed';
+      return isSameDepartment && isNotAssignedToMe && isClosed;
+    });
+  }, [isManager, issues, userDepartmentId, user?.id]);
+
   const openIssues = useMemo(() => {
     return userIssues.filter((issue) => issue.status.toLowerCase() !== 'closed');
   }, [userIssues]);
@@ -56,6 +83,9 @@ const IssueList = () => {
   const closedIssues = useMemo(() => {
     return userIssues.filter((issue) => issue.status.toLowerCase() === 'closed');
   }, [userIssues]);
+
+  const totalOpenedIssues = openIssues.length + openedAssignedDepartmentIssues.length + unassignedDepartmentIssues.length;
+  const totalClosedIssues = closedIssues.length + closedAssignedDepartmentIssues.length;
 
   return (
     <div className="issue-list-page">
@@ -74,12 +104,12 @@ const IssueList = () => {
           </button>
 
           <div className="issue-list-page__summary-box">
-            <span className="issue-list-page__summary-number">{openIssues.length}</span>
+            <span className="issue-list-page__summary-number">{totalOpenedIssues}</span>
             <span className="issue-list-page__summary-label">Open</span>
           </div>
 
           <div className="issue-list-page__summary-box">
-            <span className="issue-list-page__summary-number">{closedIssues.length}</span>
+            <span className="issue-list-page__summary-number">{totalClosedIssues}</span>
             <span className="issue-list-page__summary-label">Closed</span>
           </div>
         </div>
@@ -108,7 +138,7 @@ const IssueList = () => {
         </div>
 
         <div className="issue-section__list">
-          {openIssues.map((issue) => (
+          {[...openedAssignedDepartmentIssues, ...openIssues].map((issue) => (
             <IssueCard key={issue.id} issue={issue} />
           ))}
         </div>
@@ -120,7 +150,7 @@ const IssueList = () => {
         </div>
 
         <div className="issue-section__list">
-          {closedIssues.map((issue) => (
+          {[...closedAssignedDepartmentIssues, ...closedIssues].map((issue) => (
             <IssueCard key={issue.id} issue={issue} />
           ))}
         </div>
