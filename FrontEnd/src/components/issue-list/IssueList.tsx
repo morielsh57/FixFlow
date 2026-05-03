@@ -6,6 +6,7 @@ import EditIssueModal from './issue-details/edit-issue-modal/EditIssueModal';
 import IssueCard from './IssueCard';
 import { useIssueListController } from './hooks/useIssueListController';
 import { getIssuesReqAction, getPriorityListReqAction } from './issues.store';
+import { IIssue } from './issue.types';
 
 const IssueList = () => {
   const { openIssueCreateModal } = useIssueListController();
@@ -23,14 +24,17 @@ const IssueList = () => {
     dispatch(getPriorityListReqAction());
   }, [dispatch]);
 
+  const isUserIssue = (issue: IIssue) => {
+    if (!user) return false;
+    return issue.assigned?.id === user.id || issue.requester.id === user.id;
+  }
+
   const userIssues = useMemo(() => {
     if (!user) {
       return [];
     }
 
-    return issues.filter(
-      (issue) => issue.assigned?.id === user.id || issue.requester.id === user.id,
-    );
+    return issues.filter(isUserIssue);
   }, [issues, user]);
 
   const isManager = Boolean(user?.is_manager);
@@ -54,7 +58,7 @@ const IssueList = () => {
     }
     return issues.filter((issue) => {
       const isSameDepartment = issue.department?.id === userDepartmentId;
-      const isNotAssignedToMe = !!issue.assigned && issue.assigned.id !== user.id;
+      const isNotAssignedToMe = !!issue.assigned && !isUserIssue(issue);
       const isNotClosed = issue.status.toLowerCase() !== 'closed';
       return isSameDepartment && isNotAssignedToMe && isNotClosed;
     });
@@ -66,7 +70,7 @@ const IssueList = () => {
     }
     return issues.filter((issue) => {
       const isSameDepartment = issue.department?.id === userDepartmentId;
-      const isNotAssignedToMe = !!issue.assigned && issue.assigned.id !== user.id;
+      const isNotAssignedToMe = !!issue.assigned && !isUserIssue(issue);
       const isClosed = issue.status.toLowerCase() === 'closed';
       return isSameDepartment && isNotAssignedToMe && isClosed;
     });
