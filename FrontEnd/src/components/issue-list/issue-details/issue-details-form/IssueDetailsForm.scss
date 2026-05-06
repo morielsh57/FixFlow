@@ -14,7 +14,18 @@
 
 .issue-details-form {
   @include displayFlex(flex-start, stretch, column);
+  position: relative;
   gap: 14px;
+
+  .issue-details-form-loading-overlay {
+    @include displayFlex(center, center, row);
+    position: absolute;
+    inset: 0;
+    z-index: 5;
+    min-height: 100%;
+    background-color: rgba($neutral1, 0.72);
+    cursor: wait;
+  }
 
   .issue-details-form-field {
     @include displayFlex(flex-start, stretch, column);
@@ -87,9 +98,33 @@
   }
 
   .issue-details-form-auto-save {
+    flex: 1;
     margin: 0;
     color: $neutral6;
     font-size: 0.82rem;
+  }
+
+  .issue-details-form-delete-button {
+    width: fit-content;
+    height: 35px;
+    @include displayFlex(center, center, row);
+    gap: 4px;
+    border: 1px solid $stateError !important;
+    border-radius: 10px;
+    background-color: $stateError !important;
+    color: $neutral1 !important;
+    padding: 0px 12px !important;
+    font-size: 16px;
+    margin: 10px 0;
+
+    &:hover {
+      background-color: $red7 !important;
+      border-color: $red7 !important;
+    }
+
+    .issue-details-form-delete-icon {
+      font-size: 1rem;
+    }
   }
 
   .issue-details-form-request-error {
@@ -117,6 +152,10 @@
     }
 
     .issue-details-form-submit-button {
+      width: 100%;
+    }
+
+    .issue-details-form-delete-button {
       width: 100%;
     }
   }

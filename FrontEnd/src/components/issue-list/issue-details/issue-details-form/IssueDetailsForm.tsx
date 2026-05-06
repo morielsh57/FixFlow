@@ -1,8 +1,12 @@
+import { useState } from 'react';
+import { DeleteOutlined } from '@ant-design/icons';
+import { Spin } from 'antd';
 import { Controller } from 'react-hook-form';
 import './IssueDetailsForm.scss';
 import AppSelect, {
   IAppSelectOption,
 } from '../../../../shared/components/app-select/AppSelect';
+import ConfirmationModal from '../../../../shared/components/confirmation-modal/ConfirmationModal';
 import { useIssueDetailsForm } from '../../hooks/useIssueDetailsForm';
 import { IIssue, IssueModalMode, IssueStatus } from '../../issue.types';
 
@@ -12,6 +16,7 @@ interface IssueDetailsFormProps {
 }
 
 const IssueDetailsForm = ({ mode, issue }: IssueDetailsFormProps) => {
+  const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
   const {
     register,
     control,
@@ -27,6 +32,8 @@ const IssueDetailsForm = ({ mode, issue }: IssueDetailsFormProps) => {
     handleDepartmentChange,
     handlePriorityChange,
     handleAssignedChange,
+    handleDeleteIssue,
+    isDeletingIssue,
     createIssueReqState,
     updateIssueReqState,
   } = useIssueDetailsForm({
@@ -86,8 +93,42 @@ const IssueDetailsForm = ({ mode, issue }: IssueDetailsFormProps) => {
     subtitle: `@${person.username}`,
   }));
 
+  const closeDeleteConfirmation = () => {
+    if (isDeletingIssue) {
+      return;
+    }
+
+    setIsDeleteConfirmationOpen(false);
+  };
+
+  const confirmDeleteIssue = () => {
+    setIsDeleteConfirmationOpen(false);
+    handleDeleteIssue();
+  };
+
   return (
-    <form className="issue-details-form" onSubmit={onCreateSubmit}>
+    <form
+      className="issue-details-form"
+      onSubmit={onCreateSubmit}
+      aria-busy={isDeletingIssue}
+    >
+      {isDeletingIssue && (
+        <div className="issue-details-form-loading-overlay">
+          <Spin size="large" />
+        </div>
+      )}
+
+      {isDeleteConfirmationOpen && (
+        <ConfirmationModal
+          title="Delete issue?"
+          description={`Are you sure you want to delete "${issue?.title}"?`}
+          confirmText="Delete"
+          cancelText="Cancel"
+          onConfirm={confirmDeleteIssue}
+          onClose={closeDeleteConfirmation}
+        />
+      )}
+
       <div className="issue-details-form-field">
         <label className="issue-details-form-label" htmlFor="issue-title">
           Title
@@ -271,9 +312,20 @@ const IssueDetailsForm = ({ mode, issue }: IssueDetailsFormProps) => {
           Create Issue
         </button>
       ) : (
-        <p className="issue-details-form-auto-save">
-          Changes are saved automatically when you blur fields or change dropdowns.
-        </p>
+        <>
+          <button
+            className="issue-details-form-delete-button"
+            type="button"
+            onClick={() => setIsDeleteConfirmationOpen(true)}
+            disabled={isDeletingIssue}
+          >
+            <DeleteOutlined className="issue-details-form-delete-icon" />
+            Delete Issue
+          </button>
+          <p className="issue-details-form-auto-save">
+            Changes are saved automatically when you blur fields or change dropdowns.
+          </p>
+        </>
       )}
 
       {isCreateMode && createRequestError && (

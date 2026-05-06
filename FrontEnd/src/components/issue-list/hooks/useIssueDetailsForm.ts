@@ -5,6 +5,7 @@ import {
   closeIssueModal,
   createIssueOptimisticAction,
   createIssueReqAction,
+  deleteIssueReqAction,
   removeIssueOptimisticActionById,
   updateIssueOptimisticAction,
   updateIssueReqAction,
@@ -22,6 +23,7 @@ import {
 import { IDepartment } from '../../../shared/store/departments/departments.types';
 import { IUser } from '../../../shared/store/user.types';
 import { showErrorAlert } from '../../../shared/utils/alerts.utils';
+import { EAPIStatus } from '../../../shared/api/models';
 
 interface UseIssueDetailsFormControllerParams {
   mode: IssueModalMode;
@@ -42,6 +44,7 @@ export const useIssueDetailsForm = ({
     priorityListRes,
     createIssueReqState,
     updateIssueReqState,
+    deleteIssueReqState,
   } = useAppSelector((state) => state.issuesReducer);
   const { userList, user } = useAppSelector((state) => state.userStoreReducer);
   const { departments } = useAppSelector((state) => state.departmentsStoreReducer);
@@ -77,6 +80,7 @@ export const useIssueDetailsForm = ({
     loggedinUserDepartmentId &&
     Number(selectedDepartmentId) === loggedinUserDepartmentId,
   );
+  const isDeletingIssue = deleteIssueReqState.status === EAPIStatus.PENDING;
 
   const usersFromSelectedDepartment = useMemo(() => {
     if (!selectedDepartmentId) {
@@ -181,6 +185,22 @@ export const useIssueDetailsForm = ({
     [patchFieldIfNeeded],
   );
 
+  const handleDeleteIssue = useCallback(() => {
+    if (mode !== 'edit' || !issue?.id || isDeletingIssue) {
+      return;
+    }
+
+    const issueId = issue.id;
+
+    void dispatch(deleteIssueReqAction({ id: issueId }))
+      .unwrap()
+      .then(() => {
+        dispatch(removeIssueOptimisticActionById(issueId));
+        dispatch(closeIssueModal());
+      })
+      .catch(() => {});
+  }, [dispatch, isDeletingIssue, issue?.id, mode]);
+
   const onCreateSubmit = handleSubmit((values) => {
     if (mode !== 'create' || !user?.id) {
       return;
@@ -256,6 +276,8 @@ export const useIssueDetailsForm = ({
     handleDepartmentChange,
     handlePriorityChange,
     handleAssignedChange,
+    handleDeleteIssue,
+    isDeletingIssue,
     createIssueReqState,
     updateIssueReqState,
   };
