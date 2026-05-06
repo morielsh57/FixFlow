@@ -132,7 +132,7 @@ def tickets(request):
     serializer = get_issuesSerializer(all_tickets, many=True)
     return Response({"data":serializer.data,"msg":"Ticket list fetched successfully"}, status=status.HTTP_200_OK)
 
-@api_view(['GET', 'PATCH'])
+@api_view(['GET', 'PATCH', 'DELETE'])
 @permission_classes([IsAuthenticated])
 def ticket_detail(request, ticket_id):
     try:
@@ -152,6 +152,10 @@ def ticket_detail(request, ticket_id):
             return Response({"data":serializer.data,"msg":"Ticket updated successfully"}, status=status.HTTP_200_OK)
 
         return Response({"msg":"failed to update Ticket","error":f"{serializer.errors}"}, status=status.HTTP_400_BAD_REQUEST)
+
+    elif request.method == 'DELETE':
+        ticket.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
