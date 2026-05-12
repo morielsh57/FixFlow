@@ -34,4 +34,4 @@ class Issues(models.Model):
     priority = models.ForeignKey(Priority,null=False,on_delete=models.SET_DEFAULT,default=1)
     requester = models.ForeignKey(CustomUser,null=False,on_delete=models.PROTECT,related_name='requested_issues') # CANNOT DELETE USER THAT OPENED AN ISSUE
     assigned = models.ForeignKey(CustomUser,null=True,on_delete=models.PROTECT,related_name='assigned_issues') # CANNOT DELETE USER THAT IS ASSIGNED TO AN ISSUE
-    milestones = models.JSONField(default=list, blank=True)
+    milestones = models.JSONField(blank=True, null=True)
