@@ -1,3 +1,6 @@
+from zoneinfo import ZoneInfo
+
+from django.utils import timezone
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from rest_framework.decorators import api_view, permission_classes
@@ -145,6 +148,10 @@ def ticket_detail(request, ticket_id):
         return Response({"data":serializer.data,"msg":"Ticket fetched successfully"}, status=status.HTTP_200_OK)
 
     elif request.method == 'PATCH':
+        old_data = ticket
+        diff = print_diff(old_data.__dict__, request.data,request.user.username)
+        israel_time = timezone.localtime(timezone.now(), ZoneInfo("Asia/Jerusalem"))
+        ticket.history.append({"timestamp": israel_time.isoformat(), "data": diff})
         serializer = add_edit_issuesSerializer(ticket, data=request.data, partial=True)
 
         if serializer.is_valid():
@@ -293,3 +300,15 @@ def update_priority(request,id):
         return Response({"data":serializer.data,"msg":"priority item updated successfully"}, status=status.HTTP_202_ACCEPTED)
     else:
         return Response({"msg":"failed to update a priority item","error":f"{serializer.errors}"},status=status.HTTP_400_BAD_REQUEST)
+
+
+
+def print_diff(d1, d2,username):
+    # Find keys in both, then find which of those have different values
+    shared_keys = set(d1.keys()) & set(d2.keys())
+    modified = {k: (d1[k], d2[k]) for k in shared_keys if d1[k] != d2[k]}
+    message = f'The user {username} updated the following fields:\n'
+    for key, value in modified.items():
+        message += f'field: {key}, From {value[0]}, To {value[1]}\n'
+
+    return message
