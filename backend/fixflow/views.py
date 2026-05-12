@@ -10,6 +10,8 @@ from .models import Departments,Issues,Priority,CustomUser
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+from django.utils import timezone
+from django.utils.dateparse import parse_date
 
 """
 @api_view(['GET','POST','PATCH'])   # MUST - PICK ONE / MORE
@@ -125,6 +127,75 @@ class MyTokenObtainPairView(TokenObtainPairView):
 #                   #
 #####################
 
+def normalize_milestones_payload(input):
+    raw_milestones = []
+
+    if 'milestone' in input:
+        raw_milestones.append(input['milestone'])
+
+    if 'milestones' in input:
+        milestones = input['milestones']
+        if isinstance(milestones, list):
+            raw_milestones.extend(milestones)
+        else:
+            raw_milestones.append(milestones)
+
+    normalized_milestones = []
+
+    for milestone in raw_milestones:
+        if not isinstance(milestone, dict):
+            raise ValueError('Each milestone must be an object.')
+
+        milestone_id = milestone.get('id')
+        title = milestone.get('title')
+        milestone_date = milestone.get('date')
+
+        if not milestone_id or not title or not milestone_date:
+            raise ValueError('Each milestone must include id, title, and date.')
+
+        if parse_date(str(milestone_date)) is None:
+            raise ValueError('Milestone date must use YYYY-MM-DD format.')
+
+        normalized_milestones.append({
+            'id': str(milestone_id),
+            'title': str(title),
+            'date': str(milestone_date),
+        })
+
+    return normalized_milestones
+
+
+def remove_milestones_payload(input):
+    cleaned_input = input.copy()
+    cleaned_input.pop('milestone', None)
+    cleaned_input.pop('milestones', None)
+    return cleaned_input
+
+
+def append_milestones(ticket, new_milestones):
+    if not new_milestones:
+        return
+
+    current_milestones = ticket.milestones if isinstance(ticket.milestones, list) else []
+    seen_ids = {
+        str(milestone.get('id'))
+        for milestone in current_milestones
+        if isinstance(milestone, dict) and milestone.get('id')
+    }
+    milestones_to_append = []
+
+    for milestone in new_milestones:
+        if milestone['id'] in seen_ids:
+            continue
+
+        milestones_to_append.append(milestone)
+        seen_ids.add(milestone['id'])
+
+    if milestones_to_append:
+        ticket.milestones = current_milestones + milestones_to_append
+        ticket.date_updated = timezone.now()
+        ticket.save(update_fields=['milestones', 'date_updated'])
+
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def tickets(request):
@@ -145,11 +216,18 @@ def ticket_detail(request, ticket_id):
         return Response({"data":serializer.data,"msg":"Ticket fetched successfully"}, status=status.HTTP_200_OK)
 
     elif request.method == 'PATCH':
-        serializer = add_edit_issuesSerializer(ticket, data=request.data, partial=True)
+        try:
+            new_milestones = normalize_milestones_payload(request.data)
+        except ValueError as e:
+            return Response({"msg":"failed to update Ticket","error":f"{e}"}, status=status.HTTP_400_BAD_REQUEST)
+
+        serializer = add_edit_issuesSerializer(ticket, data=remove_milestones_payload(request.data), partial=True)
 
         if serializer.is_valid():
             serializer.save()
-            return Response({"data":serializer.data,"msg":"Ticket updated successfully"}, status=status.HTTP_200_OK)
+            append_milestones(ticket, new_milestones)
+            response_serializer = get_issuesSerializer(ticket)
+            return Response({"data":response_serializer.data,"msg":"Ticket updated successfully"}, status=status.HTTP_200_OK)
 
         return Response({"msg":"failed to update Ticket","error":f"{serializer.errors}"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -160,7 +238,14 @@ def ticket_detail(request, ticket_id):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def create_ticket(request):
-    serializer = add_edit_issuesSerializer(data=request.data)
+    try:
+        milestones = normalize_milestones_payload(request.data)
+    except ValueError as e:
+        return Response({"msg":"failed to create a Ticket","error":f"{e}"}, status=status.HTTP_400_BAD_REQUEST)
+
+    input = remove_milestones_payload(request.data)
+    input['milestones'] = milestones
+    serializer = add_edit_issuesSerializer(data=input)
 
     if serializer.is_valid():
         serializer.save()
