@@ -13,6 +13,8 @@ from .models import Departments,Issues,Priority,CustomUser
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError
+import copy
+from django.apps import apps
 
 """
 @api_view(['GET','POST','PATCH'])   # MUST - PICK ONE / MORE
@@ -150,6 +152,10 @@ def ticket_detail(request, ticket_id):
     elif request.method == 'PATCH':
         old_data = ticket
         diff = print_diff(old_data.__dict__, request.data,request.user.username)
+        if diff == "":
+            serializer = get_issuesSerializer(ticket)
+            return Response({"data":serializer.data,"msg":"Ticket was not changed, values are the same"}, status=status.HTTP_200_OK)
+        
         israel_time = timezone.localtime(timezone.now(), ZoneInfo("Asia/Jerusalem"))
         ticket.history.append({"timestamp": israel_time.isoformat(), "data": diff})
         serializer = add_edit_issuesSerializer(ticket, data=request.data, partial=True)
@@ -303,12 +309,43 @@ def update_priority(request,id):
 
 
 
-def print_diff(d1, d2,username):
+def print_diff(d1:dict, d2:dict,username:str):
     # Find keys in both, then find which of those have different values
-    shared_keys = set(d1.keys()) & set(d2.keys())
-    modified = {k: (d1[k], d2[k]) for k in shared_keys if d1[k] != d2[k]}
+    fk_mappings = {
+        "department": "fixflow.Departments",
+        "priority": "fixflow.Priority",
+        "assigned": "fixflow.CustomUser"
+    }
+    
+    temp_dict = copy.copy(d2)
+    for items in d2.items():
+        if(items[0] in fk_mappings.keys()):
+            temp_dict[f"{items[0]}_id"] = temp_dict.pop(items[0])
+
+    print(temp_dict)
+    
+    shared_keys = set(d1.keys()) & set(temp_dict.keys())
+    modified = {k: (d1[k], temp_dict[k]) for k in shared_keys if d1[k] != temp_dict[k]}
+    print(modified)
+    
+    if(len(modified)) == 0:
+        return ""
+    
     message = f'The user {username} updated the following fields:\n'
-    for key, value in modified.items():
-        message += f'field: {key}, From {value[0]}, To {value[1]}\n'
+    
+    for key, value in modified.items():    
+        if key[:-3] not in fk_mappings:
+            message += f'field: {key}, From {value[0]}, To {value[1]}\n'
+        else:    
+            model = apps.get_model(fk_mappings[key[:-3]])
+            match key[:-3]:
+                case "department" | "priority":
+                    old_value = str(model.objects.get(id=value[0]).title)
+                    new_value = str(model.objects.get(id=value[1]).title)
+                case "assigned":
+                    old_value = str(model.objects.get(id=value[0]).username)
+                    new_value = str(model.objects.get(id=value[1]).username)
+
+            message += f'field: {key[:-3]}, From {old_value}, To {new_value}\n'
 
     return message
