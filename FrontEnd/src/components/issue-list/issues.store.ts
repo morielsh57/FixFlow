@@ -3,6 +3,7 @@ import { API_ROUTES } from '../../app/constants';
 import { apiService, createApiThunk } from '../../shared/api/axios';
 import {
   APIRequestState,
+  IAPIError,
   IAPIRequestState,
 } from '../../shared/api/models';
 import {
@@ -15,6 +16,7 @@ import {
 import {
   IIssue,
   IIssueCreateReqPayload,
+  IIssueDeleteReqActionPayload,
   IIssueDetailsModalState,
   IIssueOptimisticUpdatePayload,
   IIssuePriority,
@@ -32,6 +34,7 @@ export interface IssuesStoreState {
   issueDetailsModal: IIssueDetailsModalState;
   createIssueReqState: IAPIRequestState<{data: IIssue}>;
   updateIssueReqState: IAPIRequestState<{data: IIssue}>;
+  deleteIssueReqState: IAPIRequestState<void>;
   priorityListRes: IAPIRequestState<{data: IIssuePriority[]}>;
   getIssuesRes: IAPIRequestState<{data: IIssue[]}>;
 }
@@ -41,6 +44,7 @@ const initialState: IssuesStoreState = {
   issueDetailsModal: getInitialIssueDetailsModalState(),
   createIssueReqState: APIRequestState.create<{data: IIssue}>(),
   updateIssueReqState: APIRequestState.create<{data: IIssue}>(),
+  deleteIssueReqState: APIRequestState.create<void>(),
   priorityListRes: APIRequestState.create<{data: IIssuePriority[]}>(),
   getIssuesRes: APIRequestState.create<{data: IIssue[]}>(),
 };
@@ -67,6 +71,14 @@ export const updateIssueReqAction = createApiThunk(
     apiService.patch<{data: IIssue}>(
       `${API_ROUTES.ISSUES.UPDATE_ISSUE}/${reqPayload?.id}`,
       reqPayload?.payload,
+    ),
+);
+
+export const deleteIssueReqAction = createApiThunk(
+  createReducerKey('deleteIssueReqAction'),
+  async (reqPayload?: IIssueDeleteReqActionPayload) =>
+    apiService.delete<{data: IIssue}>(
+      `${API_ROUTES.ISSUES.UPDATE_ISSUE}/${reqPayload?.id}`
     ),
 );
 
@@ -160,6 +172,19 @@ export const issuesReducer = createReducer(initialState, (builder) => {
     onFulfilled() {},
     onRejected() {
       showErrorAlert('Failed to update issue. Please try again.');
+    },
+  });
+
+  createAPIReducerCases(deleteIssueReqAction, 'deleteIssueReqState', builder, {
+    onPending(state) {
+      const issuesState = state as IssuesStoreState;
+      issuesState.deleteIssueReqState.error = undefined;
+    },
+    onFulfilled() {},
+    onRejected(state, error) {
+      showErrorAlert(
+        'Failed to delete issue. Please try again.',
+      );
     },
   });
 

@@ -54,6 +54,11 @@ export interface IIssueUpdateReqActionPayload {
   id: number;
   payload: IIssueUpdateReqPayload;
 }
+
+export interface IIssueDeleteReqActionPayload {
+  id: number;
+}
+
 export interface IIssueOptimisticUpdatePayload extends Partial<IIssue> {
   id: number;
 }

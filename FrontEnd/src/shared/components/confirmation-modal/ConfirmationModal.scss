@@ -1,0 +1,88 @@
+@import '../../styles/style.index.scss';
+
+.confirmation-modal-overlay {
+  @include displayFlex(center, flex-start, row);
+  position: fixed;
+  inset: 0;
+  z-index: 6000;
+  background-color: rgba($purple9, 0.36);
+  padding: clamp(32px, 8vh, 72px) 16px 16px;
+  animation: fadeIn 0.4s ease;
+}
+
+.confirmation-modal {
+  position: relative;
+  width: min(100%, 420px);
+  overflow: hidden;
+  border: 1px solid $purple2;
+  border-radius: 8px;
+  background-color: $neutral1;
+  box-shadow: 0 18px 44px rgba($purple9, 0.24);
+}
+
+.confirmation-modal-title {
+  margin: 0;
+  padding: 18px 20px 8px;
+  color: $purple8;
+  font-size: 1.12rem;
+  font-weight: 800;
+}
+
+.confirmation-modal-description {
+  margin: 0;
+  padding: 0 20px 18px;
+  color: $neutral7;
+  font-size: 0.94rem;
+  line-height: 1.45;
+}
+
+.confirmation-modal-actions {
+  @include displayFlex(flex-end, center, row);
+  gap: 10px;
+  padding: 14px 20px 18px;
+}
+
+.confirmation-modal-cancel-button,
+.confirmation-modal-confirm-button {
+  min-width: 92px;
+  border-radius: 8px;
+  padding: 9px 14px;
+  font-size: 0.9rem;
+}
+
+.confirmation-modal-cancel-button {
+  border: 1px solid $purple3;
+  background-color: $neutral1;
+  color: $purple7;
+}
+
+.confirmation-modal-cancel-button:hover {
+  background-color: $purple1;
+}
+
+.confirmation-modal-confirm-button {
+  border: 1px solid $stateError;
+  background-color: $stateError;
+  color: $neutral1;
+  transition: 0.3s;
+}
+
+.confirmation-modal-confirm-button:hover {
+  border-color: $red6;
+  background-color: $red6;
+}
+
+@media only screen and (max-width: 700px) {
+  .confirmation-modal-overlay {
+    padding-top: 24px;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
