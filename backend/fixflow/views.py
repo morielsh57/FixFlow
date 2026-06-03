@@ -335,7 +335,7 @@ def print_diff(d1:dict, d2:dict,username:str):
     
     for key, value in modified.items():    
         if key[:-3] not in fk_mappings:
-            message += f'field: {key}, From {value[0]}, To {value[1]}\n'
+            message += f'Field: {key}, From {value[0]}, To {value[1]}\n'
         else:    
             model = apps.get_model(fk_mappings[key[:-3]])
             match key[:-3]:
@@ -346,6 +346,6 @@ def print_diff(d1:dict, d2:dict,username:str):
                     old_value = str(model.objects.get(id=value[0]).username)
                     new_value = str(model.objects.get(id=value[1]).username)
 
-            message += f'field: {key[:-3]}, From {old_value}, To {new_value}\n'
+            message += f'Field: {key[:-3]}, From {old_value}, To {new_value}\n'
 
     return message

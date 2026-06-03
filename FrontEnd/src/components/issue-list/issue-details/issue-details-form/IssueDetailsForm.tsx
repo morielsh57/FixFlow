@@ -9,6 +9,7 @@ import AppSelect, {
 import ConfirmationModal from '../../../../shared/components/confirmation-modal/ConfirmationModal';
 import { useIssueDetailsForm } from '../../hooks/useIssueDetailsForm';
 import { IIssue, IssueModalMode, IssueStatus } from '../../issue.types';
+import IssueHistory from './issue-history/IssueHistory';
 
 interface IssueDetailsFormProps {
   mode: IssueModalMode;
@@ -54,6 +55,7 @@ const IssueDetailsForm = ({ mode, issue }: IssueDetailsFormProps) => {
   });
 
   const isCreateMode = mode === 'create';
+  const historyItems = issue?.history ?? [];
   const createRequestError = createIssueReqState.error?.message;
   const updateRequestError = updateIssueReqState.error?.message;
 
@@ -325,6 +327,8 @@ const IssueDetailsForm = ({ mode, issue }: IssueDetailsFormProps) => {
           <p className="issue-details-form-auto-save">
             Changes are saved automatically when you blur fields or change dropdowns.
           </p>
+
+          <IssueHistory history={historyItems} />
         </>
       )}
 

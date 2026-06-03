@@ -241,6 +241,7 @@ export const useIssueDetailsForm = ({
       description: payload.description,
       location: payload.location,
       status: payload.status,
+      history: [],
       priority: selectedPriority!,
       assigned: selectedAssignee ?? null,
       requester: user,

@@ -169,7 +169,22 @@ export const issuesReducer = createReducer(initialState, (builder) => {
       const issuesState = state as IssuesStoreState;
       issuesState.updateIssueReqState.error = undefined;
     },
-    onFulfilled() {},
+    onFulfilled(state, reqData) {
+      const issuesState = state as IssuesStoreState;
+      const serverIssue = reqData.data;
+      const serverHistory = serverIssue.history;
+      const issueIndex = issuesState.issues.findIndex(
+        (issue) => issue.id === serverIssue.id,
+      );
+
+      if (issueIndex >= 0) {
+        issuesState.issues[issueIndex].history = serverHistory;
+      }
+
+      if (issuesState.issueDetailsModal.issue?.id === serverIssue.id) {
+        issuesState.issueDetailsModal.issue.history = serverHistory;
+      }
+    },
     onRejected() {
       showErrorAlert('Failed to update issue. Please try again.');
     },
