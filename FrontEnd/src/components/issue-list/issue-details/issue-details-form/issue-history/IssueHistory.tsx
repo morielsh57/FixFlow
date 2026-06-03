@@ -8,6 +8,10 @@ interface IssueHistoryProps {
 const HISTORY_CHANGE_LINE_PATTERN =
   /^(field:)(\s*)(.*?)(,\s*)(from:?)(\s*)(.*?)(,\s*)(to:?)(\s*)(.*)$/i;
 
+const capitalizeFirstLetter = (value: string) => {
+  return value.charAt(0).toUpperCase() + value.slice(1);
+};
+
 const formatIssueHistoryTimestamp = (timestamp: string) => {
   const timestampDate = new Date(timestamp);
 
@@ -48,7 +52,9 @@ const renderIssueHistoryLine = (line: string, lineIndex: number) => {
 
   return (
     <span key={`history-line-${lineIndex}`}>
-      <strong className="issue-history__label">{fieldLabel}</strong>
+      <strong className="issue-history__label">
+        {capitalizeFirstLetter(fieldLabel)}
+      </strong>
       {fieldSpacing}
       {fieldValue}
       {fromSeparator}
