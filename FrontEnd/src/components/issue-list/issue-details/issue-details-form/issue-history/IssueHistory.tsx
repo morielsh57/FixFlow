@@ -9,7 +9,11 @@ const HISTORY_CHANGE_LINE_PATTERN =
   /^(field:)(\s*)(.*?)(,\s*)(from:?)(\s*)(.*?)(,\s*)(to:?)(\s*)(.*)$/i;
 
 const capitalizeFirstLetter = (value: string) => {
+  try {
   return value.charAt(0).toUpperCase() + value.slice(1);
+  } catch (e) { 
+    return value;
+  }
 };
 
 const formatIssueHistoryTimestamp = (timestamp: string) => {
