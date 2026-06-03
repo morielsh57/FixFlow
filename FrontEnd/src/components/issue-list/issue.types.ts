@@ -5,6 +5,11 @@ export type IssueStatus = 'Open' | 'In Progress' | 'Closed';
 
 export type IssueModalMode = 'create' | 'edit';
 
+export interface IIssueHistoryEntry {
+  data: string;
+  timestamp: string;
+}
+
 export interface IIssue {
   id: number;
   title: string;
@@ -13,6 +18,7 @@ export interface IIssue {
   status: IssueStatus;
   date_created: string;
   date_updated: string;
+  history: IIssueHistoryEntry[];
   priority: IIssuePriority;
   assigned: IUser | null;
   requester: IUser;

@@ -1,0 +1,121 @@
+@import '../../../../../shared/styles/style.index.scss';
+
+.issue-history {
+  margin-top: 8px;
+  padding-top: 16px;
+  border-top: 1px solid $purple2;
+}
+
+.issue-history__header {
+  @include displayFlex(space-between, center, row, wrap);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.issue-history__title {
+  margin: 0;
+  color: $purple8;
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.issue-history__count {
+  border: 1px solid $purple3;
+  border-radius: 999px;
+  background-color: $purple1;
+  color: $purple7;
+  padding: 4px 9px;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.issue-history__list {
+  @include displayFlex(flex-start, stretch, column);
+  position: relative;
+  gap: 12px;
+  margin: 0;
+  padding: 0 0 0 2px;
+  list-style: none;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 16px;
+    bottom: 16px;
+    left: 7px;
+    width: 2px;
+    border-radius: 999px;
+    background-color: $purple2;
+  }
+}
+
+.issue-history__item {
+  @include displayFlex(flex-start, flex-start, row);
+  position: relative;
+  gap: 12px;
+}
+
+.issue-history__marker {
+  position: relative;
+  z-index: 1;
+  flex: 0 0 14px;
+  width: 14px;
+  height: 14px;
+  margin-top: 14px;
+  border: 2px solid $purple6;
+  border-radius: 999px;
+  background-color: $neutral1;
+  box-shadow: 0 0 0 4px $purple1;
+}
+
+.issue-history__card {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid $purple2;
+  border-radius: 8px;
+  background-color: $neutral1;
+  padding: 10px 12px;
+  box-shadow: 0 2px 8px rgba($neutral9, 0.05);
+}
+
+.issue-history__text {
+  margin: 0;
+  color: $neutral8;
+  font-size: 0.88rem;
+  line-height: 1.45;
+  overflow-wrap: anywhere;
+  white-space: pre-line;
+}
+
+.issue-history__label {
+  color: $purple8;
+  font-weight: 700;
+}
+
+.issue-history__timestamp {
+  display: block;
+  margin-top: 6px;
+  color: $neutral6;
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.issue-history__empty {
+  margin: 0;
+  border: 1px dashed $purple3;
+  border-radius: 8px;
+  background-color: rgba($purple1, 0.48);
+  color: $neutral6;
+  padding: 12px;
+  font-size: 0.85rem;
+}
+
+@media only screen and (max-width: 700px) {
+  .issue-history__list {
+    gap: 10px;
+  }
+
+  .issue-history__card {
+    padding: 9px 10px;
+  }
+}
