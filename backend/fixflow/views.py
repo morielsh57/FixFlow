@@ -152,14 +152,17 @@ def ticket_detail(request, ticket_id):
     elif request.method == 'PATCH':
         old_data = ticket
         diff = print_diff(old_data.__dict__, request.data,request.user.username)
+        print("after diff")
         if diff == "":
             serializer = get_issuesSerializer(ticket)
             return Response({"data":serializer.data,"msg":"Ticket was not changed, values are the same"}, status=status.HTTP_200_OK)
         
         israel_time = timezone.localtime(timezone.now(), ZoneInfo("Asia/Jerusalem"))
+        print("before history append")
         ticket.history.append({"timestamp": israel_time.isoformat(), "data": diff})
+        print("before serializer")
         serializer = add_edit_issuesSerializer(ticket, data=request.data, partial=True)
-
+        print("after serializer")
         if serializer.is_valid():
             serializer.save()
             return Response({"data":serializer.data,"msg":"Ticket updated successfully"}, status=status.HTTP_200_OK)
@@ -333,7 +336,8 @@ def print_diff(d1:dict, d2:dict,username:str):
     
     message = f'The user {username} updated the following fields:\n'
     
-    for key, value in modified.items():    
+    for key, value in modified.items():
+        print(f"key: {key}, value: {value}")    
         if key[:-3] not in fk_mappings:
             message += f'Field: {key}, From {value[0]}, To {value[1]}\n'
         else:    
@@ -343,7 +347,10 @@ def print_diff(d1:dict, d2:dict,username:str):
                     old_value = str(model.objects.get(id=value[0]).title)
                     new_value = str(model.objects.get(id=value[1]).title)
                 case "assigned":
-                    old_value = str(model.objects.get(id=value[0]).username)
+                    if value[0] is None:
+                        old_value = "None"
+                    else:
+                        old_value = str(model.objects.get(id=value[0]).username)
                     new_value = str(model.objects.get(id=value[1]).username)
 
             message += f'Field: {key[:-3]}, From {old_value}, To {new_value}\n'
